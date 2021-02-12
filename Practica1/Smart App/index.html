@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="Estilos/estilos_tve.css">
+     <link rel="shortcut icon" href="Íconos/IOT.ico"> <!-- ícono para la pestaña de la página en navegador -->
+     <!-- google font: Nixie One -->
+     <link rel="preconnect" href="https://fonts.gstatic.com">
+     <link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
+     <script type="text/javascript" src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script> <!-- Llamada a framework Vue.js -->
+     <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> <!-- llamada swal para alertas -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+     <title>Mi TVE</title>
+</head>
+<body>
+    <header id="encabezado">
+        <h1 class="tituloPrincipal"> {{titulo}}</h1>
+    </header>
+    <section id="main">
+        <section id="menu">
+            <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulos">{{titulos.secccion_Perfil}} </h2>
+            </div>
+            <div v-on:click="activarVisorRitmoCardiaco" v-bind:class="[estadoVisualizadores.estadoRitmoCardiaco ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulos"> {{titulos.secccion_Ritmo_Cardiaco}} </h2>
+            </div>
+            <div v-on:click="activarVisorTemperatura" v-bind:class="[estadoVisualizadores.estadoTemperatura ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulos">{{titulos.secccion_Temperatura}} </h2>
+            </div>
+            <div v-on:click="activarVisorOxigeno" v-bind:class="[estadoVisualizadores.estadoOxigeno ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulos">{{titulos.seccion_Oxigeno}}</h2>
+            </div>   
+        </section>
+        <section id="visualizador">
+            <div v-show= "estadoVisualizadores.estadoPerfil" class="visores">
+                <h2 class="titulos">{{titulos.visorPerfil}}</h2>
+                <br>
+            </div>
+            <div  v-show= "estadoVisualizadores.estadoRitmoCardiaco" class="visores">
+                <h2 class="titulos">{{titulos.visorCardiaco}}</h2>
+                <br>
+                <div class = "contenedorDinamico">
+                    <div class= "primerSeparador">
+                            <canvas id="visorGraficoRitmoCardiaco"></canvas>
+                    </div>
+                    <div class= "segundoSeparador">
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form id="indicadoresDePulso">
+                                <p>Mi pulso actual: <input type="text" name="pulsoActual" value="85" readonly=readonly>(Mv/mm)</p>
+                                <br>
+                                <p>Mi pulso promedio: <input type="text" name="pulsoPromedio" value="85" readonly=»readonly>(Mv/mm)</p>
+                            </form>
+                        </div>
+                        <br>
+                        <br>
+                        <div id="opcionesDeAnalisis">
+                            <div class="contenedorBotonAccionador">
+                                <button id="botonEjecucionPulso">Iniciar Medición</button>
+                            </div>
+                            <div class="contenedorBotonAccionador">
+                                <button id="botonGuardadoPulso">Guardar Medición</button>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="contenedorBotonAccionador">
+                            <button id="botonVerHistorialPulso">Ver Historial Pulso</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div v-show= "estadoVisualizadores.estadoHistorialRitmoCardiaco" class="visores">
+                <h2 class="titulos">{{titulos.visorHistorialCardiaco}}</h2>
+                <br>
+                <canvas id="visorGraficoHistorialRitmoCardiaco"></canvas>
+                <div id="contenedorTablaHistorialCardiaco">
+					<table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Fecha</th><th>Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaHistorialCardiaco">
+                                <td>{{elemento.fecha}}</td>
+                                <td><a href="#">Ver detalles</a></td>
+                            </tr>
+                        </tbody>
+					</table>
+                </div>
+            </div>
+            <div  v-show= "estadoVisualizadores.estadoTemperatura" class="visores" >
+                <h2 class="titulos">{{titulos.visorTemperatura}}</h2>
+                <br>
+            </div>
+            <div  v-show= "estadoVisualizadores.estadoOxigeno" class="visores">
+                <h2 class="titulos">{{titulos.visorOxigeno}}</h2>
+                <br>
+                    
+            </div>
+        </section>
+    </section>
+    <footer>
+        <article>
+			<h4>Arquitectura de Computadores y Ensambladores 2 Sección: N</h4>
+			<p>Práctica # 1: Tecnología Vestible para Ejercicio</p>
+		</article>
+    </footer>
+</body> <!-- scripts: vue.js , vis.js-network, sweetalert.js -->
+
+<script type="text/javascript" src="JS/bundle.js" defer></script>
+</html>
