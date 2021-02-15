@@ -70,11 +70,15 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
 
 
 /* Titulos de toda la página */
-.titulos{
+.titulos,  .titulosMenu{
     margin-top: 15px;
     color: #F8F6F5;
     font-size: larger;
     text-align: center;
+}
+
+#referenciaImagenes{
+    color: #e1e1e1;
 }
 
 
@@ -265,11 +269,11 @@ sin afectar directamente la alineación del editor codemirror*/
 }
 
 #botonGuardadoPulso{
-    background-color: #3F3FF7;
+    background-color: #70B090;
 }
 
 #botonGuardadoPulso:hover{
-    background-color: #3333FF;
+    background-color: #669999;
     transition: 0.5s;
 }
 
@@ -282,12 +286,21 @@ sin afectar directamente la alineación del editor codemirror*/
     transition: 0.5s;
 }
 
-#botonVerHistorialPulso{
-    background-color: #F7C03F;
+#botonVerHistorialPulso, #botonVerAtletas{
+    background-color: #006666;
 }
 
-#botonVerHistorialPulso:hover{
-    background-color: #FFCC33;
+#botonVerHistorialPulso:hover ,#botonVerAtletas:hover{
+    background-color: #016161;
+    transition: 0.5s;
+}
+
+#botonRegresarPulsoPrincipal{
+    background-color: #70B090;
+}
+
+#botonRegresarPulsoPrincipal:hover{
+    background-color: #669999;
     transition: 0.5s;
 }
 
@@ -317,9 +330,10 @@ ESTILOS DE VISOR GRÁFICO {
 .contenedorDinamico{
     display: flex;
     flex-flow: row nowrap;
-    height: 80%;
+    height: 100%;
     width: 95%;
     margin: auto;
+    padding: 0;
 }
 
 .primerSeparador, .segundoSeparador{
@@ -328,11 +342,11 @@ ESTILOS DE VISOR GRÁFICO {
     width: 50%;
     align-items: center;
     height: auto;
+    padding: 0;
 }
 
-
-/*Indicadores de Pulso*/
-#indicadoresDePulso{
+/*Indicadores de Pulso en ventan "Ritmo Cardiaco"*/
+#indicadoresDePulso, #datosPerfil, #datosDeportivos{
     margin: auto;
     width: 100%;
     text-align: center;
@@ -350,6 +364,16 @@ ESTILOS DE VISOR GRÁFICO {
     width: 50px;
 }
 
+#datosPerfil input, #datosDeportivos input{
+    text-align: center;
+    font-size: large;
+    color: #F8F6F5;
+    border: none;
+    border-bottom: 1px solid #49AB80;
+    background-color: #34495E;
+    width: 160px;
+}
+
 #opcionesDeAnalisis{
     display: flex;
     flex-flow: row nowrap;
@@ -357,14 +381,22 @@ ESTILOS DE VISOR GRÁFICO {
     width: 85%;
 }
 
+#imagenPerfil{
+    width: auto;
+    height: 55%;
+}
+
+#contenedorDatosDeportivos{
+    border-left: 2px solid #49AB80;
+}
 
 
 /* Reestructuración web responsive: */
 
 /* Titulos y textos mas pequeños */
-@media screen and (min-width: 850px) and (max-width: 1240px){
+@media screen and (min-width: 861px) and (max-width: 1240px){
     /* Titulos de toda la página */
-    .titulos{
+    .titulos,  .titulosMenu{
         font-size: medium;
     }
 
@@ -376,9 +408,9 @@ ESTILOS DE VISOR GRÁFICO {
 }
 
 /* Titulo mas pequeños, cambios de orientación de flex del menu */
-@media screen and (min-width: 501px) and  (max-width: 849px){
+@media screen and (min-width: 620px) and  (max-width: 860px){
     /* Titulos de toda la página */
-    .titulos{
+    .titulos,  .titulostitulosMenu{
         font-size: small;
     }
 
@@ -432,6 +464,7 @@ ESTILOS DE VISOR GRÁFICO {
     .contenedorDinamico{
         display: flex;
         flex-flow: column nowrap;
+        justify-content: unset;
         height: 100%;
     }
 
@@ -441,16 +474,21 @@ ESTILOS DE VISOR GRÁFICO {
         height: 45%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input{
         font-size: medium;
+    }
+
+    #contenedorDatosDeportivos{
+        border-style: none;
+        border-top: 2px solid #49AB80;
     }
     
 }
 
 /* Textos mas pequeñps */
-@media screen and  (min-width: 450px) and  (max-width: 500px){
+@media screen and  (min-width: 475px) and  (max-width: 619px){
     /* Titulos de toda la página */
-    .titulos{
+    .titulos,  .titulosMenu{
         font-size: smaller;
     }
 
@@ -479,7 +517,7 @@ ESTILOS DE VISOR GRÁFICO {
 
     #visualizador{ /* contenedor section con los distintos visores que se activan con Vue.js*/
         width: 100%;
-        height: 600px;
+        height: 400px;
         box-sizing: border-box; /* background-color:purple; */
     }
 
@@ -513,16 +551,29 @@ ESTILOS DE VISOR GRÁFICO {
         width: 100%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input{
         font-size: small;
     }
 
+    #imagenPerfil{
+        width: 175px;
+        height: 175px;
+    }
+
+    #contenedorDatosDeportivos{
+        border-style: none;
+        border-top: 2px solid #49AB80;
+    }
     
 }
 
-@media screen and  (max-width: 449px){
-    .titulos{
+@media screen and  (max-width: 474px){
+     .titulosMenu{
         font-size: 50%;
+     }
+
+    .titulos{
+        font-size: smaller;
     }
 
     #main{
@@ -568,6 +619,7 @@ ESTILOS DE VISOR GRÁFICO {
         display: flex;
         flex-flow: column nowrap;
         height: 100%;
+        justify-content: space-evenly;
     }
 
     .primerSeparador, .segundoSeparador{
@@ -582,8 +634,87 @@ ESTILOS DE VISOR GRÁFICO {
         justify-content: space-between;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input{
         font-size: smaller;
+    }
+
+    #imagenPerfil{
+        width: 175px;
+        height: 175px;
+    }
+
+    #contenedorDatosDeportivos{
+        border-style: none;
+        border-top: 2px solid #49AB80;
+    }
+
+}
+
+/*Si la altura es demasiado grande*/
+
+@media screen and  (min-height: 850px){
+
+    #main{
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-around;
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        align-items: stretch; /* background-color: red; */
+    }
+
+    #menu{ /* contenedor section con las opociones del menu */
+        display: flex;
+        justify-content: space-around;
+        flex-flow: row nowrap; 
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+    }
+
+    .opcionesMenu{
+        padding: 1%;
+        height: auto;
+        width: 25%;
+        box-sizing: border-box;
+    }
+
+    .opcionesMenuDesactivadas{
+        padding: 1%;
+        height: auto;
+        width: 25%;
+        box-sizing: border-box;
+    }
+
+    .contenedorDinamico{
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+        justify-content: space-evenly;
+    }
+
+    .primerSeparador, .segundoSeparador{
+        margin: auto;
+        width: 100%;
+        height: auto;
+    }
+
+    #opcionesDeAnalisis{
+        width: 100%;
+        flex-flow: column nowrap;
+        justify-content: space-between;
+    }
+
+    #visualizador{ /* contenedor section con los distintos visores que se activan con Vue.js*/
+        width: 100%;
+        height: 1050px;
+        box-sizing: border-box; /* background-color:purple; */
+    }
+
+    #contenedorDatosDeportivos{
+        border-style: none;
+        border-top: 2px solid #49AB80;
     }
 }
 

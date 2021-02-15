@@ -36,6 +36,13 @@ let mensajeIconoAdvertencia = {
     button: "Aceptar"
 }
 
+let mensajeIconoPregunta = {
+  title: "Titulo de pregunta",
+  text: "Mensaje de pregunta",
+  icon: "question",
+  button: "Aceptar"
+}
+
 
 let mensajeDividido = {
     mensaje: "Con estos mensajes se puede elegir entre varias opciónes a realizar.",
