@@ -17,7 +17,7 @@
     </header>
     <section id="main">
         <section id="menu">
-            <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil ? estiloActual.activo : estiloActual.inactivo]">
+            <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil || estadoVisualizadores.estadoAtletas ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.secccion_Perfil}} </h2>
             </div>
             <div v-on:click="activarVisorRitmoCardiaco" v-bind:class="[estadoVisualizadores.estadoRitmoCardiaco || estadoVisualizadores.estadoHistorialRitmoCardiaco ? estiloActual.activo : estiloActual.inactivo]">
@@ -43,11 +43,12 @@
                             <br>
                             <p>Apellidos: <input v-bind:value="datosDePerfilEnSesion.apellidos" type="text" readonly="readonly"></p>
                         </form>
-                        <img id="imagenPerfil" src="./Imagenes/Perfil.gif" alt="Imagen de Freepik Storyset">
+                        <img id="imagenPerfil" src="./Imagenes/Perfil.gif" alt="Imagen de Freepik Storyset"  title="Imagen de Freepik Storyset">
                     </div>
                     <div class= "segundoSeparador" id="contenedorDatosDeportivos">
                         <br>
                         <h2 class="titulos">{{titulos.visorDatosDeportivos}}</h2>
+                        <br>
                         <form id="datosDeportivos">
                             <p>Tipo: <input v-bind:value="datosDePerfilEnSesion.tipo" type="text" readonly="readonly"></p>
                             <br>
@@ -59,6 +60,7 @@
                             <br>
                             <p>Estatura: <input v-bind:value="datosDePerfilEnSesion.estatura" type="text" readonly="readonly"></p>
                         </form>
+                        <br>
                         <div v-show= "datosDePerfilEnSesion.estadoTipo" class="contenedorBotonAccionador">
                             <button id="botonVerAtletas">Ver atletas</button>
                         </div>
@@ -70,20 +72,21 @@
                     <div class= "primerSeparador">
                         <h2 class="titulos">{{titulos.visorCardiaco}}</h2>
                         <br>
-                        <canvas id="visorGraficoRitmoCardiaco"></canvas>
+                        <canvas id="visorGraficoRitmoCardiaco" width="90%" height="35%"></canvas>
+                        <br>
                     </div>
                     <div class= "segundoSeparador">
+                        <h2 class="titulos">{{titulos.seccion_indicadoresPulso}}</h2>
                         <br>
                         <div class="indicadoresSalud">
                             <br>
-                            <form id="indicadoresDePulso">
+                            <form id="indicadoresDePulso">      
                                 <p>Mi pulso actual: <input v-bind:value="indicadoresDeSaludVariables.pulsoActual" type="text" readonly="readonly">(Mv/mm)</p>
                                 <br>
                                 <p>Mi pulso promedio: <input v-bind:value="indicadoresDeSaludVariables.pulsoPromedio" type="text" readonly="readonly">(Mv/mm)</p>
                             </form>
                         </div>
-                        <br>
-                        <br>
+                        <br><br>
                         <div id="opcionesDeAnalisis">
                             <div class="contenedorBotonAccionador">
                                 <button id="botonEjecucionPulso">Iniciar Medición</button>
@@ -104,24 +107,29 @@
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
                         <h2 class="titulos">{{titulos.visorHistorialCardiaco}}</h2>
-                        <canvas id="visorGraficoHistorialRitmoCardiaco"></canvas>
+                        <br>
+                        <canvas id="visorGraficoHistorialRitmoCardiaco" width="90%" height="35%"></canvas>
                     </div>
                     <div class= "segundoSeparador">
+                        <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
+                        <br>
                         <div id="contenedorTablaHistorialCardiaco">
                             <table class="tabla" >
                                 <thead>
                                     <tr>
-                                        <th>Fecha</th><th>Detalles</th>
+                                        <th>Fecha</th><th>Pulso</th><th>Pulso Promedio</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr  v-for="elemento in controladoresDeHistoriales.listaHistorialCardiaco">
                                         <td>{{elemento.fecha}}</td>
-                                        <td><a href="#">Ver detalles</a></td>
+                                        <td>{{elemento.pulso}}</td>
+                                        <td>{{elemento.pulsoPromedio}}</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <br>
                         <div class="contenedorBotonAccionador">
                             <button id="botonRegresarPulsoPrincipal">Regresar a datos de Pulso</button>
                         </div>
@@ -135,6 +143,113 @@
             <div  v-show= "estadoVisualizadores.estadoOxigeno" class="visores">
                 <h2 class="titulos">{{titulos.visorOxigeno}}</h2>
                 <br>
+            </div>
+            <div v-show= "estadoVisualizadores.estadoAtletas" class="visores">
+                <div class = "contenedorDinamico">
+                    <div class= "primerSeparador">
+                        <h2 class="titulos">{{titulos.visorAtletas}}</h2>
+                        <br>
+                        <div id="contenedorTablaAtletas">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Atleta</th><th>Edad</th><th>Sexo</th><th>Peso</th><th>Estatura</th><th>Historial</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaAtletas">
+                                        <td>{{elemento.nombre}} {{elemento.apellido}}</td>
+                                        <td>{{elemento.edad}}</td>
+                                        <td>{{elemento.sexo}}</td>
+                                        <td>{{elemento.peso}}</td>
+                                        <td>{{elemento.estatura}}</td>
+                                        <td><span class="icon-eye" alt="Ver detalles" title="Ver Detalles"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h2 class="titulos">{{titulos.seccionNuevosAtletas}}</h2>
+                        <form id="datosNuevoAtleta">
+                            <br>
+                            <p>Id: 
+                                <select id="atletasNoAsignados">
+                                    <option selected>0000</option>
+                                    <option>0001</option>
+                                </select>
+                            </p>
+                            <br>
+                            <p>Nombre: <input v-bind:value="evaluacionAtleta.nombreAtleta" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Apellido: <input v-bind:value="evaluacionAtleta.apellidoAtleta" type="text" readonly="readonly"></p>
+                        </form>
+                        <br>
+                        <div class="contenedorBotonAccionador">
+                            <button id="botonAgregarAtleta">Agregar Atleta</button>
+                        </div>
+                    </div>
+                    <div class= "segundoSeparador">
+                        <h2 class="titulos">{{titulos.visorAtletasHistorialCardiaco}}</h2>
+                        <br>
+                        <div id="contenedorTablaHistorialPulsoAtletas">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th><th>Pulso</th><th>Pulso Promedio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialCardiacoCoach">
+                                        <td>{{elemento.fecha}}</td>
+                                        <td>{{elemento.pulso}}</td>
+                                        <td>{{elemento.pulsoPromedio}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h2 class="titulos">{{titulos.visorAtletasHistorialTemperatura}}</h2>
+                        <br>
+                        <div id="contenedorTablaHistorialTemperaturaAtletas">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th><th>Temp.</th><th>Promedio</th><th>Mínima</th><th>Máxima</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialTemperaturaCoach">
+                                        <td>{{elemento.fecha}}</td>
+                                        <td>{{elemento.temperatura}}</td>
+                                        <td>{{elemento.temperaturaPromedio}}</td>
+                                        <td>{{elemento.minima}}</td>
+                                        <td>{{elemento.maxima}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h2 class="titulos">{{titulos.visorAtletasHistorialOxígeno}}</h2>
+                        <br>
+                        <div id="contenedorTablaHistorialOxigenoAtletas">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th><th>Oxígeno</th><th>Promedio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialOxigenoCoach">
+                                        <td>{{elemento.fecha}}</td>
+                                        <td>{{elemento.oxigeno}}</td>
+                                        <td>{{elemento.oxigenoPromedio}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="contenedorBotonAccionador">
+                            <button id="botonRegresarPerfil">Regresar a mi perfil</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </section>
