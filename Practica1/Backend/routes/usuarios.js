@@ -16,7 +16,32 @@ router.route('/getCoachs').get((req, res) => {
 
 router.route('/getAtletas/:id').get((req, res) => {
     Coach.findById(req.params.id).select('atletas -_id')
-        .then(atletas => res.json(atletas))
+        .then(function(atletas) {
+            
+            Usuario.find().where('_id').in(atletas.atletas).select('nombres')
+                .then(atl => res.json(atl));
+            
+            /*let jsonAtletas = [];
+            let fuera;
+
+            for(let i = 0; i<atletas.atletas.length; i++){
+                let nombre = Usuario.findById(atletas.atletas[i]).select('nombres')
+                    .exec(nombre => {
+                        return nombre;
+                        //res.json(jsonAtletas);
+                     });
+
+                console.log(nombre);
+                let jsonAtleta = {}
+                jsonAtleta.id = atletas.atletas[i];
+                jsonAtleta.nombre = 'Testo';
+
+                jsonAtletas.push(jsonAtleta);
+            }
+
+
+            res.json(jsonAtletas);*/
+        })
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
