@@ -9,6 +9,12 @@ router.route('/getUsuarios').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/getUsernames').get((req, res) => {
+    Usuario.find().select("username -_id")
+        .then(usernames => res.json(usernames))
+        .catch(err => res.status(400).json('Error: ' + err));
+})
+
 router.route('/getUsuario/:user').get((req, res) => {
     Usuario.findOne({username: req.params.user})
         .then(usuario => res.json(usuario));

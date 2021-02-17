@@ -8,12 +8,12 @@ router.route('/').post((req, res) => {
         Usuario.findOne({ username: username})
             .then(usuario => {
                 if(!usuario){
-                    res.status(401).json('Usuario no existe');
+                    res.status(401).json('Error: Usuario no existe');
                 }else{
                     if(usuario.password === password){
                         res.json(usuario.username);
                     }else{
-                        res.status(401).json('Contraseña incorrecta');
+                        res.status(401).json('Error: Contraseña incorrecta');
                     }
                 }
     

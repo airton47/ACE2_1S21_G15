@@ -2,9 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const rutinaSchema = new Schema({
-    userId: {type: Schema.Types.ObjectId, ref: 'Usuario'},
     username: {type: String, required: true},
-    fechaInicio: {type: Date, required: true},
+    fechaInicio: {type:String, required: true},
     pulso: [ {type: Number} ],
     oxigeno: [ {type: Number} ],
     temperatura: [ {type: Number} ]

@@ -9,9 +9,8 @@ router.route('/').get((req, res) => {
 });
 
 router.route('/add').post((req, res) => {
-    const userId = req.body.userId;
     const username = req.body.username;
-    const fechaInicio = Date.parse(req.body.fechaInicio);
+    const fechaInicio = req.body.fechaInicio;
     const pulso = [];
     const oxigeno = [];
     const temperatura = [];
