@@ -3,13 +3,18 @@ let Usuario = require('../models/usuario.model');
 
 router.route('/').post((req, res) => {
     const username = req.body.username;
+    const password = req.body.password;
 
-        Usuario.find({ username: username})
+        Usuario.findOne({ username: username})
             .then(usuario => {
-                if(!usuario.length){
-                    res.json('Usuario no existe');
+                if(!usuario){
+                    res.status(401).json('Usuario no existe');
                 }else{
-                    res.json(usuario[0]._id);
+                    if(usuario.password === password){
+                        res.json(usuario.username);
+                    }else{
+                        res.status(401).json('Contraseña incorrecta');
+                    }
                 }
     
             })

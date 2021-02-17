@@ -1,11 +1,17 @@
 const router = require('express').Router();
 let Usuario = require('../models/usuario.model');
 let Coach = require('../models/coach.model');
+const { json } = require('express');
 
 router.route('/getUsuarios').get((req, res) => {
     Usuario.find()
         .then(usuarios => res.json(usuarios))
         .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/getUsuario/:user').get((req, res) => {
+    Usuario.findOne({username: req.params.user})
+        .then(usuario => res.json(usuario));
 });
 
 router.route('/getCoachs').get((req, res) => {
@@ -14,11 +20,11 @@ router.route('/getCoachs').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/getAtletas/:id').get((req, res) => {
-    Coach.findById(req.params.id).select('atletas -_id')
+router.route('/getAtletaFromCoach/:user').get((req, res) => {
+    Coach.findOne({username: req.params.user}).select('atletas -_id')
         .then(function(atletas) {
-            
-            Usuario.find().where('_id').in(atletas.atletas).select('nombres')
+
+            Usuario.find().where('username').in(atletas.atletas)
                 .then(atl => res.json(atl));
             
             /*let jsonAtletas = [];
@@ -103,10 +109,10 @@ router.route('/addCoach').post((req,res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/addAtletaToCoach/:id').post((req,res) => {
-    Coach.findById(req.params.id)
+router.route('/addAtletaToCoach/:user').post((req,res) => {
+    Coach.findOne({username: req.params.user})
         .then(coach => {
-            coach.atletas.push(req.body.atleta);
+            coach.atletas.push(req.body.username);
 
             coach.save()
                 .then(() => res.json('Atleta agregado al Coach'))
@@ -114,4 +120,4 @@ router.route('/addAtletaToCoach/:id').post((req,res) => {
         })
 });
 
-module.exports = router
+module.exports = router;
