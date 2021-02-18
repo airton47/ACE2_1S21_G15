@@ -3,59 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="Estilos/estilos_tve.css">
-     <link rel="shortcut icon" href="Íconos/IOT.ico"> <!-- ícono para la pestaña de la página en navegador -->
-     <!-- google font: Nixie One -->
-     <link rel="preconnect" href="https://fonts.gstatic.com">
-     <link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
-     <script type="text/javascript" src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script> <!-- Llamada a framework Vue.js -->
-     <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> <!-- llamada swal para alertas -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="stylesheet" href="Estilos/estilos_tve.css">
+    <link rel="shortcut icon" href="Íconos/IOT.ico"> <!-- ícono para la pestaña de la página en navegador -->
+    <!-- google font: Nixie One -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script> <!-- Llamada a framework Vue.js -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
+<!--      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
      <title>Mi TVE</title>
 </head>
 <body>
     <header id="encabezado">
-        <h1 class="tituloPrincipal"> {{titulo}}</h1>
+        <section id="encapsuladorSuperior">
+            <h1 class="tituloPrincipal"> {{titulo}}</h1>
+            <span id="controladorSesion" class="icon-switch" alt="Cerrar sesión" title="Cerrar Sesión"></span>
+        </section>
     </header>
     <section id="main">
         <section id="menu">
-            <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil ? estiloActual.activo : estiloActual.inactivo]">
-                <h2 class="titulos">{{titulos.secccion_Perfil}} </h2>
+            <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil || estadoVisualizadores.estadoAtletas ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulosMenu">{{titulos.secccion_Perfil}} </h2>
             </div>
-            <div v-on:click="activarVisorRitmoCardiaco" v-bind:class="[estadoVisualizadores.estadoRitmoCardiaco ? estiloActual.activo : estiloActual.inactivo]">
-                <h2 class="titulos"> {{titulos.secccion_Ritmo_Cardiaco}} </h2>
+            <div v-on:click="activarVisorRitmoCardiaco" v-bind:class="[estadoVisualizadores.estadoRitmoCardiaco || estadoVisualizadores.estadoHistorialRitmoCardiaco ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulosMenu"> {{titulos.secccion_Ritmo_Cardiaco}} </h2>
             </div>
             <div v-on:click="activarVisorTemperatura" v-bind:class="[estadoVisualizadores.estadoTemperatura ? estiloActual.activo : estiloActual.inactivo]">
-                <h2 class="titulos">{{titulos.secccion_Temperatura}} </h2>
+                <h2 class="titulosMenu">{{titulos.secccion_Temperatura}} </h2>
             </div>
             <div v-on:click="activarVisorOxigeno" v-bind:class="[estadoVisualizadores.estadoOxigeno ? estiloActual.activo : estiloActual.inactivo]">
-                <h2 class="titulos">{{titulos.seccion_Oxigeno}}</h2>
+                <h2 class="titulosMenu">{{titulos.seccion_Oxigeno}}</h2>
             </div>   
-        </section>
+        </section> 
         <section id="visualizador">
             <div v-show= "estadoVisualizadores.estadoPerfil" class="visores">
-                <h2 class="titulos">{{titulos.visorPerfil}}</h2>
-                <br>
-            </div>
-            <div  v-show= "estadoVisualizadores.estadoRitmoCardiaco" class="visores">
-                <h2 class="titulos">{{titulos.visorCardiaco}}</h2>
-                <br>
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
-                            <canvas id="visorGraficoRitmoCardiaco"></canvas>
+                        <h2 class="titulos">{{titulos.visorDatosPersonales}}</h2>
+                        <form id="datosPerfil">
+                            <br>
+                            <p>Id: <input v-bind:value="datosDePerfilEnSesion.id" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Nombres: <input v-bind:value="datosDePerfilEnSesion.nombres" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Apellidos: <input v-bind:value="datosDePerfilEnSesion.apellidos" type="text" readonly="readonly"></p>
+                        </form>
+                        <img id="imagenPerfil" src="./Imagenes/Perfil.gif" alt="Imagen de Freepik Storyset"  title="Imagen de Freepik Storyset">
+                    </div>
+                    <div class= "segundoSeparador" id="contenedorDatosDeportivos">
+                        <br>
+                        <h2 class="titulos">{{titulos.visorDatosDeportivos}}</h2>
+                        <br>
+                        <form id="datosDeportivos">
+                            <p>Tipo: <input v-bind:value="datosDePerfilEnSesion.tipo" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Edad: <input v-bind:value="datosDePerfilEnSesion.edad" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Sexo: <input v-bind:value="datosDePerfilEnSesion.sexo" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Peso: <input v-bind:value="datosDePerfilEnSesion.peso" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Estatura: <input v-bind:value="datosDePerfilEnSesion.estatura" type="text" readonly="readonly"></p>
+                        </form>
+                        <br>
+                        <div v-show= "datosDePerfilEnSesion.estadoTipo" class="contenedorBotonAccionador">
+                            <button id="botonVerAtletas">Ver atletas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div  v-show= "estadoVisualizadores.estadoRitmoCardiaco" class="visores">
+                <div class = "contenedorDinamico">
+                    <div class= "primerSeparador">
+                        <h2 class="titulos">{{titulos.visorCardiaco}}</h2>
+                        <br>
+                        <canvas id="visorGraficoRitmoCardiaco" width="90%" height="35%"></canvas>
+                        <br>
                     </div>
                     <div class= "segundoSeparador">
+                        <h2 class="titulos">{{titulos.seccion_indicadoresPulso}}</h2>
                         <br>
                         <div class="indicadoresSalud">
                             <br>
-                            <form id="indicadoresDePulso">
-                                <p>Mi pulso actual: <input type="text" name="pulsoActual" value="85" readonly=readonly>(Mv/mm)</p>
+                            <form id="indicadoresDePulso">      
+                                <p>Mi pulso actual: <input v-bind:value="indicadoresDeSaludVariables.pulsoActual" type="text" readonly="readonly">(Mv/mm)</p>
                                 <br>
-                                <p>Mi pulso promedio: <input type="text" name="pulsoPromedio" value="85" readonly=»readonly>(Mv/mm)</p>
+                                <p>Mi pulso promedio: <input v-bind:value="indicadoresDeSaludVariables.pulsoPromedio" type="text" readonly="readonly">(Mv/mm)</p>
                             </form>
                         </div>
-                        <br>
-                        <br>
+                        <br><br>
                         <div id="opcionesDeAnalisis">
                             <div class="contenedorBotonAccionador">
                                 <button id="botonEjecucionPulso">Iniciar Medición</button>
@@ -73,23 +109,36 @@
                 <br>
             </div>
             <div v-show= "estadoVisualizadores.estadoHistorialRitmoCardiaco" class="visores">
-                <h2 class="titulos">{{titulos.visorHistorialCardiaco}}</h2>
-                <br>
-                <canvas id="visorGraficoHistorialRitmoCardiaco"></canvas>
-                <div id="contenedorTablaHistorialCardiaco">
-					<table class="tabla" >
-                        <thead>
-                            <tr>
-                                <th>Fecha</th><th>Detalles</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr  v-for="elemento in controladoresDeHistoriales.listaHistorialCardiaco">
-                                <td>{{elemento.fecha}}</td>
-                                <td><a href="#">Ver detalles</a></td>
-                            </tr>
-                        </tbody>
-					</table>
+                <div class = "contenedorDinamico">
+                    <div class= "primerSeparador">
+                        <h2 class="titulos">{{titulos.visorHistorialCardiaco}}</h2>
+                        <br>
+                        <canvas id="visorGraficoHistorialRitmoCardiaco" width="90%" height="35%"></canvas>
+                    </div>
+                    <div class= "segundoSeparador">
+                        <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
+                        <br>
+                        <div id="contenedorTablaHistorialCardiaco">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th><th>Pulso</th><th>Pulso Promedio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistoriales.listaHistorialCardiaco">
+                                        <td>{{elemento.fecha}}</td>
+                                        <td>{{elemento.pulso}}</td>
+                                        <td>{{elemento.pulsoPromedio}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="contenedorBotonAccionador">
+                            <button id="botonRegresarPulsoPrincipal">Regresar a datos de Pulso</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div  v-show= "estadoVisualizadores.estadoTemperatura" class="visores" >
@@ -99,17 +148,124 @@
             <div  v-show= "estadoVisualizadores.estadoOxigeno" class="visores">
                 <h2 class="titulos">{{titulos.visorOxigeno}}</h2>
                 <br>
-                    
+            </div>
+            <div v-show= "estadoVisualizadores.estadoAtletas" class="visores">
+                <div class = "contenedorDinamico">
+                    <div class= "primerSeparador">
+                        <h2 class="titulos">{{titulos.visorAtletas}}</h2>
+                        <br>
+                        <div id="contenedorTablaAtletas">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Atleta</th><th>Edad</th><th>Sexo</th><th>Peso</th><th>Estatura</th><th>Historial</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaAtletas">
+                                        <td>{{elemento.nombre}} {{elemento.apellido}}</td>
+                                        <td>{{elemento.edad}}</td>
+                                        <td>{{elemento.sexo}}</td>
+                                        <td>{{elemento.peso}}</td>
+                                        <td>{{elemento.estatura}}</td>
+                                        <td><span class="icon-eye" alt="Ver detalles" title="Ver Detalles"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h2 class="titulos">{{titulos.seccionNuevosAtletas}}</h2>
+                        <form id="datosNuevoAtleta">
+                            <br>
+                            <p>Id: 
+                                <select id="atletasNoAsignados">
+                                    <option selected>0000</option>
+                                    <option>0001</option>
+                                </select>
+                            </p>
+                            <br>
+                            <p>Nombre: <input v-bind:value="evaluacionAtleta.nombreAtleta" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Apellido: <input v-bind:value="evaluacionAtleta.apellidoAtleta" type="text" readonly="readonly"></p>
+                        </form>
+                        <br>
+                        <div class="contenedorBotonAccionador">
+                            <button id="botonAgregarAtleta">Agregar Atleta</button>
+                        </div>
+                    </div>
+                    <div class= "segundoSeparador">
+                        <h2 class="titulos">{{titulos.visorAtletasHistorialCardiaco}}</h2>
+                        <br>
+                        <div id="contenedorTablaHistorialPulsoAtletas">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th><th>Pulso</th><th>Pulso Promedio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialCardiacoCoach">
+                                        <td>{{elemento.fecha}}</td>
+                                        <td>{{elemento.pulso}}</td>
+                                        <td>{{elemento.pulsoPromedio}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h2 class="titulos">{{titulos.visorAtletasHistorialTemperatura}}</h2>
+                        <br>
+                        <div id="contenedorTablaHistorialTemperaturaAtletas">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th><th>Temp.</th><th>Promedio</th><th>Mínima</th><th>Máxima</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialTemperaturaCoach">
+                                        <td>{{elemento.fecha}}</td>
+                                        <td>{{elemento.temperatura}}</td>
+                                        <td>{{elemento.temperaturaPromedio}}</td>
+                                        <td>{{elemento.minima}}</td>
+                                        <td>{{elemento.maxima}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h2 class="titulos">{{titulos.visorAtletasHistorialOxígeno}}</h2>
+                        <br>
+                        <div id="contenedorTablaHistorialOxigenoAtletas">
+                            <table class="tabla" >
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th><th>Oxígeno</th><th>Promedio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialOxigenoCoach">
+                                        <td>{{elemento.fecha}}</td>
+                                        <td>{{elemento.oxigeno}}</td>
+                                        <td>{{elemento.oxigenoPromedio}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="contenedorBotonAccionador">
+                            <button id="botonRegresarPerfil">Regresar a mi perfil</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </section>
     <footer>
         <article>
 			<h4>Arquitectura de Computadores y Ensambladores 2 Sección: N</h4>
-			<p>Práctica # 1: Tecnología Vestible para Ejercicio</p>
+			<p>Práctica # 1: Tecnología Vestible para Ejercicio, Ilustraciones de <a id="referenciaImagenes" href="https://storyset.com/data"> Freepik Storyset</a></p>
 		</article>
     </footer>
-</body> <!-- scripts: vue.js , vis.js-network, sweetalert.js -->
-
-<script type="text/javascript" src="JS/bundle.js" defer></script>
+</body> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="JS/bundle.js"></script>
 </html>
