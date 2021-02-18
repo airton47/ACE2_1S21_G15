@@ -32,7 +32,7 @@ header {
     margin-bottom: 10px;
     margin-top: 10px;
     box-sizing: border-box;
-    font-size: larger;
+    font-size: larger; 
 }
 
 footer {
@@ -82,6 +82,26 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
     width: 85%;
     height: auto;
     box-sizing: border-box; 
+}
+
+#encapsuladorSuperior{ /*encierra al header y al "controladorSesion"*/
+    display: flex;
+    flex-direction: row wrap;
+    justify-content: space-between;
+}
+
+#encapsuladorSuperior h1{ /*titulo principal*/
+    width: 70%;
+}
+
+#controladorSesion{ /*contiene el icono de cierre de sesión*/
+    margin-bottom: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    width: 5%;
+    text-align: center;
+    height: auto;
+    padding: 0;
 }
 
 /*#endregion Contenedores Principales*/
@@ -348,11 +368,11 @@ button{
 /*#region Iconos*/
 @font-face {
     font-family: 'icomoon';
-    src:  url('../Íconos/fonts/icomoon.eot?qlkb9w');
-    src:  url('../Íconos/fonts/icomoon.eot?qlkb9w#iefix') format('embedded-opentype'),
-      url('../Íconos/fonts/icomoon.ttf?qlkb9w') format('truetype'),
-      url('../Íconos/fonts/icomoon.woff?qlkb9w') format('woff'),
-      url('../Íconos/fonts/icomoon.svg?qlkb9w#icomoon') format('svg');
+    src:  url('../Íconos/fonts/icomoon.eot?f3wlb5');
+    src:  url('../Íconos/fonts/icomoon.eot?f3wlb5#iefix') format('embedded-opentype'),
+      url('../Íconos/fonts/icomoon.ttf?f3wlb5') format('truetype'),
+      url('../Íconos/fonts/icomoon.woff?f3wlb5') format('woff'),
+      url('../Íconos/fonts/icomoon.svg?f3wlb5#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -366,19 +386,34 @@ button{
     font-variant: normal;
     text-transform: none;
     line-height: 1;
-    /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
   
+  .icon-switch:before {
+    content: "\e9b6";
+  }
+
   .icon-eye:before {
     content: "\e9ce";
   }
 
-  .icon-eye{
+  .icon-eye, .icon-switch{
     color: #006666;
     cursor: pointer;
   }
+
+  .icon-switch{
+    font-size: large;
+    color: #F0F0F0;
+  }
+
+  .icon-switch:hover, .icon-eye:hover{
+    color: #41B883;
+    transition: 0.5;
+  }
+
+ 
 /*#endregion fin iconos*/
 
 /*#region Contenedores dinámicos de las subventanas*/
@@ -776,3 +811,11 @@ button{
     }    
 }
 /*#endregion Estilos con Media Querys para pantalla estándar de ancho min:861px y max: 1240px */
+
+/*#region Edición de SweetAlerts personalizados*/
+
+.swal2-container.swal2-shown {
+    background: url('../Imagenes/fondo-login.png');
+  }
+
+/*#endregion Edición de SweetAlerts personalizados*/

@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="Estilos/estilos_tve.css">
-     <link rel="shortcut icon" href="Íconos/IOT.ico"> <!-- ícono para la pestaña de la página en navegador -->
-     <!-- google font: Nixie One -->
-     <link rel="preconnect" href="https://fonts.gstatic.com">
-     <link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
-     <script type="text/javascript" src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script> <!-- Llamada a framework Vue.js -->
+    <link rel="stylesheet" href="Estilos/estilos_tve.css">
+    <link rel="shortcut icon" href="Íconos/IOT.ico"> <!-- ícono para la pestaña de la página en navegador -->
+    <!-- google font: Nixie One -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script> <!-- Llamada a framework Vue.js -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
+<!--      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
      <title>Mi TVE</title>
 </head>
 <body>
     <header id="encabezado">
-        <h1 class="tituloPrincipal"> {{titulo}}</h1>
+        <section id="encapsuladorSuperior">
+            <h1 class="tituloPrincipal"> {{titulo}}</h1>
+            <span id="controladorSesion" class="icon-switch" alt="Cerrar sesión" title="Cerrar Sesión"></span>
+        </section>
     </header>
     <section id="main">
         <section id="menu">
@@ -29,7 +34,7 @@
             <div v-on:click="activarVisorOxigeno" v-bind:class="[estadoVisualizadores.estadoOxigeno ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.seccion_Oxigeno}}</h2>
             </div>   
-        </section>
+        </section> 
         <section id="visualizador">
             <div v-show= "estadoVisualizadores.estadoPerfil" class="visores">
                 <div class = "contenedorDinamico">
@@ -260,7 +265,7 @@
 		</article>
     </footer>
 </body> 
-<script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> <!-- llamada swal para alertas -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-<script type="text/javascript" src="JS/bundle.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="JS/bundle.js"></script>
 </html>

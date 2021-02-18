@@ -4,7 +4,7 @@ import {Mensajes} from './Mensajes';
 var encabezador = new Vue({
 	el: '#encabezado',
 	data: {
-	  titulo: "Mi TVE"
+	  titulo: "Glove Fit"
   }
 })
 
@@ -227,10 +227,8 @@ mainApp.controladoresDeHistorialesCoach.listaAtletas.push({
 }); 
 
 
-//Prueba de Mensaje:
-Mensajes.mostrarMensajeDividido();
-
-
+//Login
+Mensajes.ejecutarLogin();
 
 //Asignación de funciones a botones:
 
@@ -238,7 +236,7 @@ document.getElementById('botonVerHistorialPulso').addEventListener("click", main
 document.getElementById('botonRegresarPulsoPrincipal').addEventListener("click", mainApp.activarVisorRitmoCardiaco);
 document.getElementById('botonVerAtletas').addEventListener("click", mainApp.activarVisorAtletas);
 document.getElementById('botonRegresarPerfil').addEventListener("click", mainApp.activarVisorPerfil);
-
+document.getElementById('botonEjecucionPulso').addEventListener("click", Mensajes.mensajeEvaluacionPulso);
 export {
   mainApp
 };
