@@ -22,6 +22,39 @@ let mensajeBienvenida = {
   allowOutsideClick: false
 }
 
+let mensajeCierreSesion = {
+  title: 'Cierre de Sesión',
+  html: '¿Realmente desea <b>cerrar su sesión</b>?',
+  showConfirmButton: true,
+  showCancelButton: true,
+  confirmButtonColor: '#669999',
+  cancelButtonColor: '#E56220',
+  confirmButtonText: 'Cerrar',
+  cancelButtonText: 'Cancelar',
+  allowEscapeKey: false,
+  allowOutsideClick: false,
+  backdrop: false
+}
+
+function ejecutarLogOut(){
+  swal(mensajeCierreSesion).then(result => {
+   if (result.value){
+      /* swal({
+        title: 'Buen viaje...',
+        html: '<b>Cerrando su sesión, espere un momento...</b>',
+        timer: 2500,
+        showConfirmButton: false,
+        type: 'info',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        backdrop: false
+      }); */
+      console.log("Cerrando sesión...");
+      ejecutarLogin();
+   }
+ });
+}
+
 let mensajePulso = {
   title: 'Pulso evaluado',
   html: '<b>Tu pulso</b> fue evaluado con <b>éxito</b>.',
@@ -53,7 +86,8 @@ let mensajeTemperatura = {
   confirmButtonColor: '#669999',
   confirmButtonText: 'Aceptar',
   allowEscapeKey: false,
-  allowOutsideClick: false
+  allowOutsideClick: false,
+  backdrop: false
 }
 
 function mensajeEvaluacionTemperatura(){
@@ -71,7 +105,8 @@ let mensajeOxigeno = {
   confirmButtonColor: '#669999',
   confirmButtonText: 'Aceptar',
   allowEscapeKey: false,
-  allowOutsideClick: false
+  allowOutsideClick: false,
+  backdrop: false
 }
 
 function mensajeEvaluacionOxigeno(){
@@ -347,5 +382,6 @@ Mensajes.recolectarCredencialesAcceso = recolectarCredencialesAcceso;
 Mensajes.mensajeEvaluacionOxigeno = mensajeEvaluacionOxigeno;
 Mensajes.mensajeEvaluacionPulso = mensajeEvaluacionPulso;
 Mensajes.mensajeEvaluacionTemperatura = mensajeEvaluacionTemperatura;
+Mensajes.ejecutarLogOut = ejecutarLogOut;
 
 export {Mensajes};

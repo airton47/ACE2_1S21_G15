@@ -109,7 +109,7 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
 /*#region Contenedores especiales*/
 
 /*Div que encierra a los botones de medición en las distintas subventanas*/
-#opcionesDeAnalisis{
+.opcionesDeAnalisis{
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-around;
@@ -138,7 +138,7 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
     color: #e1e1e1;
 }
 
-#indicadoresDePulso, #datosPerfil, #datosDeportivos, #datosNuevoAtleta{
+#indicadoresDePulso, #indicadoresDeTemperatura, #indicadoresDeOxigeno,  #datosPerfil, #datosDeportivos, #datosNuevoAtleta{
     margin: auto;
     width: 100%;
     text-align: center;
@@ -316,7 +316,7 @@ button{
 }
 
 /* dibuja y coloca "antes" el simbolo de play(triángulo acostado) */
-#botonEjecucionPulso:before{ 
+#botonEjecucionPulso:before, #botonEjecucionTemperatura:before, #botonEjecucionOxigeno:before{ 
     content: "";
     width: 0;
     height: 0;
@@ -327,38 +327,38 @@ button{
     margin-right: 5px;
 }
 
-#botonGuardadoPulso{
+#botonGuardadoPulso, #botonGuardadoTemperatura, #botonGuardadoOxigeno{
     background-color: #70B090;
 }
 
-#botonGuardadoPulso:hover{
+#botonGuardadoPulso:hover, #botonGuardadoTemperatura:hover, #botonGuardadoOxigen:hover{
     background-color: #669999;
     transition: 0.5s;
 }
 
-#botonEjecucionPulso{
+#botonEjecucionPulso, #botonEjecucionTemperatura, #botonEjecucionOxigeno{
     background-color: #99CC99;
 }
 
-#botonEjecucionPulso:hover{
+#botonEjecucionPulso:hover, #botonEjecucionTemperatura:hover, #botonEjecucionOxigeno:hover{
     background-color: #98d973;
     transition: 0.5s;
 }
 
-#botonVerHistorialPulso, #botonVerAtletas, #botonAgregarAtleta{
+#botonVerHistorialPulso, #botonVerHistorialTemperatura, #botonVerHistorialOxigeno, #botonVerAtletas, #botonAgregarAtleta{
     background-color: #006666;
 }
 
-#botonVerHistorialPulso:hover ,#botonVerAtletas:hover, #botonAgregarAtleta:hover{
+#botonVerHistorialPulso:hover , #botonVerHistorialTemperatura:hover, #botonVerHistorialOxigeno:hover, #botonVerAtletas:hover, #botonAgregarAtleta:hover{
     background-color: #016161;
     transition: 0.5s;
 }
 
-#botonRegresarPulsoPrincipal, #botonRegresarPerfil{
+#botonRegresarPulsoPrincipal, #botonRegresarTemperaturaPrincipal, #botonRegresarOxigenoPrincipal, #botonRegresarPerfil{
     background-color: #70B090;
 }
 
-#botonRegresarPulsoPrincipal:hover, #botonRegresarPerfil:hover{
+#botonRegresarPulsoPrincipa:hover, #botonRegresarTemperaturaPrincipal:hover, #botonRegresarOxigenoPrincipal:hover, #botonRegresarPerfil:hover{
     background-color: #669999;
     transition: 0.5s;
 }
@@ -440,7 +440,7 @@ button{
 
 /*#region Inputs(de tipo texto) para mostrar los datos*/
 
-#indicadoresDePulso input{
+#indicadoresDePulso input, #indicadoresDeTemperatura input, #indicadoresDeOxigeno input{
     text-align: center;
     font-size: larger;
     color: #F8F6F5;
@@ -529,7 +529,7 @@ button{
         height: auto;
     }
 
-    #opcionesDeAnalisis{
+    .opcionesDeAnalisis{
         width: 100%;
         flex-flow: column nowrap;
         justify-content: space-between;
@@ -610,13 +610,13 @@ button{
        height: 50%;
    }
 
-   #opcionesDeAnalisis{
+   .opcionesDeAnalisis{
        width: 100%;
        flex-flow: column nowrap;
        justify-content: space-between;
    }
 
-   #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+   #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
        font-size: smaller;
    }
 
@@ -696,11 +696,11 @@ button{
         height: auto;
     }
 
-    #opcionesDeAnalisis{
+    .opcionesDeAnalisis{
         width: 100%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
         font-size: small;
     }
 
@@ -786,7 +786,7 @@ button{
         height: 45%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input ,#datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
         font-size: medium;
     }
 
@@ -806,7 +806,7 @@ button{
         font-size: medium;
     }
 
-    #opcionesDeAnalisis{
+    .opcionesDeAnalisis{
         width: 100%;
     }    
 }
