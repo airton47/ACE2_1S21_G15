@@ -28,9 +28,11 @@ router.route('/iniciarTest').post((req, res) => {
     const temperatura = [];
     const pulso = [];
     const oxigeno = [];
-    const tempMaxima = 0
-    const tempMinima = 0
-    const tempPromedio = 0
+    const tempMaxima = 0;
+    const tempMinima = 0;
+    const tempPromedio = 0;
+    const oxigenoPromedio = 0;
+    const pulsoPromedio = 0;
 
     const newTest = new Test({
         username,
@@ -41,7 +43,9 @@ router.route('/iniciarTest').post((req, res) => {
         pulso,
         tempMaxima,
         tempMinima,
-        tempPromedio
+        tempPromedio,
+        oxigenoPromedio,
+        pulsoPromedio
     });
 
     newTest.save()
@@ -62,10 +66,14 @@ router.route('/add/:user').post((req, res) => {
             testo.oxigeno.push(oxigeno);
 
             const temp = testo.temperatura;
+            const oxi = testo.oxigeno;
+            const puls = testo.pulso;
 
             testo.tempMaxima = Math.max(...temp);
             testo.tempMinima = Math.min(...temp);
             testo.tempPromedio = temp.reduce((a,b) => a + b, 0) / temp.length;
+            testo.oxigenoPromedio = oxi.reduce((a,b) => a + b, 0) / oxi.length;
+            testo.pulsoPromedio = puls.reduce((a,b) => a + b, 0) / puls.length;
 
             testo.save()
                 .then(() => res.json("Mediciones guardados con exito"))

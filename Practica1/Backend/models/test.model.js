@@ -11,6 +11,8 @@ const testSchema = new Schema({
     tempMaxima: {type: Number},
     tempMinima: {type: Number},
     tempPromedio: {type: Number},
+    oxigenoPromedio: {type: Number},
+    pulsoPromedio: {type: Number}
 },{
     timestamps: true,
 });

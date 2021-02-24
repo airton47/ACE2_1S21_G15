@@ -11,7 +11,16 @@ router.route('/getUsuarios').get((req, res) => {
 
 router.route('/getUsernames').get((req, res) => {
     Usuario.find().select("username -_id")
-        .then(usernames => res.json(usernames))
+        .then(usernames => {
+
+            let users = [];
+            for(let i = 0; i < usernames.length; i++){
+                users.push(usernames[i].username);
+            }
+
+            res.json(users);
+
+        })
         .catch(err => res.status(400).json('Error: ' + err));
 })
 
