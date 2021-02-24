@@ -21,7 +21,10 @@ usuario, además cuenta con una serie de reportes que lo ayudaran a ver su histo
 * App Inventor.
 
 ### APIs y Servidores
-* 
+* Express
+* Node.js
+* MongoDB Atlas
+* Amazon Web Services - EC2
 
 ### Prenda Inteligente
 * 
