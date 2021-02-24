@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const Usuario = require('./usuario.model');
 
 const coachSchema = Usuario.discriminator('Coach', new Schema({
-    atletas: [ {type: Schema.Types.ObjectId, ref: 'Usuario'}]
+    atletas: [ {type: String} ]
  }),
 );
 
