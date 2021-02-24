@@ -1,5 +1,6 @@
 
 import {Mensajes} from './Mensajes';
+import {Procesos} from './Procesos';
 
 var encabezador = new Vue({
 	el: '#encabezado',
@@ -71,19 +72,20 @@ var mainApp = new Vue({
         oxigenoPromedio: 0
       },
       datosDePerfilEnSesion:{
-        tipo: 'atleta',
-        estadoTipo: true, //Coach es true, false es atleta
-        id: '0000',
-        nombres: 'Lorem',
-        apellidos: 'Ipsum',
-        edad: '0',
-        sexo: 'M',
-        peso: '000',
-        estatura: '0.00'
+        tipo: '---',
+        username: '---',
+        estadoTipo: false, //Coach es true, false es atleta
+        id: '---',
+        nombres: '----',
+        apellidos: '----',
+        edad: '---',
+        sexo: '---',
+        peso: '---',
+        estatura: '---'
       },
       //Mantiene guardado qué atleta esta evaluando el coach actualmente
       evaluacionAtleta:{
-        idAtleta: '0',
+        username: '---',
         nombreAtleta: '---',
         apellidoAtleta: '---'
       }
@@ -170,7 +172,7 @@ var mainApp = new Vue({
             this.estadoVisualizadores.estadoOxigeno = false;
             this.estadoVisualizadores.estadoHistorialOxigeno = false;
             this.estadoVisualizadores.estadoAtletas = true;
-      }
+        }
       //#endregion METHODS
     }
 })
@@ -397,9 +399,43 @@ mainApp.controladoresDeHistorialesCoach.listaAtletas.push({
   estatura:'000'
 }); 
 
-
-//Login
+//Ejecución de Login y Registro
+//activarCovertorInicial();
 Mensajes.ejecutarLogin();
+/* desactivarCovertorInicial(); */
+
+function activarCovertorInicial(){
+  let visor = document.getElementById("covertor");
+  visor.style.display = "block";
+}
+
+
+async function mostrarVisorAtletasAsignados(){
+  mainApp.activarVisorAtletas();
+  await Procesos.mostrarAtletasAsignados(mainApp.datosDePerfilEnSesion.username);
+  //generamos los botones para ver los historiales individuales de cada atleta
+  Procesos.generarBotonesTablaAtletas();
+}
+
+function asignarFuncionalidadDeHistorial(){
+  swal({
+    title: 'Recolectando historiales',
+    html: '<b>Cargando mediciones recientes...</b>',
+    timer: 2500,
+    showConfirmButton: false,
+    type: 'info',
+    allowEscapeKey: false,
+    allowOutsideClick: false
+  });
+}
+
+ async function probarAPIS(){
+  //console.log(JSON.stringify(await Procesos.obtenerUsernamesSistema()));
+  //console.log(JSON.stringify(Procesos.obtenerDatosUsuarioEspecifico('giossan')));
+  //console.log(JSON.stringify(await Procesos.obtenerDatosCompletosUsuariosSistema()));
+  //let informacion = '{"username": "Caliss", "password": "1001", "nombres": "Candida Lisseth", "apellidos": "Aroca Estrada","edad": 23,"genero": "F","peso": 158, "altura": 167,"coach": false}';
+  //console.log(JSON.stringify(Procesos.crearNuevoAtleta(JSON.parse(informacion))));
+}
 
 //#region Asignación de funciones a botones:
 
@@ -410,7 +446,7 @@ document.getElementById('botonVerHistorialTemperatura').addEventListener("click"
 document.getElementById('botonRegresarTemperaturaPrincipal').addEventListener("click", mainApp.activarVisorTemperatura);
 document.getElementById('botonVerHistorialOxigeno').addEventListener("click", mainApp.activarVisorHistorialOxigeno);
 document.getElementById('botonRegresarOxigenoPrincipal').addEventListener("click", mainApp.activarVisorOxigeno);
-document.getElementById('botonVerAtletas').addEventListener("click", mainApp.activarVisorAtletas);
+document.getElementById('botonVerAtletas').addEventListener("click", mostrarVisorAtletasAsignados);
 document.getElementById('botonRegresarPerfil').addEventListener("click", mainApp.activarVisorPerfil);
 //#endregion Ventanas
 
@@ -419,6 +455,10 @@ document.getElementById('botonEjecucionPulso').addEventListener("click", Mensaje
 document.getElementById('controladorSesion').addEventListener("click", Mensajes.ejecutarLogOut);
 
 //#endregion Mensajes
+
+//#region Acciones API
+//document.getElementById('controladorSesion').addEventListener("click", probarAPIS);
+//#endregion Acciones API
 
 //#endregion Asignación de funciones a botones
 

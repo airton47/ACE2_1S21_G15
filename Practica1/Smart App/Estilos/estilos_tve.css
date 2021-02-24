@@ -480,6 +480,16 @@ button{
 
 /*#endregion Imágenes*/
 
+/*#region covertor LogIn Y SigIn*/ 
+#covertor{
+    position: fixed;
+    background-color: #344c5c;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+}
+/*#endregion covertor LogIn Y SigIn */ 
+
 /*#region Estilos con Media querys para dispositivos/pantallas con demasiada altura*/
 @media screen and  (min-height: 850px){
 
@@ -812,10 +822,11 @@ button{
 }
 /*#endregion Estilos con Media Querys para pantalla estándar de ancho min:861px y max: 1240px */
 
+
 /*#region Edición de SweetAlerts personalizados*/
 
-.swal2-container.swal2-shown {
+/* .swal2-container.swal2-shown {
     background: url('../Imagenes/fondo-login.png');
-  }
+  } */
 
 /*#endregion Edición de SweetAlerts personalizados*/

@@ -14,6 +14,9 @@
      <title>Glove Fit</title>
 </head>
 <body>
+    <section id="covertor"> 
+        <div class="rellenoCovertor"></div>
+    </section>
     <header id="encabezado">
         <section id="encapsuladorSuperior">
             <h1 class="tituloPrincipal"> {{titulo}}</h1>
@@ -55,15 +58,17 @@
                         <h2 class="titulos">{{titulos.visorDatosDeportivos}}</h2>
                         <br>
                         <form id="datosDeportivos">
+                            <p>Username: <input v-bind:value="datosDePerfilEnSesion.username" type="text" readonly="readonly"></p>
+                            <br>
                             <p>Tipo: <input v-bind:value="datosDePerfilEnSesion.tipo" type="text" readonly="readonly"></p>
                             <br>
                             <p>Edad: <input v-bind:value="datosDePerfilEnSesion.edad" type="text" readonly="readonly"></p>
                             <br>
                             <p>Sexo: <input v-bind:value="datosDePerfilEnSesion.sexo" type="text" readonly="readonly"></p>
                             <br>
-                            <p>Peso: <input v-bind:value="datosDePerfilEnSesion.peso" type="text" readonly="readonly"></p>
+                            <p>Peso: <input v-bind:value="datosDePerfilEnSesion.peso" type="text" readonly="readonly">(Lbs)</p>
                             <br>
-                            <p>Estatura: <input v-bind:value="datosDePerfilEnSesion.estatura" type="text" readonly="readonly"></p>
+                            <p>Estatura: <input v-bind:value="datosDePerfilEnSesion.estatura" type="text" readonly="readonly">(cm)</p>
                         </form>
                         <br>
                         <div v-show= "datosDePerfilEnSesion.estadoTipo" class="contenedorBotonAccionador">
@@ -290,20 +295,20 @@
                         <h2 class="titulos">{{titulos.visorAtletas}}</h2>
                         <br>
                         <div id="contenedorTablaAtletas">
-                            <table class="tabla" >
+                            <table id="tablaAtletas" class="tabla" >
                                 <thead>
                                     <tr>
                                         <th>Atleta</th><th>Edad</th><th>Sexo</th><th>Peso</th><th>Estatura</th><th>Historial</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaAtletas">
-                                        <td>{{elemento.nombre}} {{elemento.apellido}}</td>
+                                <tbody id="cuerpoInformativoAtletas" >
+                                    <tr v-for="elemento in controladoresDeHistorialesCoach.listaAtletas">
+                                        <td>{{elemento.username}}</td>
                                         <td>{{elemento.edad}}</td>
                                         <td>{{elemento.sexo}}</td>
                                         <td>{{elemento.peso}}</td>
                                         <td>{{elemento.estatura}}</td>
-                                        <td><span class="icon-eye" alt="Ver detalles" title="Ver Detalles"></span></td>
+                                        <!-- <td id="botonVerHistorial"><span class="icon-eye" alt="Ver detalles" title="Ver Detalles"></span></td> -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -311,7 +316,7 @@
                         <h2 class="titulos">{{titulos.seccionNuevosAtletas}}</h2>
                         <form id="datosNuevoAtleta">
                             <br>
-                            <p>Id: 
+                            <p>Username: 
                                 <select id="atletasNoAsignados">
                                     <option selected>0000</option>
                                     <option>0001</option>
