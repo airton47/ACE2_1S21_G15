@@ -101,6 +101,7 @@ function ejecutarLogOut(){
 function desactivarVisorInicial(){ //quita el fondo para poder visualizar el dashboard cargado
  let visor = document.getElementById("covertor");
  visor.style.display = "none";
+ mainApp.activarVisorPerfil();
 }
 
 function activarVisorInicial(){ //activa el fondo para poder ocultar el dashboard de datos
@@ -439,7 +440,6 @@ async function recolectarDatosRegistro(){
 
 
 //#endregion Recolección de datos Log In y Sign In
-
 
 //#region Analítica
 let mensajePulso = {

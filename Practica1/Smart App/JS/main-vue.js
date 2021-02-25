@@ -5,7 +5,9 @@ import {Procesos} from './Procesos';
 var encabezador = new Vue({
 	el: '#encabezado',
 	data: {
-	  titulo: "Glove Fit"
+	  titulo: "Glove Fit",
+    fecha: '00/00/0000',
+    hora: '00:00'
   }
 })
 
@@ -358,6 +360,7 @@ let  grafico_hist_Oxigeno = new Chart(
 
 //#endregion GRAFICOS
 
+//#region Push de prueba
 
 mainApp.controladoresDeHistoriales.listaHistorialCardiaco.push({
   id: '000',
@@ -399,16 +402,31 @@ mainApp.controladoresDeHistorialesCoach.listaAtletas.push({
   estatura:'000'
 }); 
 
-//Ejecución de Login y Registro
-//activarCovertorInicial();
-Mensajes.ejecutarLogin();
-/* desactivarCovertorInicial(); */
+//#endregion Push de prueba 
 
-function activarCovertorInicial(){
-  let visor = document.getElementById("covertor");
-  visor.style.display = "block";
+
+//Ejecución de Login y Registro
+actualizarFecha();
+ejecutarReloj();
+Mensajes.ejecutarLogin();
+
+//#region Control de Fecha y Hora
+
+function actualizarFecha(){
+  let controladorTiempo = new Date();
+  encabezador.fecha = controladorTiempo.getDate() + '/' + (controladorTiempo.getMonth()+1) + '/' + controladorTiempo.getFullYear();
 }
 
+function actualizarHora(){
+  let controladorTiempo = new Date();
+  encabezador.hora = String(controladorTiempo.getHours()).padStart(2, "0") + ':' + String(controladorTiempo.getMinutes()).padStart(2, "0")  + ':' + String(controladorTiempo.getSeconds()).padStart(2, "0");
+}
+
+function ejecutarReloj(){
+  setInterval(actualizarHora, 1000);
+}
+
+//#endregion Control de Fecha y Hora
 
 async function mostrarVisorAtletasAsignados(){
   mainApp.activarVisorAtletas();

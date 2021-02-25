@@ -3,27 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- #region Referencias a Librerias, Frameworks y otros archivos -->
     <link rel="stylesheet" href="Estilos/estilos_tve.css">
-    <link rel="shortcut icon" href="Íconos/IOT.ico"> <!-- ícono para la pestaña de la página en navegador -->
+    <!-- ícono para la pestaña de la página en navegador -->
+    <link rel="shortcut icon" href="Íconos/IOT.ico"> 
     <!-- google font: Nixie One -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script> <!-- Llamada a framework Vue.js -->
+    <!-- Llamada a framework Vue.js -->
+    <script type="text/javascript" src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script> 
+    <!-- Llamada a sweealert 2 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
-<!--      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
+    <!-- Llamada a Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <!-- Llamada a bundle -->
+    <script type="text/javascript" src="JS/bundle.js" defer></script> 
+    <!-- #endregion Referencias a Librerias, Frameworks y otros archivos -->
      <title>Glove Fit</title>
 </head>
 <body>
-    <section id="covertor"> 
-        <div class="rellenoCovertor"></div>
-    </section>
-    <header id="encabezado">
-        <section id="encapsuladorSuperior">
-            <h1 class="tituloPrincipal"> {{titulo}}</h1>
-            <span id="controladorSesion" class="icon-switch" alt="Cerrar sesión" title="Cerrar Sesión"></span>
+    <!-- #region covertor -->
+        <section id="covertor"> 
+            <div class="rellenoCovertor"></div>
         </section>
-    </header>
+    <!-- #endregion covertor -->
+    <!-- #region Opciones de encabezado -->
+        <header id="encabezado">
+            <h1 class="tituloPrincipal"> {{titulo}}</h1>
+            <section id="barraInformativa">
+                    <h2 class="lectorTiempo"> {{fecha}}</h2>
+                    <h2 class="lectorTiempo"> {{hora}}</h2>
+                    <span id="controladorSesion" class="icon-switch" alt="Cerrar sesión" title="Cerrar Sesión"></span>
+            </section>
+        </header>
+    <!-- #endregion Opciones de ebncabezado -->
+    <!-- #region DashBoard -->
     <section id="main">
+        <!-- #region Menu de Opciones -->
         <section id="menu">
             <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil || estadoVisualizadores.estadoAtletas ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.secccion_Perfil}} </h2>
@@ -38,7 +55,10 @@
                 <h2 class="titulosMenu">{{titulos.seccion_Oxigeno}}</h2>
             </div>   
         </section> 
+         <!-- #endregion Menu de Opciones -->
+        <!-- #region Visores/Subventanas -->
         <section id="visualizador">
+            <!-- #region Visor Perfil -->
             <div v-show= "estadoVisualizadores.estadoPerfil" class="visores">
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
@@ -77,6 +97,8 @@
                     </div>
                 </div>
             </div>
+            <!-- #endregion Visor Perfil -->
+            <!-- #region Visor Ritmo Cardiaco -->
             <div  v-show= "estadoVisualizadores.estadoRitmoCardiaco" class="visores">
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
@@ -113,6 +135,8 @@
                 </div>
                 <br>
             </div>
+            <!-- #endregion Ritmo Cardiaco -->
+            <!-- #region Visor Historial Cardiaco -->
             <div v-show= "estadoVisualizadores.estadoHistorialRitmoCardiaco" class="visores">
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
@@ -146,6 +170,8 @@
                     </div>
                 </div>
             </div>
+            <!-- #endregion Visor Historial Cardiaco -->
+            <!-- #region Visor Temperatura -->
             <div  v-show= "estadoVisualizadores.estadoTemperatura" class="visores" >
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
@@ -186,6 +212,8 @@
                 </div>
                 <br>
             </div>
+            <!-- #endregion Visor Temperatura -->
+            <!-- #region Visor Historial Temperatura -->
             <div v-show= "estadoVisualizadores.estadoHistorialTemperatura" class="visores">
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
@@ -220,6 +248,8 @@
                     </div>
                 </div>
             </div>
+            <!-- #endregion Visor Historial Temperatura -->
+            <!-- #region Visor Oxigeno -->
             <div  v-show= "estadoVisualizadores.estadoOxigeno" class="visores">
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
@@ -256,7 +286,8 @@
                 </div>
                 <br>
             </div>
-
+            <!-- #endregion Visor Oxigeno -->
+            <!-- #region Visor Historial Oxigeno -->
             <div v-show= "estadoVisualizadores.estadoHistorialOxigeno" class="visores">            
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
@@ -289,6 +320,8 @@
                     </div>
                 </div>
             </div>
+            <!-- #endregion Visor Historial Oxigeno -->
+            <!-- #region Visor Atletas(De coach) -->
             <div v-show= "estadoVisualizadores.estadoAtletas" class="visores">
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
@@ -396,16 +429,18 @@
                     </div>
                 </div>
             </div>
+            <!-- #endregion Visor Atletas(De coach) -->  
         </section>
+        <!-- #endregion Visores/Subventanas -->
     </section>
+    <!-- #endregion DashBoard -->
+    <!-- #region Pie de Página -->
     <footer>
         <article>
-			<h4>Arquitectura de Computadores y Ensambladores 2 Sección: N</h4>
-			<p>Práctica # 1: Tecnología Vestible para Ejercicio, Ilustraciones de <a id="referenciaImagenes" href="https://storyset.com/data"> Freepik Storyset</a></p>
-		</article>
+            <h4>Arquitectura de Computadores y Ensambladores 2 Sección: N</h4>
+            <p>Práctica # 1: Tecnología Vestible para Ejercicio, Ilustraciones de <a id="referenciaImagenes" href="https://storyset.com/data"> Freepik Storyset</a></p>
+        </article>
     </footer>
+    <!-- #endregion Pie de Página -->
 </body> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="JS/bundle.js"></script>
 </html>

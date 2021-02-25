@@ -32,7 +32,10 @@ header {
     margin-bottom: 10px;
     margin-top: 10px;
     box-sizing: border-box;
-    font-size: larger; 
+    font-size: larger;
+    display: flex;
+    flex-direction: row wrap;
+    justify-content: space-between;
 }
 
 footer {
@@ -84,14 +87,27 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
     box-sizing: border-box; 
 }
 
-#encapsuladorSuperior{ /*encierra al header y al "controladorSesion"*/
+#barraInformativa{
     display: flex;
-    flex-direction: row wrap;
-    justify-content: space-between;
+    flex-direction: row nowrap;
+    justify-content: space-between; 
+    width: 40%; 
 }
 
-#encapsuladorSuperior h1{ /*titulo principal*/
-    width: 70%;
+header h1{ /*titulo principal*/
+    width: 40%; 
+}
+
+.lectorTiempo{ /*fecha y hora*/
+    font-size: small;
+    color: #e1e1e1;
+    text-align: center;
+    height: auto;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    width: 20%;
 }
 
 #controladorSesion{ /*contiene el icono de cierre de sesión*/
@@ -560,6 +576,15 @@ button{
 
 /*#region Estilos con Media querys para dispositivos/pantallas con poco ancho*/
 @media screen and  (max-width: 474px){
+    header{
+        display: block;
+    }
+
+    #barraInformativa , header h1{ /*titulo principal y barra informatica*/
+        width: 100%; 
+    }
+    
+    
     .titulosMenu{
        font-size: 50%;
     }
@@ -647,6 +672,15 @@ button{
 /* Textos mas pequeñps */
 @media screen and  (min-width: 475px) and  (max-width: 619px){
     /* Titulos de toda la página y menu */
+    
+    header{
+        display: block;
+    }
+
+    #barraInformativa , header h1{ /*titulo principal y barra informatica*/
+        width: 100%; 
+    }
+
     .titulos,  .titulosMenu{
         font-size: smaller;
     }
@@ -821,7 +855,6 @@ button{
     }    
 }
 /*#endregion Estilos con Media Querys para pantalla estándar de ancho min:861px y max: 1240px */
-
 
 /*#region Edición de SweetAlerts personalizados*/
 

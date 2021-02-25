@@ -46,6 +46,49 @@ async function obtenerHistorialesAtleta(atleta){
     return datosHistorialesAtleta;
 }
 
+//#endregion Solicitudes GET
+
+//#region Solicitudes POST
+
+async function enviarInfoAPI(informacion, urlAPI, complementoURLAPI){
+    try{
+        const configuracion = {
+            method: 'POST',
+            headers:{
+                'Content-Type':  'application/json'
+            },
+            body: JSON.stringify(informacion)
+        };   
+        const respuestaRecibida = await fetch(urlAPI+complementoURLAPI, configuracion);
+        const indicadorEnvio = await respuestaRecibida.json();
+        return indicadorEnvio;
+    }catch(error){
+        swal(Mensajes.mensajeFalloPostAPI);
+    }
+}
+
+async function crearNuevoAtleta(infoAtleta){
+    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/addAtleta';
+    const respuestaEnvio = await enviarInfoAPI(infoAtleta, urlAPI, '');
+    return respuestaEnvio;
+}
+
+async function crearNuevoCoach(infoCoach){
+    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/addCoach';
+    const respuestaEnvio = await enviarInfoAPI(infoCoach, urlAPI, '');
+    return respuestaEnvio;
+}
+
+async function asignarAtleta(coach, atleta){
+    const urlAPI = '';
+    const respuestaEnvio = await enviarInfoAPI(atleta, urlAPI, '');
+    return respuestaEnvio;
+}
+
+//#endregion Solicitudes POST
+
+//#region Acciones
+
 function obtenerHistorialesCompletos(){
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
     let usernameAtleta = filaActual.firstChild.textContent;
@@ -104,52 +147,6 @@ function vaciarBotonesTablaAtletas(){
         fila.removeChild(fila.lastChild); //el último hijo es una columna que tiene al boton
     }); 
 }
-
-//#endregion Solicitudes GET
-
-//#region Solicitudes POST
-
-async function enviarInfoAPI(informacion, urlAPI, complementoURLAPI){
-    try{
-        const configuracion = {
-            method: 'POST',
-            headers:{
-                'Content-Type':  'application/json'
-            },
-            body: JSON.stringify(informacion)
-        };   
-        const respuestaRecibida = await fetch(urlAPI+complementoURLAPI, configuracion);
-        const indicadorEnvio = await respuestaRecibida.json();
-        return indicadorEnvio;
-    }catch(error){
-        swal(Mensajes.mensajeFalloPostAPI);
-    }
-}
-
-async function crearNuevoAtleta(infoAtleta){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/addAtleta';
-    const respuestaEnvio = await enviarInfoAPI(infoAtleta, urlAPI, '');
-    return respuestaEnvio;
-}
-
-async function crearNuevoCoach(infoCoach){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/addCoach';
-    const respuestaEnvio = await enviarInfoAPI(infoCoach, urlAPI, '');
-    return respuestaEnvio;
-}
-
-async function asignarAtleta(coach, atleta){
-    const urlAPI = '';
-    const respuestaEnvio = await enviarInfoAPI(atleta, urlAPI, '');
-    return respuestaEnvio;
-}
-
-//#endregion Solicitudes POST
-
-
-//#region Acciones
-
-
 
 //#endregion Acciones
 
