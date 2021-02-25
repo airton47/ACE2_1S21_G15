@@ -18,12 +18,12 @@ usuario, además cuenta con una serie de reportes que lo ayudaran a ver su histo
 * 📜 [SweetAlert.js](https://github.com/sweetalert2/sweetalert2) - Herramienta visualizadora de alertas personalizables.
 
 ### App Movil intermediaria
-* 📱 App Inventor.
+* 📱 [App_Inventor](https://github.com/mit-cml)
 
-### APIs y Servidores
-* ExpressJS.
-* Mongo DB.
-* AWS.
+### APIs, BD, Servidores y Hosting
+* ⛓ [ExpressJS](https://github.com/expressjs)
+* 💾 [Mongo DB](https://github.com/mongodb/mongo)
+* 📦 [AWS](https://aws.amazon.com/es/)
 
 ### Prenda Inteligente
-* Arduino Mega
+* 💡 Arduino Mega

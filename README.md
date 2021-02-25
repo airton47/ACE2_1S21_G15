@@ -7,7 +7,7 @@ Proyectos y prácticas del curso de Arquitectura de Computadores y Ensambladores
 * Proyecto # 1
 * Proyecto # 2
 
-## Desarrolladorres ✒️
+## Desarrolladores ✒️
 
 * **Oswaldo Giovanni Cáceres Samayoa** - 201314164 - [201314164](https://github.com/201314164)
 * **Airton Yelstin de León Obando** - 201602836 - [airton47](https://github.com/airton47)
