@@ -103,7 +103,7 @@ Las dimensiones son de
 \subsection{Infraestructura del Producto}
 \subsubsection{Hardware:}
 \begin{itemize}
-    \item[$\bullet$]\textbf{Banda} para muñeca.
+    \item[$\bullet$]\textbf{Banda} para medidora.
     \item[$\bullet$]Dispositivo de \textbf{Módulo Bluethoot}.
     \item[$\bullet$]\textbf{Arduino.}
     \item[$\bullet$]\textbf{Cables} para conexiones.
@@ -122,41 +122,116 @@ Las dimensiones son de
     La comunicación a utilizar entre la banda inteligente y el usuario será a través de conexión \textbf{Bluethoot}. El dispositivo arduino recolecta la información para ser transmitida desde el módulo \textbf{Bluethoot} a el dispositivo móvil, este a su vez realiza peticiones \textbf{HTTP} con el servidor a través de una \textbf{API/REST} que se encargará de transmitir la información al dispositivo móvil del usuario. Ver figura 2. \newline
 \begin{figure} [H] \centering 
 \caption{Representación de conexión}
-
-\includegraphics[width=0.5\textwidth]{} 
+\includegraphics[width=0.5\textwidth]{Arquitectura.png} 
 \end{figure}
+
 \subsection{Análisis}
     Para este proyecto solamente se requiere que el buzón desinfecte los paquetes entregados una vez están dentro del compartimiento del buzón, además este producto de IoT debe informar al usuario sobre nuevos paquetes, estado de las puertas del buzón y nivel de líquido desinfectante y por lo tanto \textbf{no es necesario aplicar análisis en este proyecto.}
-\subsection{Smart APP}
+    
+\subsection{Aplicación Movil}
     Ya que el usuario deberá tener acceso al estado de sus lecturas e historial de actividad de la banda inteligente en todo momento se ha de ha desarrollado una aplicación inteligente para dispositivos móviles. Esta aplicación es compatible con dispositivos que utilizan el Sistema Operativo \textbf{Android}, entre algunas de sus funcione mas destacadas esta el dash-board con la actividad, a continuación se pueden apreciar las pantallas que muestran su funcionamiento:
     
 \begin{figure} [H] \centering 
 \caption{PANTALLA 1 ( Aplicación móvil )}
-\includegraphics[width=0.4\textwidth]{} 
+\includegraphics[width=0.4\textwidth]{PantallaPrincipal.png} 
 \end{figure}
-\\
-Cuando el buzón ha detectado un nuevo paquete en el compartimiento la aplicación muestra una advertencia al usuario sobre ello. Al seleccionar vera más información sobre ello.
+
+    Para poder realizar la conexion Bluethoot es necesario que el usuario ingrese su ID/Username para poder identificar a quien le pertenecen los datos enviados.
+    
+\begin{figure} [H] \centering 
+\caption{BLOCKS 1 ( Conexión Bluetooth )}
+\includegraphics[width=0.4\textwidth]{ConexionBT.png} 
+\end{figure}
 
 \begin{figure} [H] \centering 
-\caption{PANTALLA 2 ( Aplicación móvil )}
-\includegraphics[width=0.4\textwidth]{} 
+\caption{BLOCKS 2 ( Nueva Sesion )}
+\includegraphics[width=0.4\textwidth]{NuevaSesion.PNG} 
 \end{figure}
-\\
-Una vez el buzón inteligente ha reconocido que se ha introducido un nuevo paquete la aplicación actualizara su estatus en la pantalla principal indicando la información de interés. Si hay un objeto mostrará un número uno de lo contrarios un número cero, además el peso del objeto y si se desea ver más solo debe presionar el botón \textbf{Get Data}.
 
+    Cuando la aplicacion movil recibe un nuevo paquete de datos este se envia inmediatamente por medio de una api hacia una base de datos la cual contiene diferentes tablas donde se estaran guardando los datos.
+    
 \begin{figure} [H] \centering 
-\caption{PANTALLA 3 ( Aplicación móvil )}
-\includegraphics[width=0.4\textwidth]{} 
+\caption{BLOCKS 3 ( Envio de datos )}
+\includegraphics[width=0.4\textwidth]{EviarDatos.PNG} 
 \end{figure}
-\\
-Una vez se ha presionado el botón \textbf{Get Data}  el usuario puede ver la información detallada junto con el nivel de liquido desinfectante.
+\subsection{Smart APP: WEB}
 
-\section{Vídeos de funcionamiento}
+    Al entrar en la pagina web se desplegara un Login para que el usuario pueda ingresar a la pagina con sus respectivas credenciales, en caso de no contar con un usuario se puede seleccionar la opcion de Registrar para crear uno.
+    
+\begin{figure} [H] \centering 
+\caption{Figura 4: Login ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{Login.PNG}
+\end{figure}
+
+La pagina principal cuenta con 4 opciones:
 \begin{itemize}
-    \item[$\bullet$]Video1: https://youtu.be/1RXLjeAWD9k 
-    \item[$\bullet$]Video2: https://youtu.be/fiz1PkFIdJ8
-    \item[$\bullet$]Video3: https://youtu.be/uYKBNuGgTSc
+    \item[$\bullet$]Perfil 
+    \item[$\bullet$]Ritmo Cardiaco
+    \item[$\bullet$]Temperatura
+    \item[$\bullet$]Oxigeno
 \end{itemize}
+
+\subsubsection{Perfil:}
+    En esta seccion se muestran los datos personales y datos deportivos del usuario que inicio secion en la pagina.
+    
+\begin{figure} [H] \centering 
+\caption{Figura 5: Perfil ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{Perfil.PNG}
+\end{figure}
+
+    Si el usuario que ingreso a la página es un Coach podra ver los datos de sus atletas asignados y poder monitorear el rendimiento de cada uno a travez sus historiales.
+    
+\begin{figure} [H] \centering 
+\caption{Figura 6: Coach-Atleta ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{CoachAtleta.PNG}
+\end{figure}
+
+\subsubsection{Ritmo Cardiaco:}
+    En esta seccion se muestra el control de ritmo cardiaco e indicadores de pulso en tiempo real.
+    
+\begin{figure} [H] \centering 
+\caption{Figura 6: Ritmo Cardiaco ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{RitmoC.PNG}
+\end{figure}
+
+    Con la opcion "ver historial" se muestran todas las seciones que el usuario ha realizado y dentro de cada secion los datos del pulso que se recolectaron
+    
+\begin{figure} [H] \centering 
+\caption{Figura 7: Historial Ritmo Cardiaco ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{RitmoCh.PNG}
+\end{figure}
+
+\subsubsection{Temperatura:}
+    En esta seccion se muestra el control de la temperatura en tiempo real.
+    
+\begin{figure} [H] \centering 
+\caption{Figura 8: Temperatura ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{Temp.PNG}
+\end{figure}
+
+    Con la opcion "ver historial" se muestran todos los datos que se han recolectado de la temperatura del usuario al momento de estar realizando una secion.
+    
+\begin{figure} [H] \centering 
+\caption{Figura 9: Historial Temperatura ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{TempH.PNG}
+\end{figure}
+
+\subsubsection{Oxigeno:}
+    En esta seccion se muestra el control del oxigeno en tiempo real.
+    
+\begin{figure} [H] \centering 
+\caption{Figura 10: Oxigeno ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{Oxigeno.PNG}
+\end{figure}
+
+    Con la opcion "ver historial" se muestran todos los datos que se han recolectado del oxigeno del usuario al momento de estar realizando una secion.
+    
+\begin{figure} [H] \centering 
+\caption{Figura 11: Historial Oxigeno ( Página WEB )}
+\includegraphics[width=0.4\textwidth]{OxigenoH.PNG}
+\end{figure}
+
+
 
 
 
