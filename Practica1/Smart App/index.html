@@ -45,13 +45,13 @@
             <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil || estadoVisualizadores.estadoAtletas ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.secccion_Perfil}} </h2>
             </div>
-            <div v-on:click="activarVisorRitmoCardiaco" v-bind:class="[estadoVisualizadores.estadoRitmoCardiaco || estadoVisualizadores.estadoHistorialRitmoCardiaco ? estiloActual.activo : estiloActual.inactivo]">
+            <div v-on:click="activarVisorRitmoCardiaco" v-bind:class="[estadoVisualizadores.estadoRitmoCardiaco ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu"> {{titulos.secccion_Ritmo_Cardiaco}} </h2>
             </div>
-            <div v-on:click="activarVisorTemperatura" v-bind:class="[estadoVisualizadores.estadoTemperatura || estadoVisualizadores.estadoHistorialTemperatura ? estiloActual.activo : estiloActual.inactivo]">
+            <div v-on:click="activarVisorTemperatura" v-bind:class="[estadoVisualizadores.estadoTemperatura ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.secccion_Temperatura}} </h2>
             </div>
-            <div v-on:click="activarVisorOxigeno" v-bind:class="[estadoVisualizadores.estadoOxigeno || estadoVisualizadores.estadoHistorialOxigeno ? estiloActual.activo : estiloActual.inactivo]">
+            <div v-on:click="activarVisorOxigeno" v-bind:class="[estadoVisualizadores.estadoOxigeno ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.seccion_Oxigeno}}</h2>
             </div>   
         </section> 
@@ -78,7 +78,7 @@
                         <h2 class="titulos">{{titulos.visorDatosDeportivos}}</h2>
                         <br>
                         <form id="datosDeportivos">
-                            <p>Username: <input v-bind:value="datosDePerfilEnSesion.username" type="text" readonly="readonly"></p>
+                            <p>Usuario: <input v-bind:value="datosDePerfilEnSesion.username" type="text" readonly="readonly"></p>
                             <br>
                             <p>Tipo: <input v-bind:value="datosDePerfilEnSesion.tipo" type="text" readonly="readonly"></p>
                             <br>
@@ -124,53 +124,14 @@
                                 <button id="botonEjecucionPulso">Evaluar Ritmo C.</button>
                             </div>
                             <div class="contenedorBotonAccionador">
-                                <button id="botonGuardadoPulso">Guardar Medición</button>
+                                <button id="botonVerHistorialPulso">Ver Historial</button>
                             </div>
-                        </div>
-                        <br>
-                        <div class="contenedorBotonAccionador">
-                            <button id="botonVerHistorialPulso">Ver Historial Ritmo C.</button>
                         </div>
                     </div>
                 </div>
                 <br>
             </div>
             <!-- #endregion Ritmo Cardiaco -->
-            <!-- #region Visor Historial Cardiaco -->
-            <div v-show= "estadoVisualizadores.estadoHistorialRitmoCardiaco" class="visores">
-                <div class = "contenedorDinamico">
-                    <div class= "primerSeparador">
-                        <h2 class="titulos">{{titulos.visorHistorialCardiaco}}</h2>
-                        <br>
-                        <canvas id="visorGraficoHistorialRitmoCardiaco" width="90%" height="35%"></canvas>
-                    </div>
-                    <div class= "segundoSeparador">
-                        <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
-                        <br>
-                        <div id="contenedorTablaHistorialCardiaco">
-                            <table class="tabla" >
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th><th>Ritmo</th><th>Ritmo Promedio</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr  v-for="elemento in controladoresDeHistoriales.listaHistorialCardiaco">
-                                        <td>{{elemento.fecha}}</td>
-                                        <td>{{elemento.pulso}}</td>
-                                        <td>{{elemento.pulsoPromedio}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <div class="contenedorBotonAccionador">
-                            <button id="botonRegresarPulsoPrincipal">Regresar a datos de Ritmo</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- #endregion Visor Historial Cardiaco -->
             <!-- #region Visor Temperatura -->
             <div  v-show= "estadoVisualizadores.estadoTemperatura" class="visores" >
                 <div class = "contenedorDinamico">
@@ -201,54 +162,14 @@
                                 <button id="botonEjecucionTemperatura">Evaluar Temp.</button>
                             </div>
                             <div class="contenedorBotonAccionador">
-                                <button id="botonGuardadoTemperatura">Guardar Medición</button>
+                                <button id="botonVerHistorialTemperatura">Ver Historial</button>
                             </div>
-                        </div>
-                        <br>
-                        <div class="contenedorBotonAccionador">
-                            <button id="botonVerHistorialTemperatura">Ver Historial Temperatura</button>
                         </div>
                     </div>
                 </div>
                 <br>
             </div>
             <!-- #endregion Visor Temperatura -->
-            <!-- #region Visor Historial Temperatura -->
-            <div v-show= "estadoVisualizadores.estadoHistorialTemperatura" class="visores">
-                <div class = "contenedorDinamico">
-                    <div class= "primerSeparador">
-                        <h2 class="titulos">{{titulos.visorHistorialTemperatura}}</h2>
-                        <canvas id="visorGraficoHistorialTemperatura" width="90%" height="35%"></canvas>
-                    </div>
-                    <div class= "segundoSeparador">
-                        <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
-                        <br>
-                        <div id="contenedorTablaHistorialTemperatura">
-                            <table class="tabla" >
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th><th>Temp.Max</th><th>Temp.Min</th><th>Temp.Prom</th><th>Temp.Act</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr  v-for="elemento in controladoresDeHistoriales.listaHistorialTemperatura">
-                                        <td>{{elemento.fecha}}</td>
-                                        <td>{{elemento.tempMaxima}}</td>
-                                        <td>{{elemento.tempMinima}}</td>
-                                        <td>{{elemento.tempPromedio}}</td>
-                                        <td>{{elemento.tempActual}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <div class="contenedorBotonAccionador">
-                            <button id="botonRegresarTemperaturaPrincipal">Regresar a datos de Temperatura</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- #endregion Visor Historial Temperatura -->
             <!-- #region Visor Oxigeno -->
             <div  v-show= "estadoVisualizadores.estadoOxigeno" class="visores">
                 <div class = "contenedorDinamico">
@@ -275,158 +196,156 @@
                                 <button id="botonEjecucionOxigeno">Evaluar Oxígeno</button>
                             </div>
                             <div class="contenedorBotonAccionador">
-                                <button id="botonGuardadoOxigeno">Guardar Medición</button>
+                                <button id="botonVerHistorialOxigeno">Ver Historial</button>
                             </div>
-                        </div>
-                        <br>
-                        <div class="contenedorBotonAccionador">
-                            <button id="botonVerHistorialOxigeno">Ver Historial de Oxigeno</button>
                         </div>
                     </div>
                 </div>
                 <br>
             </div>
             <!-- #endregion Visor Oxigeno -->
-            <!-- #region Visor Historial Oxigeno -->
-            <div v-show= "estadoVisualizadores.estadoHistorialOxigeno" class="visores">            
-                <div class = "contenedorDinamico">
-                    <div class= "primerSeparador">
-                        <h2 class="titulos">{{titulos.visorHistorialOxigeno}}</h2>
-                        <canvas id="visorGraficoHistorialOxigeno" width="90%" height="35%"></canvas>
-                    </div>
-                    <div class= "segundoSeparador">
-                        <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
-                        <br>
-                        <div id="contenedorTablaHistorialOxigeno">
-                            <table class="tabla" >
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th><th>O.Prom</th><th>O.Act</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr  v-for="elemento in controladoresDeHistoriales.listaHistorialOxigeno">
-                                        <td>{{elemento.fecha}}</td>
-                                        <td>{{elemento.oxigenoPromedio}}</td>
-                                        <td>{{elemento.oxigenoActual}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <div class="contenedorBotonAccionador">
-                            <button id="botonRegresarOxigenoPrincipal">Regresar a datos de Oxigeno</button>
-                        </div>
-                    </div>
+            <!-- #region Visor Historial -->
+            <div v-show= "estadoVisualizadores.estadoHistorial" class="visores">
+                <h2 class="titulos">{{titulos.visorHistorial}}</h2>
+                <div class="historialesGenerales">
+                    <canvas id="visorGraficoHistorial" width="75%" height="35%"></canvas>
                 </div>
+                <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
+                <br>
+                <div class="tablaRutinas">
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Fecha</th><th>Detalles</th><th>Graficar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoRutinasAtleta">
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaRutinas">
+                                <td>{{elemento.fecha}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h2 class="titulos">{{titulos.visorDetallesRutinas}}</h2>
+                <br>
+                <div class="tablasDetallada">
+                    <table class="tabla"  >
+                        <thead>
+                            <tr>
+                                <th>Ritmos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaMedicionesCardiacas">
+                                <td>{{elemento.medicion}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Temperaturas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaMedicionesTemperaturas">
+                                <td>{{elemento.medicion}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Oxígenos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaMedicionesOxigenos">
+                                <td>{{elemento.medicion}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div id="contenedorTablaHistorialTemperaturaAtletas" class="tablaPromedios">
+                    <table  class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Ritmo Promedio</th><th>Oxígeno Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaAnaliticas">
+                                <td>{{elemento.ritmoPromedio}}</td>
+                                <td>{{elemento.oxigenoPromedio}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Temperatura Promedio</th><th>Temperatura Mínima</th><th> Temperatura Máxima</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaAnaliticas">
+                                <td>{{elemento.temperaturaPromedio}}</td>
+                                <td>{{elemento.temperaturaMin}}</td>
+                                <td>{{elemento.temperaturaMax}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
             </div>
-            <!-- #endregion Visor Historial Oxigeno -->
+            <!-- #endregion Visor Historial -->
             <!-- #region Visor Atletas(De coach) -->
             <div v-show= "estadoVisualizadores.estadoAtletas" class="visores">
-                <div class = "contenedorDinamico">
-                    <div class= "primerSeparador">
-                        <h2 class="titulos">{{titulos.visorAtletas}}</h2>
-                        <br>
-                        <div id="contenedorTablaAtletas">
-                            <table id="tablaAtletas" class="tabla" >
-                                <thead>
-                                    <tr>
-                                        <th>Atleta</th><th>Edad</th><th>Sexo</th><th>Peso</th><th>Estatura</th><th>Historial</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cuerpoInformativoAtletas" >
-                                    <tr v-for="elemento in controladoresDeHistorialesCoach.listaAtletas">
-                                        <td>{{elemento.username}}</td>
-                                        <td>{{elemento.edad}}</td>
-                                        <td>{{elemento.sexo}}</td>
-                                        <td>{{elemento.peso}}</td>
-                                        <td>{{elemento.estatura}}</td>
-                                        <!-- <td id="botonVerHistorial"><span class="icon-eye" alt="Ver detalles" title="Ver Detalles"></span></td> -->
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <h2 class="titulos">{{titulos.seccionNuevosAtletas}}</h2>
-                        <form id="datosNuevoAtleta">
-                            <br>
-                            <p>Username: 
-                                <select id="atletasNoAsignados">
-                                    <option selected>0000</option>
-                                    <option>0001</option>
-                                </select>
-                            </p>
-                            <br>
-                            <p>Nombre: <input v-bind:value="evaluacionAtleta.nombreAtleta" type="text" readonly="readonly"></p>
-                            <br>
-                            <p>Apellido: <input v-bind:value="evaluacionAtleta.apellidoAtleta" type="text" readonly="readonly"></p>
-                        </form>
-                        <br>
-                        <div class="contenedorBotonAccionador">
-                            <button id="botonAgregarAtleta">Agregar Atleta</button>
-                        </div>
-                    </div>
-                    <div class= "segundoSeparador">
-                        <h2 class="titulos">{{titulos.visorAtletasHistorialCardiaco}}</h2>
-                        <br>
-                        <div id="contenedorTablaHistorialPulsoAtletas">
-                            <table class="tabla" >
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th><th>Ritmo</th><th>Ritmo Promedio</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialCardiacoCoach">
-                                        <td>{{elemento.fecha}}</td>
-                                        <td>{{elemento.pulso}}</td>
-                                        <td>{{elemento.pulsoPromedio}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <h2 class="titulos">{{titulos.visorAtletasHistorialTemperatura}}</h2>
-                        <br>
-                        <div id="contenedorTablaHistorialTemperaturaAtletas">
-                            <table class="tabla" >
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th><th>Temp.</th><th>Promedio</th><th>Mínima</th><th>Máxima</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialTemperaturaCoach">
-                                        <td>{{elemento.fecha}}</td>
-                                        <td>{{elemento.temperatura}}</td>
-                                        <td>{{elemento.temperaturaPromedio}}</td>
-                                        <td>{{elemento.minima}}</td>
-                                        <td>{{elemento.maxima}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <h2 class="titulos">{{titulos.visorAtletasHistorialOxígeno}}</h2>
-                        <br>
-                        <div id="contenedorTablaHistorialOxigenoAtletas">
-                            <table class="tabla" >
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th><th>Oxígeno</th><th>Promedio</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr  v-for="elemento in controladoresDeHistorialesCoach.listaHistorialOxigenoCoach">
-                                        <td>{{elemento.fecha}}</td>
-                                        <td>{{elemento.oxigeno}}</td>
-                                        <td>{{elemento.oxigenoPromedio}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <div class="contenedorBotonAccionador">
-                            <button id="botonRegresarPerfil">Regresar a mi perfil</button>
-                        </div>
-                    </div>
+                <h2 class="titulos">{{titulos.visorAtletas}}</h2>
+                <br>
+                <div id="contenedorTablaAtletas">
+                    <br>
+                    <table id="tablaAtletas" class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Atleta</th><th>Nombre</th><th>Apellido</th><th>Edad</th><th>Sexo</th><th>Peso</th><th>Estatura</th><th>Historial</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoInformativoAtletas" >
+                            <tr v-for="elemento in controladoresDeHistorialesCoach.listaAtletas">
+                                <td>{{elemento.username}}</td>
+                                <td>{{elemento.nombre}}</td>
+                                <td>{{elemento.apellido}}</td>
+                                <td>{{elemento.edad}}</td>
+                                <td>{{elemento.sexo}}</td>
+                                <td>{{elemento.peso}}</td>
+                                <td>{{elemento.estatura}}</td>
+                                <!-- <td id="botonVerHistorial"><span class="icon-eye" alt="Ver detalles" title="Ver Detalles"></span></td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <h2 class="titulos">{{titulos.seccionNuevosAtletas}}</h2>
+                <form id="datosNuevoAtleta">
+                    <br>
+                    <p>Username: 
+                        <select id="atletasNoAsignados">
+                            <option selected>0000</option>
+                            <option>0001</option>
+                        </select>
+                    </p>
+                    <br>
+                    <p>Nombre: <input v-bind:value="evaluacionAtleta.nombreAtleta" type="text" readonly="readonly"></p>
+                    <br>
+                    <p>Apellido: <input v-bind:value="evaluacionAtleta.apellidoAtleta" type="text" readonly="readonly"></p>
+                </form>
+                <br>
+                <div class="contenedorBotonAccionador">
+                    <button id="botonAgregarAtleta">Agregar Atleta</button>
+                    <br>
+                    <button id="botonRegresarPerfil">Regresar a mi perfil</button>
                 </div>
             </div>
             <!-- #endregion Visor Atletas(De coach) -->  

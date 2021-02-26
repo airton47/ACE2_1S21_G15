@@ -96,6 +96,7 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
 
 header h1{ /*titulo principal*/
     width: 40%; 
+    font-size: larger;
 }
 
 .lectorTiempo{ /*fecha y hora*/
@@ -136,6 +137,13 @@ header h1{ /*titulo principal*/
 #contenedorDatosDeportivos{
     border-left: 2px solid #49AB80;
 }
+
+.historialesGenerales{
+    width: 50%;
+    margin: auto;
+    height: auto;
+}
+
 
 /*#endregion Contenedores especiales*/
 
@@ -216,7 +224,7 @@ thead{
 }
 
 tbody{
-    height: 75px;
+    height: 70px;
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -243,6 +251,24 @@ td, th{
 
 #contenedorTablaHistorialPulsoAtletas tbody, #contenedorTablaHistorialTemperaturaAtletas tbody, #contenedorTablaHistorialOxigenoAtletas tbody{
     height: 50px;
+}
+
+.tablasDetallada{
+    display: flex;
+    flex-direction: row nowrap;
+    justify-content: space-between;
+    width: 100%;
+}
+.tablasDetallada table{
+    width: 15%;
+}
+
+.tablaPromedios table{
+    width: 35%;
+}
+
+.tablaRutinas table{
+    width: 40%;
 }
 
 /*#endregion Fin Estilos de tablas*/
@@ -343,21 +369,12 @@ button{
     margin-right: 5px;
 }
 
-#botonGuardadoPulso, #botonGuardadoTemperatura, #botonGuardadoOxigeno{
+#botonEjecucionPulso, #botonEjecucionTemperatura, #botonEjecucionOxigeno{
     background-color: #70B090;
 }
 
-#botonGuardadoPulso:hover, #botonGuardadoTemperatura:hover, #botonGuardadoOxigen:hover{
-    background-color: #669999;
-    transition: 0.5s;
-}
-
-#botonEjecucionPulso, #botonEjecucionTemperatura, #botonEjecucionOxigeno{
-    background-color: #99CC99;
-}
-
 #botonEjecucionPulso:hover, #botonEjecucionTemperatura:hover, #botonEjecucionOxigeno:hover{
-    background-color: #98d973;
+    background-color: #669999;
     transition: 0.5s;
 }
 
@@ -370,11 +387,11 @@ button{
     transition: 0.5s;
 }
 
-#botonRegresarPulsoPrincipal, #botonRegresarTemperaturaPrincipal, #botonRegresarOxigenoPrincipal, #botonRegresarPerfil{
+#botonRegresarPerfil{
     background-color: #70B090;
 }
 
-#botonRegresarPulsoPrincipa:hover, #botonRegresarTemperaturaPrincipal:hover, #botonRegresarOxigenoPrincipal:hover, #botonRegresarPerfil:hover{
+#botonRegresarPerfil:hover{
     background-color: #669999;
     transition: 0.5s;
 }
@@ -384,17 +401,18 @@ button{
 /*#region Iconos*/
 @font-face {
     font-family: 'icomoon';
-    src:  url('../Íconos/fonts/icomoon.eot?f3wlb5');
-    src:  url('../Íconos/fonts/icomoon.eot?f3wlb5#iefix') format('embedded-opentype'),
-      url('../Íconos/fonts/icomoon.ttf?f3wlb5') format('truetype'),
-      url('../Íconos/fonts/icomoon.woff?f3wlb5') format('woff'),
-      url('../Íconos/fonts/icomoon.svg?f3wlb5#icomoon') format('svg');
+    src:  url('../Íconos/fonts/icomoon.eot?mbn88v');
+    src:  url('../Íconos/fonts/icomoon.eot?mbn88v#iefix') format('embedded-opentype'),
+      url('../Íconos/fonts/icomoon.ttf?mbn88v') format('truetype'),
+      url('../Íconos/fonts/icomoon.woff?mbn88v') format('woff'),
+      url('../Íconos/fonts/icomoon.svg?mbn88v#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
   }
   
   [class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'icomoon' !important;
     speak: never;
     font-style: normal;
@@ -402,6 +420,8 @@ button{
     font-variant: normal;
     text-transform: none;
     line-height: 1;
+  
+    /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -414,7 +434,11 @@ button{
     content: "\e9ce";
   }
 
-  .icon-eye, .icon-switch{
+  .icon-stats-dots:before {
+    content: "\e99b";
+  }
+
+  .icon-eye, .icon-switch, .icon-stats-dots{
     color: #006666;
     cursor: pointer;
   }
@@ -424,7 +448,7 @@ button{
     color: #F0F0F0;
   }
 
-  .icon-switch:hover, .icon-eye:hover{
+  .icon-switch:hover, .icon-eye:hover, .icon-stats-dots:hover{
     color: #41B883;
     transition: 0.5;
   }
@@ -665,6 +689,12 @@ button{
        border-top: 2px solid #49AB80;
    }
 
+   .historialesGenerales{
+        width: 90%;
+        margin: auto;
+        height: auto;
+    }
+
 }
 /*#endregion Estilos con Media querys para dispositivos/pantallas con poco ancho*/
 
@@ -756,6 +786,12 @@ button{
     #contenedorDatosDeportivos{
         border-style: none;
         border-top: 2px solid #49AB80;
+    }
+
+    .historialesGenerales{
+        width: 90%;
+        margin: auto;
+        height: auto;
     }
     
 }

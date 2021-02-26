@@ -1,5 +1,5 @@
 
-import {mainApp} from "./main-vue";
+import {mainApp, dataGraficoHistorialActual,graficoHistorial, labelsGraficoHistorialActual,colorGraficoHistorialActual,colorHoverGraficoHistorialActual} from "./main-vue";
 import {Mensajes} from './Mensajes';
 import "regenerator-runtime/runtime.js"; //permite la compilación de Async en Babel
 
@@ -41,8 +41,8 @@ async function obtenerAtletasBajoCoach(coach){
 }
 
 async function obtenerHistorialesAtleta(atleta){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/tests/';
-    const datosHistorialesAtleta = await obtenerInfoPorAPI(urlAPI, '');
+    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/tests/getTest/';
+    const datosHistorialesAtleta = await obtenerInfoPorAPI(urlAPI, atleta);
     return datosHistorialesAtleta;
 }
 
@@ -92,6 +92,7 @@ async function asignarAtleta(coach, atleta){
 function obtenerHistorialesCompletos(){
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
     let usernameAtleta = filaActual.firstChild.textContent;
+    mainApp.evaluacionAtleta.username = usernameAtleta;
     swal({
         title: 'Recolectando historiales de ' + usernameAtleta,
         html: '<b>Cargando mediciones recientes...</b>',
@@ -99,10 +100,67 @@ function obtenerHistorialesCompletos(){
         showConfirmButton: false,
         type: 'info',
         allowEscapeKey: false,
-        allowOutsideClick: false,
-        backdrop: false
+        allowOutsideClick: false
     });
+    setTimeout(mostrarVisorRutinas, 2300);
+}
 
+function obtenerHistorialesPersonales(){
+    swal({
+        title: 'Recolectando historiales de ' + mainApp.evaluacionAtleta.username,
+        html: '<b>Cargando mediciones recientes...</b>',
+        timer: 2500,
+        showConfirmButton: false,
+        type: 'info',
+        allowEscapeKey: false,
+        allowOutsideClick: false
+    });
+    setTimeout(mostrarVisorRutinas, 2300);
+}
+
+function obtenerDetallesRutina(){
+    let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
+    let fechaRutina = filaActual.firstChild.textContent;
+    mainApp.evaluacionAtleta.fechaRutina = fechaRutina;
+    swal({
+        html: '<b>Cargando detalles de rutina...</b>',
+        timer: 2500,
+        showConfirmButton: false,
+        type: 'info',
+        allowEscapeKey: false,
+        allowOutsideClick: false
+    });
+    setTimeout(mostrarDetalleRutinaTablas, 2500);
+}
+
+function obtenerGrafico(){
+    let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
+    let fechaRutina = filaActual.firstChild.textContent;
+    mainApp.evaluacionAtleta.fechaRutina = fechaRutina;
+    swal({
+        title: 'Grafico de mediciones',
+        text: 'Seleccione cúal medición se graficará:',
+        input: 'select',
+        inputOptions: {
+          Ritmo: 'Ritmo Cardíaco',
+          Temperatura: 'Temperatura',
+          Oxigeno: 'Oxígeno'
+        },
+        allowEscapeKey: false,
+        allowOutsideClick: false
+      }).then( result => {
+        const medicionSeleccionada = result.value;
+        mainApp.evaluacionAtleta.medicionGrafico = medicionSeleccionada;
+        swal({
+            html: '<b>Generando gráfico de  '+ medicionSeleccionada+'</b>',
+            timer: 2500,
+            showConfirmButton: false,
+            type: 'success',
+            allowEscapeKey: false,
+            allowOutsideClick: false
+        });
+        setTimeout(mostrarGraficoMedicionesRutina, 2500);
+      });
 }
 
 async function mostrarAtletasAsignados(coach){
@@ -126,6 +184,20 @@ async function mostrarAtletasAsignados(coach){
     }); 
 }
 
+async function mostrarRutinasAtletaActual(){
+    //Vaciamos la tabla actual
+    vaciarBotonesTablaRutinas();
+    mainApp.controladoresDeHistoriales.listaRutinas.splice(0, mainApp.controladoresDeHistoriales.listaRutinas.length);
+    //recolectamos los historiales del atleta con la API
+    const historialesRecolectados = await obtenerHistorialesAtleta(mainApp.evaluacionAtleta.username);
+    //ingresamos los nuevos datos, VUE los mostrará por si solo como se indicó en el HTML
+    historialesRecolectados.forEach(elemento => {
+        mainApp.controladoresDeHistoriales.listaRutinas.push({
+            fecha: elemento.fecha,
+        });  
+    }); 
+}
+
 function generarBotonesTablaAtletas(){
     document.querySelectorAll('#cuerpoInformativoAtletas tr')
     .forEach(fila =>{
@@ -141,11 +213,127 @@ function generarBotonesTablaAtletas(){
 }
 
 function vaciarBotonesTablaAtletas(){
-    //esta tabla se vacia de esta forma porque es la única que posee botones dinámicos
+    //esta tabla se vacia de esta forma porque posee botones dinámicos
+    /* mainApp.activarVisorHistorial */
     document.querySelectorAll('#cuerpoInformativoAtletas tr')
     .forEach(fila =>{
         fila.removeChild(fila.lastChild); //el último hijo es una columna que tiene al boton
     }); 
+}
+
+function generarBotonesTablaRutinas(){
+    document.querySelectorAll('#cuerpoRutinasAtleta tr')
+    .forEach(fila =>{
+        let contenedorActivadorDetalles = document.createElement('td');
+        let iconoVisor = document.createElement('span');
+        iconoVisor.className="icon-eye";
+        iconoVisor.alt = "Ver Detalles";
+        iconoVisor.title = "Ver Detalles";
+        contenedorActivadorDetalles.appendChild(iconoVisor);
+        contenedorActivadorDetalles.addEventListener("click", Procesos.obtenerDetallesRutina);
+        fila.appendChild(contenedorActivadorDetalles);
+        let contenedorActivadorGraficos = document.createElement('td');
+        let iconoGrafico = document.createElement('span');
+        iconoGrafico.className="icon-stats-dots";
+        iconoGrafico.alt = "Graficar datos";
+        iconoGrafico.title = "Graficar Datos";
+        contenedorActivadorGraficos.appendChild(iconoGrafico);
+        contenedorActivadorGraficos.addEventListener("click", Procesos.obtenerGrafico);
+        fila.appendChild(contenedorActivadorGraficos);
+    }); 
+}
+
+function vaciarBotonesTablaRutinas(){
+    //esta tabla se vacia de esta forma porque posee botones dinámicos
+    /* mainApp.activarVisorHistorial */
+    document.querySelectorAll('#cuerpoRutinasAtleta tr')
+    .forEach(fila =>{
+        fila.removeChild(fila.lastChild); //el último hijo es una columna que tiene al boton
+    }); 
+}
+
+
+async function mostrarVisorRutinas(){
+    mainApp.activarVisorHistorial();
+    await mostrarRutinasAtletaActual();
+    //generamos los botones para ver los detalles de rutina y la opción de graficarlos
+    generarBotonesTablaRutinas();
+}
+
+async function mostrarDetalleRutinaTablas(){
+    const historialesRecolectados = await obtenerHistorialesAtleta(mainApp.evaluacionAtleta.username);
+    //vaciamos la lsita por si tiene datos previos
+    mainApp.controladoresDeHistoriales.listaAnaliticas.splice(0, mainApp.controladoresDeHistoriales.listaAnaliticas.length);
+    mainApp.controladoresDeHistoriales.listaMedicionesCardiacas.splice(0, mainApp.controladoresDeHistoriales.listaMedicionesCardiacas.length);
+    mainApp.controladoresDeHistoriales.listaMedicionesTemperaturas.splice(0, mainApp.controladoresDeHistoriales.listaMedicionesTemperaturas.length);
+    mainApp.controladoresDeHistoriales.listaMedicionesOxigenos.splice(0, mainApp.controladoresDeHistoriales.listaMedicionesOxigenos.length);
+    //ingresamos los nuevos datos, VUE los mostrará por si solo como se indicó en el HTML
+    historialesRecolectados.forEach(elemento => {
+        if(elemento.fecha == mainApp.evaluacionAtleta.fechaRutina){
+            mainApp.controladoresDeHistoriales.listaAnaliticas.push({
+                ritmoPromedio:elemento.pulsoPromedio,
+                temperaturaPromedio:elemento.tempPromedio,
+                temperaturaMax:elemento.tempMaxima,
+                temperaturaMin:elemento.tempMinima,
+                oxigenoPromedio:elemento.oxigenoPromedio
+            }); 
+            elemento.pulso.forEach(pulso =>{
+                mainApp.controladoresDeHistoriales.listaMedicionesCardiacas.push({
+                    medicion:pulso
+                  }); ;
+            });
+            elemento.temperatura.forEach(temperatura =>{
+                mainApp.controladoresDeHistoriales.listaMedicionesTemperaturas.push({
+                    medicion:temperatura
+                  }); ;
+            });
+            elemento.oxigeno.forEach(oxigeno =>{
+                mainApp.controladoresDeHistoriales.listaMedicionesOxigenos.push({
+                    medicion:oxigeno
+                  }); ;
+            });
+        }
+    }); 
+}
+
+async function mostrarGraficoMedicionesRutina(){
+    const historialesRecolectados = await obtenerHistorialesAtleta(mainApp.evaluacionAtleta.username);
+    //vaciamos los elementos del gráfico por si tiene datos previos
+    dataGraficoHistorialActual.splice(0, dataGraficoHistorialActual.length);
+    labelsGraficoHistorialActual.splice(0, labelsGraficoHistorialActual.length);
+    colorGraficoHistorialActual.splice(0, colorGraficoHistorialActual.length);
+    colorHoverGraficoHistorialActual.splice(0, colorHoverGraficoHistorialActual.length);
+    //ingresamos los nuevos datos, VUE los mostrará por si solo como se indicó en el HTML
+    historialesRecolectados.forEach(elemento => {
+        if(elemento.fecha == mainApp.evaluacionAtleta.fechaRutina){
+            if(mainApp.evaluacionAtleta.medicionGrafico == 'Ritmo'){
+                elemento.pulso.forEach(pulso =>{
+                    dataGraficoHistorialActual.push(pulso); 
+                    labelsGraficoHistorialActual.push(pulso); 
+                    /*rojo*/
+                    colorGraficoHistorialActual.push('rgba(255,51,51, 0.5)'); 
+                    colorHoverGraficoHistorialActual.push('rgb(255,51,51)'); 
+                });
+            } else if(mainApp.evaluacionAtleta.medicionGrafico == 'Temperatura'){
+                elemento.temperatura.forEach(temperatura =>{
+                    dataGraficoHistorialActual.push(temperatura); 
+                    labelsGraficoHistorialActual.push(temperatura); 
+                    /*azul*/
+                    colorGraficoHistorialActual.push('rgba(153, 153, 255, 0.3)'); 
+                    colorHoverGraficoHistorialActual.push('rgb(153, 153, 255)'); 
+                });
+            } else{
+                elemento.oxigeno.forEach(oxigeno =>{
+                    dataGraficoHistorialActual.push(oxigeno); 
+                    labelsGraficoHistorialActual.push(oxigeno); 
+                    /*verde*/
+                    colorGraficoHistorialActual.push('rgba(102, 255, 102, 0.4)'); 
+                    colorHoverGraficoHistorialActual.push('rgb(102, 255, 102)'); 
+                });
+            }
+        }
+    }); 
+    graficoHistorial.update();
 }
 
 //#endregion Acciones
@@ -183,7 +371,11 @@ Procesos.crearNuevoAtleta = crearNuevoAtleta;
 Procesos.obtenerAtletasBajoCoach = obtenerAtletasBajoCoach;
 Procesos.mostrarAtletasAsignados = mostrarAtletasAsignados;
 Procesos.generarBotonesTablaAtletas = generarBotonesTablaAtletas;
+Procesos.generarBotonesTablaRutinas = generarBotonesTablaRutinas;
 Procesos.obtenerHistorialesCompletos = obtenerHistorialesCompletos;
+Procesos.obtenerHistorialesPersonales = obtenerHistorialesPersonales;
+Procesos.obtenerDetallesRutina = obtenerDetallesRutina;
+Procesos.obtenerGrafico = obtenerGrafico;
 Procesos.crearNuevoCoach = crearNuevoCoach;
 
 export{Procesos};
