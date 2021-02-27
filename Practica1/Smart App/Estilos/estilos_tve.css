@@ -32,7 +32,10 @@ header {
     margin-bottom: 10px;
     margin-top: 10px;
     box-sizing: border-box;
-    font-size: larger; 
+    font-size: larger;
+    display: flex;
+    flex-direction: row wrap;
+    justify-content: space-between;
 }
 
 footer {
@@ -84,14 +87,28 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
     box-sizing: border-box; 
 }
 
-#encapsuladorSuperior{ /*encierra al header y al "controladorSesion"*/
+#barraInformativa{
     display: flex;
-    flex-direction: row wrap;
-    justify-content: space-between;
+    flex-direction: row nowrap;
+    justify-content: space-between; 
+    width: 40%; 
 }
 
-#encapsuladorSuperior h1{ /*titulo principal*/
-    width: 70%;
+header h1{ /*titulo principal*/
+    width: 40%; 
+    font-size: larger;
+}
+
+.lectorTiempo{ /*fecha y hora*/
+    font-size: small;
+    color: #e1e1e1;
+    text-align: center;
+    height: auto;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    width: 20%;
 }
 
 #controladorSesion{ /*contiene el icono de cierre de sesión*/
@@ -109,7 +126,7 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
 /*#region Contenedores especiales*/
 
 /*Div que encierra a los botones de medición en las distintas subventanas*/
-#opcionesDeAnalisis{
+.opcionesDeAnalisis{
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-around;
@@ -120,6 +137,13 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
 #contenedorDatosDeportivos{
     border-left: 2px solid #49AB80;
 }
+
+.historialesGenerales{
+    width: 50%;
+    margin: auto;
+    height: auto;
+}
+
 
 /*#endregion Contenedores especiales*/
 
@@ -138,7 +162,7 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
     color: #e1e1e1;
 }
 
-#indicadoresDePulso, #datosPerfil, #datosDeportivos, #datosNuevoAtleta{
+#indicadoresDePulso, #indicadoresDeTemperatura, #indicadoresDeOxigeno,  #datosPerfil, #datosDeportivos, #datosNuevoAtleta{
     margin: auto;
     width: 100%;
     text-align: center;
@@ -200,7 +224,7 @@ thead{
 }
 
 tbody{
-    height: 75px;
+    height: 70px;
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -227,6 +251,24 @@ td, th{
 
 #contenedorTablaHistorialPulsoAtletas tbody, #contenedorTablaHistorialTemperaturaAtletas tbody, #contenedorTablaHistorialOxigenoAtletas tbody{
     height: 50px;
+}
+
+.tablasDetallada{
+    display: flex;
+    flex-direction: row nowrap;
+    justify-content: space-between;
+    width: 100%;
+}
+.tablasDetallada table{
+    width: 15%;
+}
+
+.tablaPromedios table{
+    width: 35%;
+}
+
+.tablaRutinas table{
+    width: 40%;
 }
 
 /*#endregion Fin Estilos de tablas*/
@@ -316,7 +358,7 @@ button{
 }
 
 /* dibuja y coloca "antes" el simbolo de play(triángulo acostado) */
-#botonEjecucionPulso:before{ 
+#botonEjecucionPulso:before, #botonEjecucionTemperatura:before, #botonEjecucionOxigeno:before{ 
     content: "";
     width: 0;
     height: 0;
@@ -327,38 +369,29 @@ button{
     margin-right: 5px;
 }
 
-#botonGuardadoPulso{
+#botonEjecucionPulso, #botonEjecucionTemperatura, #botonEjecucionOxigeno{
     background-color: #70B090;
 }
 
-#botonGuardadoPulso:hover{
+#botonEjecucionPulso:hover, #botonEjecucionTemperatura:hover, #botonEjecucionOxigeno:hover{
     background-color: #669999;
     transition: 0.5s;
 }
 
-#botonEjecucionPulso{
-    background-color: #99CC99;
-}
-
-#botonEjecucionPulso:hover{
-    background-color: #98d973;
-    transition: 0.5s;
-}
-
-#botonVerHistorialPulso, #botonVerAtletas, #botonAgregarAtleta{
+#botonVerHistorialPulso, #botonVerHistorialTemperatura, #botonVerHistorialOxigeno, #botonVerAtletas, #botonAgregarAtleta{
     background-color: #006666;
 }
 
-#botonVerHistorialPulso:hover ,#botonVerAtletas:hover, #botonAgregarAtleta:hover{
+#botonVerHistorialPulso:hover , #botonVerHistorialTemperatura:hover, #botonVerHistorialOxigeno:hover, #botonVerAtletas:hover, #botonAgregarAtleta:hover{
     background-color: #016161;
     transition: 0.5s;
 }
 
-#botonRegresarPulsoPrincipal, #botonRegresarPerfil{
+#botonRegresarPerfil{
     background-color: #70B090;
 }
 
-#botonRegresarPulsoPrincipal:hover, #botonRegresarPerfil:hover{
+#botonRegresarPerfil:hover{
     background-color: #669999;
     transition: 0.5s;
 }
@@ -368,17 +401,18 @@ button{
 /*#region Iconos*/
 @font-face {
     font-family: 'icomoon';
-    src:  url('../Íconos/fonts/icomoon.eot?f3wlb5');
-    src:  url('../Íconos/fonts/icomoon.eot?f3wlb5#iefix') format('embedded-opentype'),
-      url('../Íconos/fonts/icomoon.ttf?f3wlb5') format('truetype'),
-      url('../Íconos/fonts/icomoon.woff?f3wlb5') format('woff'),
-      url('../Íconos/fonts/icomoon.svg?f3wlb5#icomoon') format('svg');
+    src:  url('../Íconos/fonts/icomoon.eot?mbn88v');
+    src:  url('../Íconos/fonts/icomoon.eot?mbn88v#iefix') format('embedded-opentype'),
+      url('../Íconos/fonts/icomoon.ttf?mbn88v') format('truetype'),
+      url('../Íconos/fonts/icomoon.woff?mbn88v') format('woff'),
+      url('../Íconos/fonts/icomoon.svg?mbn88v#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
   }
   
   [class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'icomoon' !important;
     speak: never;
     font-style: normal;
@@ -386,6 +420,8 @@ button{
     font-variant: normal;
     text-transform: none;
     line-height: 1;
+  
+    /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -398,7 +434,11 @@ button{
     content: "\e9ce";
   }
 
-  .icon-eye, .icon-switch{
+  .icon-stats-dots:before {
+    content: "\e99b";
+  }
+
+  .icon-eye, .icon-switch, .icon-stats-dots{
     color: #006666;
     cursor: pointer;
   }
@@ -408,7 +448,7 @@ button{
     color: #F0F0F0;
   }
 
-  .icon-switch:hover, .icon-eye:hover{
+  .icon-switch:hover, .icon-eye:hover, .icon-stats-dots:hover{
     color: #41B883;
     transition: 0.5;
   }
@@ -440,7 +480,7 @@ button{
 
 /*#region Inputs(de tipo texto) para mostrar los datos*/
 
-#indicadoresDePulso input{
+#indicadoresDePulso input, #indicadoresDeTemperatura input, #indicadoresDeOxigeno input{
     text-align: center;
     font-size: larger;
     color: #F8F6F5;
@@ -479,6 +519,16 @@ button{
 }
 
 /*#endregion Imágenes*/
+
+/*#region covertor LogIn Y SigIn*/ 
+#covertor{
+    position: fixed;
+    background-color: #344c5c;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+}
+/*#endregion covertor LogIn Y SigIn */ 
 
 /*#region Estilos con Media querys para dispositivos/pantallas con demasiada altura*/
 @media screen and  (min-height: 850px){
@@ -529,7 +579,7 @@ button{
         height: auto;
     }
 
-    #opcionesDeAnalisis{
+    .opcionesDeAnalisis{
         width: 100%;
         flex-flow: column nowrap;
         justify-content: space-between;
@@ -550,6 +600,15 @@ button{
 
 /*#region Estilos con Media querys para dispositivos/pantallas con poco ancho*/
 @media screen and  (max-width: 474px){
+    header{
+        display: block;
+    }
+
+    #barraInformativa , header h1{ /*titulo principal y barra informatica*/
+        width: 100%; 
+    }
+    
+    
     .titulosMenu{
        font-size: 50%;
     }
@@ -610,13 +669,13 @@ button{
        height: 50%;
    }
 
-   #opcionesDeAnalisis{
+   .opcionesDeAnalisis{
        width: 100%;
        flex-flow: column nowrap;
        justify-content: space-between;
    }
 
-   #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+   #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
        font-size: smaller;
    }
 
@@ -630,6 +689,12 @@ button{
        border-top: 2px solid #49AB80;
    }
 
+   .historialesGenerales{
+        width: 90%;
+        margin: auto;
+        height: auto;
+    }
+
 }
 /*#endregion Estilos con Media querys para dispositivos/pantallas con poco ancho*/
 
@@ -637,6 +702,15 @@ button{
 /* Textos mas pequeñps */
 @media screen and  (min-width: 475px) and  (max-width: 619px){
     /* Titulos de toda la página y menu */
+    
+    header{
+        display: block;
+    }
+
+    #barraInformativa , header h1{ /*titulo principal y barra informatica*/
+        width: 100%; 
+    }
+
     .titulos,  .titulosMenu{
         font-size: smaller;
     }
@@ -696,11 +770,11 @@ button{
         height: auto;
     }
 
-    #opcionesDeAnalisis{
+    .opcionesDeAnalisis{
         width: 100%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
         font-size: small;
     }
 
@@ -712,6 +786,12 @@ button{
     #contenedorDatosDeportivos{
         border-style: none;
         border-top: 2px solid #49AB80;
+    }
+
+    .historialesGenerales{
+        width: 90%;
+        margin: auto;
+        height: auto;
     }
     
 }
@@ -786,7 +866,7 @@ button{
         height: 45%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input ,#datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
         font-size: medium;
     }
 
@@ -806,7 +886,7 @@ button{
         font-size: medium;
     }
 
-    #opcionesDeAnalisis{
+    .opcionesDeAnalisis{
         width: 100%;
     }    
 }
@@ -814,8 +894,8 @@ button{
 
 /*#region Edición de SweetAlerts personalizados*/
 
-.swal2-container.swal2-shown {
+/* .swal2-container.swal2-shown {
     background: url('../Imagenes/fondo-login.png');
-  }
+  } */
 
 /*#endregion Edición de SweetAlerts personalizados*/
