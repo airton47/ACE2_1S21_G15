@@ -67,7 +67,10 @@ var mainApp = new Vue({
         temperaturaMinima: 0,
         temperaturaPromedio: 0,
         oxigenoActual: 0,
-        oxigenoPromedio: 0
+        oxigenoPromedio: 0,
+        cantidadMedicionesPrevia:0,
+        cantidadMedicionesActual:0,
+        indicadorSeguimiento:true
       },
       datosDePerfilEnSesion:{
         tipo: '---',
@@ -108,6 +111,7 @@ var mainApp = new Vue({
             this.estadoVisualizadores.estadoTemperatura = false;
             this.estadoVisualizadores.estadoOxigeno = false;
             this.estadoVisualizadores.estadoAtletas = false;
+            mainApp.reiniciarVisoresMedicionesEnVivo();
         },
         activarVisorTemperatura: function(){
             this.estadoVisualizadores.estadoPerfil = false;
@@ -116,6 +120,7 @@ var mainApp = new Vue({
             this.estadoVisualizadores.estadoTemperatura = true;
             this.estadoVisualizadores.estadoOxigeno = false;
             this.estadoVisualizadores.estadoAtletas = false;
+            mainApp.reiniciarVisoresMedicionesEnVivo();
         },
         activarVisorOxigeno: function(){
             this.estadoVisualizadores.estadoPerfil = false;
@@ -124,6 +129,7 @@ var mainApp = new Vue({
             this.estadoVisualizadores.estadoTemperatura = false;
             this.estadoVisualizadores.estadoOxigeno = true;
             this.estadoVisualizadores.estadoAtletas = false;
+            mainApp.reiniciarVisoresMedicionesEnVivo();
         },
         activarVisorAtletas: function(){
             this.estadoVisualizadores.estadoPerfil = false;
@@ -150,6 +156,28 @@ var mainApp = new Vue({
           mainApp.controladoresDeHistoriales.listaMedicionesCardiacas.splice(0, mainApp.controladoresDeHistoriales.listaMedicionesCardiacas.length);
           mainApp.controladoresDeHistoriales.listaMedicionesTemperaturas.splice(0, mainApp.controladoresDeHistoriales.listaMedicionesTemperaturas.length);
           mainApp.controladoresDeHistoriales.listaMedicionesOxigenos.splice(0, mainApp.controladoresDeHistoriales.listaMedicionesOxigenos.length);
+      },
+      reiniciarVisoresMedicionesEnVivo: function(){
+          this.indicadoresDeSaludVariables.pulsoActual = 0;
+          this.indicadoresDeSaludVariables.pulsoPromedio = 0;
+          this.indicadoresDeSaludVariables.temperaturaActual = 0;
+          this.indicadoresDeSaludVariables.temperaturaMaxima = 0;
+          this.indicadoresDeSaludVariables.temperaturaMinima = 0;
+          this.indicadoresDeSaludVariables.temperaturaPromedio = 0;
+          this.indicadoresDeSaludVariables.oxigenoActual = 0;
+          this.indicadoresDeSaludVariables.oxigenoPromedio = 0;
+          this.indicadoresDeSaludVariables.cantidadMedicionesActual = 0;
+          this.indicadoresDeSaludVariables.cantidadMedicionesPrevia = 0;
+          //reinicio de gráficos:
+          dataRitmoGrafico.splice(0, dataRitmoGrafico.length);
+          labelsRitmoGrafico.splice(0, labelsRitmoGrafico.length);
+          dataTemperaturaGrafico.splice(0, dataTemperaturaGrafico.length);
+          labelsTemperaturaGrafico.splice(0, labelsTemperaturaGrafico.length);
+          dataOxigenoGrafico.splice(0, dataOxigenoGrafico.length);
+          labelsOxigenoGrafico.splice(0, labelsOxigenoGrafico.length);
+          graficoRitmoCardiaco.update();
+          graficoOxigeno.update();
+          graficoTemperatura.update();
       }
       //#endregion METHODS
     }
@@ -161,13 +189,15 @@ var mainApp = new Vue({
 //#region RITMO CARDÍACO:
 
 let contenedor_graf_pulso = document.getElementById('visorGraficoRitmoCardiaco');
+let dataRitmoGrafico = [];
+let labelsRitmoGrafico = [];
 let config_graf_pulso = {
     type: 'line',
     data: {
-      labels:['# 1','# 2','# 3', '#4', '#5', '#6'],
+      labels:labelsRitmoGrafico,
       datasets: [{
-        label: 'Mediciones actuales',
-        data:[0,0,25,-15, 0, 0],
+        label: 'LPM actuales',
+        data:dataRitmoGrafico,
         backgroundColor: 'rgba(236,46,46,1)',/*Color con tono rojo */
         borderColor: 'rgba(236,46,46,0.6)', //el borde lo interpreta como el color de la linea
         pointBackgroundColor:'rgba(236,46,46,1)',
@@ -189,25 +219,22 @@ let  graficoRitmoCardiaco = new Chart(
 //#region TEMPERATURA:
 
 let contenedor_graf_Temperatura = document.getElementById('visorGraficoTemperatura');
+let dataTemperaturaGrafico = [];
+let labelsTemperaturaGrafico = [];
 let config_graf_Temperatura = {
-    type: 'bar',
-    data: {
-      labels:['# 1','# 2','# 3', '#4'],
-      datasets:[{
-        label: 'Mediciones Actuales',
-        backgroundColor:[
-          'rgba(0, 0, 0, 0.2)',
-          'rgba(153, 153, 255, 0.3)',
-          'rgba(102, 255, 102, 0.4)',
-          'rgba(255,51,51, 0.5)'],
-        hoverBackgroundColor:[
-          'rgb(0, 0, 0)',
-          'rgb(153, 153, 255)',
-          'rgb(102, 255, 102)',
-          'rgb(255,51,51)'],
-        data:[0,20,30,40]
-      }]
-    },
+  type: 'line',
+  data: {
+    labels:labelsTemperaturaGrafico,
+    datasets: [{
+      label: 'Temperaturas actuales',
+      data:dataTemperaturaGrafico,
+      backgroundColor: 'rgba(104, 164, 164, 1)',
+      borderColor: 'rgba(102, 153, 153, 0.4)', //el borde lo interpreta como el color de la linea
+      pointBackgroundColor:'rgba(104, 164, 164, 1)',
+      fill: false,
+      lineTension: 0.6
+    }]
+  },
     options: {}
 };
 
@@ -222,25 +249,22 @@ let  graficoTemperatura = new Chart(
 //#region OXIGENO:
 
 let contenedor_graf_Oxigeno = document.getElementById('visorGraficoOxigeno');
+let dataOxigenoGrafico = [];
+let labelsOxigenoGrafico = [];
 let config_graf_Oxigeno = {
-    type: 'bar',
-    data: {
-      labels:['# 1','# 2','# 3', '#4'],
-      datasets:[{
-        label: 'Mediciones Actuales',
-        backgroundColor:[
-          'rgba(0, 0, 0, 0.2)',
-          'rgba(153, 153, 255, 0.3)',
-          'rgba(102, 255, 102, 0.4)',
-          'rgba(255,51,51, 0.5)'],
-        hoverBackgroundColor:[
-          'rgb(0, 0, 0)',
-          'rgb(153, 153, 255)',
-          'rgb(102, 255, 102)',
-          'rgb(255,51,51)'],
-        data:[0,20,30,40]
-      }]
-    },
+  type: 'line',
+  data: {
+    labels:labelsOxigenoGrafico,
+    datasets: [{
+      label: 'Oxigenos actuales',
+      data:dataOxigenoGrafico,
+      backgroundColor: 'rgba(102,153,153, 1)',
+      borderColor: 'rgba(102,153,153, 0.4)', //el borde lo interpreta como el color de la linea
+      pointBackgroundColor:'rgba(102,153,153, 1)',
+      fill: false,
+      lineTension: 0.5
+    }]
+  },
     options: {}
 };
 
@@ -344,47 +368,27 @@ function ejecutarReloj(){
 
 //#endregion Control de Fecha y Hora
 
-async function mostrarVisorAtletasAsignados(){
-  mainApp.activarVisorAtletas();
-  await Procesos.mostrarAtletasAsignados(mainApp.datosDePerfilEnSesion.username);
-  //generamos los botones para ver los historiales individuales de cada atleta
-  Procesos.generarBotonesTablaAtletas();
-}
-
-function verHistorialPersonal(){
-  mainApp.evaluacionAtleta.username = mainApp.datosDePerfilEnSesion.username; 
-  /*esto permite que en los usuarios de tipo coach no se mezclen
-   sus historiales con los historiales del atleta cuyo análisis está en curso. */
-   Procesos.obtenerHistorialesPersonales();
-}
-
-
- async function probarAPIS(){
-  //console.log(JSON.stringify(await Procesos.obtenerUsernamesSistema()));
-  //console.log(JSON.stringify(Procesos.obtenerDatosUsuarioEspecifico('giossan')));
-  //console.log(JSON.stringify(await Procesos.obtenerDatosCompletosUsuariosSistema()));
-  //let informacion = '{"username": "Caliss", "password": "1001", "nombres": "Candida Lisseth", "apellidos": "Aroca Estrada","edad": 23,"genero": "F","peso": 158, "altura": 167,"coach": false}';
-  //console.log(JSON.stringify(Procesos.crearNuevoAtleta(JSON.parse(informacion))));
-}
-
 //#region Asignación de funciones a botones:
 
 //#region Ventanas
-document.getElementById('botonVerHistorialPulso').addEventListener("click", verHistorialPersonal);
-document.getElementById('botonVerHistorialTemperatura').addEventListener("click", verHistorialPersonal);
-document.getElementById('botonVerHistorialOxigeno').addEventListener("click", verHistorialPersonal);
-document.getElementById('botonVerAtletas').addEventListener("click", mostrarVisorAtletasAsignados);
+document.getElementById('botonVerHistorialPulso').addEventListener("click", Procesos.verHistorialPersonal);
+document.getElementById('botonVerHistorialTemperatura').addEventListener("click", Procesos.verHistorialPersonal);
+document.getElementById('botonVerHistorialOxigeno').addEventListener("click", Procesos.verHistorialPersonal);
+document.getElementById('botonVerAtletas').addEventListener("click", Procesos.mostrarVisorAtletasAsignados);
 document.getElementById('botonRegresarPerfil').addEventListener("click", mainApp.activarVisorPerfil);
 //#endregion Ventanas
 
 //#region Mensajes
-document.getElementById('botonEjecucionPulso').addEventListener("click", Mensajes.mensajeEvaluacionPulso);
 document.getElementById('controladorSesion').addEventListener("click", Mensajes.ejecutarLogOut);
 
 //#endregion Mensajes
 
 //#region Acciones API
-//document.getElementById('controladorSesion').addEventListener("click", probarAPIS);
+document.getElementById('botonAgregarAtleta').addEventListener("click", Procesos.asignarAtletaNoAsignado);
+document.getElementById('atletasNoAsignados').addEventListener("change", Procesos.obtenerNombresAtletaNoAsignado);
+document.getElementById('botonEjecucionPulso').addEventListener("click", Procesos.ejecutarMedicionEnVivo.bind(null, "Ritmo"));
+document.getElementById('botonEjecucionTemperatura').addEventListener("click", Procesos.ejecutarMedicionEnVivo.bind(null, "Temperatura"));
+document.getElementById('botonEjecucionOxigeno').addEventListener("click", Procesos.ejecutarMedicionEnVivo.bind(null, "Oxigeno"));
 //#endregion Acciones API
 
 //#endregion Asignación de funciones a botones
@@ -396,4 +400,13 @@ export {
   labelsGraficoHistorialActual,
   colorGraficoHistorialActual,
   colorHoverGraficoHistorialActual,
+  dataRitmoGrafico,
+  labelsRitmoGrafico,
+  dataTemperaturaGrafico,
+  labelsTemperaturaGrafico,
+  dataOxigenoGrafico,
+  labelsOxigenoGrafico,
+  graficoRitmoCardiaco,
+  graficoOxigeno,
+  graficoTemperatura
 };

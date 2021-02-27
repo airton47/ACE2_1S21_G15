@@ -444,7 +444,7 @@ async function recolectarDatosRegistro(){
 //#region Analítica
 let mensajePulso = {
   title: 'Pulso evaluado',
-  html: '<b>Tu pulso</b> fue evaluado con <b>éxito</b>.',
+  html: '<b>Tu pulso fue evaluado con éxito durante esta rutina</b>.',
   imageUrl: "Imagenes/Pulso.gif", //es la ruta desde el HTML
   imageWidth: 250,
   imageHeight: 250,
@@ -463,7 +463,7 @@ function mensajeEvaluacionPulso(){
 
 let mensajeTemperatura = {
   title: 'Temperatura evaluada',
-  html: '<b>Tu temperatura</b> fue evaluado con <b>éxito</b>.',
+  html: '<b>Tu temperatura fue evaluado con éxito durante esta rutina</b>.',
   imageUrl: "Imagenes/Temperatura.gif", //es la ruta desde el HTML
   imageWidth: 250,
   imageHeight: 250,
@@ -481,7 +481,7 @@ function mensajeEvaluacionTemperatura(){
 
 let mensajeOxigeno = {
   title: 'Oxígeno evaluado',
-  html: '<b>Tu Oxígeno en la sangre</b> fue evaluada con <b>éxito</b>.',
+  html: '<b>Tu Oxígeno en la sangre fue evaluada con éxito durante esta rutina</b>.',
   imageUrl: "Imagenes/Oxigeno_Sangre.gif", //es la ruta desde el HTML
   imageWidth: 250,
   imageHeight: 250,

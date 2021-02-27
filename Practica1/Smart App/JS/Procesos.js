@@ -1,5 +1,5 @@
 
-import {mainApp, dataGraficoHistorialActual,graficoHistorial, labelsGraficoHistorialActual,colorGraficoHistorialActual,colorHoverGraficoHistorialActual} from "./main-vue";
+import {mainApp, dataGraficoHistorialActual,graficoHistorial, labelsGraficoHistorialActual,colorGraficoHistorialActual,colorHoverGraficoHistorialActual, dataRitmoGrafico, labelsRitmoGrafico, dataTemperaturaGrafico, labelsTemperaturaGrafico, dataOxigenoGrafico, labelsOxigenoGrafico, graficoRitmoCardiaco, graficoOxigeno, graficoTemperatura} from "./main-vue";
 import {Mensajes} from './Mensajes';
 import "regenerator-runtime/runtime.js"; //permite la compilación de Async en Babel
 
@@ -79,15 +79,22 @@ async function crearNuevoCoach(infoCoach){
     return respuestaEnvio;
 }
 
-async function asignarAtleta(coach, atleta){
-    const urlAPI = '';
-    const respuestaEnvio = await enviarInfoAPI(atleta, urlAPI, '');
+async function asignarAtletaACoach(coach, atleta){
+    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/addAtletaToCoach/';
+    const respuestaEnvio = await enviarInfoAPI(atleta, urlAPI, coach);
     return respuestaEnvio;
 }
 
 //#endregion Solicitudes POST
 
-//#region Acciones
+//#region Acciones Historiales
+
+function verHistorialPersonal(){
+    mainApp.evaluacionAtleta.username = mainApp.datosDePerfilEnSesion.username; 
+    /*esto permite que en los usuarios de tipo coach no se mezclen
+     sus historiales con los historiales del atleta cuyo análisis está en curso. */
+     Procesos.obtenerHistorialesPersonales();
+}
 
 function obtenerHistorialesCompletos(){
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
@@ -336,32 +343,156 @@ async function mostrarGraficoMedicionesRutina(){
     graficoHistorial.update();
 }
 
-//#endregion Acciones
+//#endregion Acciones Historiales
 
-//#region Otros ejemplos
-/* function obtenerInfoPorAPI(urlAPI){
-    fetch(urlAPI)
-    .then(res =>
-        res.json()
-    )
-    .then(res => {
-        res.data.map(user => {
-        console.log(`${user.username}: ${user.edad} ${user.genero}`);
-        }); 
-        console.log(JSON.stringify(res));
-    })
-    .catch(err => {
-        console.log(err);
-        swal(Mensajes.mensajeFalloGetAPI);
+//#region Acciones sobre Coach y Atletas
+
+async function mostrarVisorAtletasAsignados(){
+    //reiniciamos los visores de datos
+    mainApp.evaluacionAtleta.nombreAtleta = '---';
+    mainApp.evaluacionAtleta.apellidoAtleta = '---';
+    await mostrarAtletasAsignados(mainApp.datosDePerfilEnSesion.username);
+    //generamos los botones para ver los historiales individuales de cada atleta
+    generarBotonesTablaAtletas();
+    obtenerUsuariosNoAsignados();
+    mainApp.activarVisorAtletas();
+}
+
+async function obtenerUsuariosNoAsignados(){
+    let selector = document.getElementById('atletasNoAsignados');
+    //vaciamso el selector de usernames:
+    while (selector.firstChild){
+        selector.removeChild(selector.firstChild);
+      };
+    const usuariosActualesSistema = await obtenerUsernamesSistema();
+    const datosUsuariosBajoCoachActual = await obtenerAtletasBajoCoach(mainApp.datosDePerfilEnSesion.username);
+    let usuariosBajoCoachActual = [];
+    datosUsuariosBajoCoachActual.forEach(elemento =>{
+        usuariosBajoCoachActual.push(elemento.username);
     });
-} */
+    const diferenciaDeArreglos = (arr1, arr2) => {
+        return arr1.filter(elemento => arr2.indexOf(elemento) == -1);
+    }
+    let usuarioNoAsignados = diferenciaDeArreglos(usuariosActualesSistema, usuariosBajoCoachActual);
+    //eliminamos al coach en sesión (ya que el no se púede asignar a si mismo)
+    let indiceCoach = usuarioNoAsignados.indexOf(mainApp.datosDePerfilEnSesion.username); // obtenemos el indice
+    usuarioNoAsignados.splice(indiceCoach, 1);
+    //Los mostramos en el selector de usernames
+    usuarioNoAsignados.forEach(elemento =>{
+        let opcionSelector = document.createElement('option');
+        opcionSelector.textContent = elemento;
+        selector.appendChild(opcionSelector);
+    });
+}
 
-/* async function obtenerUsernamesSistema(){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/getUsernames';
-    let receptor = await obtenerInfoPorAPI(urlAPI, '');
-    console.log(JSON.stringify(receptor));
-} */
-//#endregion Otros ejemplos
+async function asignarAtletaNoAsignado(){
+    let atletaSeleccionado = document.getElementById('atletasNoAsignados').value;
+    let envioAtleta = '{"username":"'+atletaSeleccionado+'"}';
+    await asignarAtletaACoach(mainApp.datosDePerfilEnSesion.username , JSON.parse(envioAtleta));
+    swal({
+        title: 'Atleta asignado',
+        html: '<b>Ahora podrás ver sus historiales...</b>',
+        timer: 2500,
+        showConfirmButton: false,
+        type: 'success',
+        allowEscapeKey: false,
+        allowOutsideClick: false
+    });
+    setTimeout(mostrarVisorAtletasAsignados, 2300);
+}
+
+async function obtenerNombresAtletaNoAsignado(){
+    let atletaSeleccionado = document.getElementById('atletasNoAsignados').value;
+    let datosUsuario = await obtenerDatosUsuarioEspecifico(atletaSeleccionado);
+    mainApp.evaluacionAtleta.nombreAtleta = datosUsuario.nombres.split(' ')[0]; //solo el primer nombre
+    mainApp.evaluacionAtleta.apellidoAtleta = datosUsuario.apellidos.split(' ')[0]; //solo el primer apellido
+}
+
+//#endregion Acciones sobre Coach
+
+//#region Mediciones en Vivo
+
+async function medirEnVivo(elementoMedicion){
+    let historialesRecolectados = await obtenerHistorialesAtleta(mainApp.datosDePerfilEnSesion.username);
+    //buscamos la medición mas reciente o en vivo(la última)
+    let medicionActual = historialesRecolectados[historialesRecolectados.length-1];
+    if(elementoMedicion == 'Ritmo'){
+        mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = medicionActual.pulso.length;
+        if(mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual != mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia){
+            mainApp.indicadoresDeSaludVariables.pulsoActual = medicionActual.pulso[medicionActual.pulso.length-1];
+            mainApp.indicadoresDeSaludVariables.pulsoPromedio = medicionActual.pulsoPromedio;
+            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.pulso.length;
+            dataRitmoGrafico.push(medicionActual.pulso[medicionActual.pulso.length-1]);
+            labelsRitmoGrafico.push(medicionActual.pulso[medicionActual.pulso.length-1]);
+            graficoRitmoCardiaco.update();
+            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = true;
+        }else{
+            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.pulso.length;
+            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
+        }
+    } 
+    else if(elementoMedicion == 'Temperatura'){
+        mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = medicionActual.temperatura.length-1;
+        if(mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual != mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia){
+            mainApp.indicadoresDeSaludVariables.temperaturaActual = medicionActual.temperatura[medicionActual.temperatura.length-1];
+            mainApp.indicadoresDeSaludVariables.temperaturaMaxima = medicionActual.tempMaxima;
+            mainApp.indicadoresDeSaludVariables.temperaturaMinima = medicionActual.tempMinima;
+            mainApp.indicadoresDeSaludVariables.temperaturaPromedio = medicionActual.tempPromedio;
+            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.temperatura.length-1;
+            dataTemperaturaGrafico.push(medicionActual.temperatura[medicionActual.temperatura.length-1]);
+            labelsTemperaturaGrafico.push(medicionActual.temperatura[medicionActual.temperatura.length-1]);
+            graficoTemperatura.update();
+            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = true;
+        }else{
+            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.temperatura.length;
+            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
+        }
+    }else{
+        mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = medicionActual.oxigeno.length-1;
+        if(mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual != mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia){
+            mainApp.indicadoresDeSaludVariables.oxigenoActual = medicionActual.oxigeno[medicionActual.oxigeno.length-1];
+            mainApp.indicadoresDeSaludVariables.oxigenoPromedio = medicionActual.oxigenoPromedio;
+            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.oxigeno.length-1;
+            dataOxigenoGrafico.push(medicionActual.oxigeno[medicionActual.oxigeno.length-1]);
+            labelsOxigenoGrafico.push(medicionActual.oxigeno[medicionActual.oxigeno.length-1]);
+            graficoOxigeno.update();
+            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = true;
+        }else{
+            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.oxigeno.length;
+            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
+        }
+    }
+}
+
+const timer = ms => new Promise(res => setTimeout(res, ms));
+
+async function ejecutarMedicionEnVivo(elementoMedicion){
+    let tiempoEspera = 7000; //milisegundos
+    mainApp.reiniciarVisoresMedicionesEnVivo();
+    swal({
+        html: '<b>Iniciando proyección de datos...</b>',
+        timer: 1500,
+        showConfirmButton: false,
+        type: 'info',
+        allowEscapeKey: false,
+        allowOutsideClick: false
+    });
+    do{
+        await timer(tiempoEspera); 
+        medirEnVivo(elementoMedicion);
+    }while(mainApp.indicadoresDeSaludVariables.indicadorSeguimiento);
+    mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = 0;
+    mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = 0;
+    if(elementoMedicion == 'Ritmo'){
+        Mensajes.mensajeEvaluacionPulso();
+    }else if(elementoMedicion == 'Temperatura'){
+        Mensajes.mensajeEvaluacionTemperatura();
+    }else{
+        Mensajes.mensajeEvaluacionOxigeno();
+    }
+}
+
+//#endregion Mediciones en Vivo
 
 
 Procesos.obtenerUsernamesSistema = obtenerUsernamesSistema;
@@ -377,5 +508,12 @@ Procesos.obtenerHistorialesPersonales = obtenerHistorialesPersonales;
 Procesos.obtenerDetallesRutina = obtenerDetallesRutina;
 Procesos.obtenerGrafico = obtenerGrafico;
 Procesos.crearNuevoCoach = crearNuevoCoach;
+Procesos.asignarAtletaACoach = asignarAtletaACoach;
+Procesos.obtenerUsuariosNoAsignados = obtenerUsuariosNoAsignados;
+Procesos.mostrarVisorAtletasAsignados = mostrarVisorAtletasAsignados;
+Procesos.verHistorialPersonal = verHistorialPersonal;
+Procesos.asignarAtletaNoAsignado = asignarAtletaNoAsignado;
+Procesos.obtenerNombresAtletaNoAsignado = obtenerNombresAtletaNoAsignado;
+Procesos.ejecutarMedicionEnVivo = ejecutarMedicionEnVivo;
 
 export{Procesos};
