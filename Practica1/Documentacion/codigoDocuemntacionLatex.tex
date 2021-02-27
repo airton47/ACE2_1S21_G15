@@ -95,8 +95,8 @@ Considerando que el propósito de este objeto es monitorear el estado del usuari
 \begin{figure} [H] \centering 
 \caption{Boceto de diseño}
 
-\includegraphics[width=0.5\textwidth]{} 
-Las dimensiones son de 
+\includegraphics[width=0.5\textwidth]{prototipo.jpg} 
+Considerando que los componentes de la banda inteligente serán integrados en un guante, se presenta una ilustración de como se disponen los componentes. 
 \end{figure}
 
 \section{Famework de Productos Inteligentes Conectados}
@@ -123,7 +123,7 @@ Para realizar las diferentes mediciones y lecturas sobre el estado corporal del 
     La comunicación a utilizar entre la banda inteligente y el dispositivo móvil del usuario será a través de conexión \textbf{Bluethoot} exclusivamente, el dispositivo arduino recolecta la información para ser transmitida desde el módulo \textbf{Bluethoot} a el dispositivo móvil, una vez los datos hayan sidos recolectados y normalizados estos serán enviados.  al dispositivo móvil que contara con conexión a internet y que a su vez realiza peticiones \textbf{HTTP} al servidor a través de una \textbf{API/REST}, que mediara el envío y recepción la información al dispositivo móvil del usuario, para posteriormente almacenar la información en una base de datos en al nube, específicamente a una base de datos de \textbf{Mongo DB.} Ver figura 2. \newline
 \begin{figure} [H] \centering 
 \caption{Representación de conexión}
-\includegraphics[width=0.5\textwidth]{Arquitectura.png} 
+\includegraphics[width=0.55\textwidth]{Arquitectura.png} 
 Puede apreciarse la dinámica de la conectividad, en la que los datos son enviados desde la banda al móvil, este a su vez realiza las peticiones HTTP a una API/REST, usando los servicio AWS (Amazon Web Services) de Armazón, para posteriormente almacenar la información en MongoDB.
 \end{figure}
 
@@ -135,26 +135,26 @@ Puede apreciarse la dinámica de la conectividad, en la que los datos son enviad
     
 \begin{figure} [H] \centering 
 \caption{PANTALLA 1 ( Aplicación móvil )}
-\includegraphics[width=0.4\textwidth]{PantallaPrincipal.png} 
+\includegraphics[width=0.45\textwidth]{PantallaPrincipal.png} 
 \end{figure}
 
     Para poder realizar la conexión inalámbrica a través de  Bluethoot es necesario que el usuario ingrese su ID/Username y así poder identificar a quien le pertenecen los datos enviados.
     
 \begin{figure} [H] \centering 
 \caption{BLOCKS 1 ( Conexión Bluetooth )}
-\includegraphics[width=0.4\textwidth]{ConexionBT.png} 
+\includegraphics[width=0.5\textwidth]{ConexionBT.png} 
 \end{figure}
 
 \begin{figure} [H] \centering 
 \caption{BLOCKS 2 ( Nueva Sesion )}
-\includegraphics[width=0.4\textwidth]{NuevaSesion.PNG} 
+\includegraphics[width=0.5\textwidth]{NuevaSesion.PNG} 
 \end{figure}
 
     Cada vez que la aplicación móvil recibe un nuevo paquete de provenientes de la banda inteligente, los datos de este se envían inmediatamente por medio de una API hacia una base de datos la cual contiene diferentes tablas donde se estarán guardando los datos que posteriormente serán procesados.
     
 \begin{figure} [H] \centering 
 \caption{BLOCKS 3 ( Envio de datos )}
-\includegraphics[width=0.4\textwidth]{EviarDatos.PNG} 
+\includegraphics[width=0.5\textwidth]{EviarDatos.PNG} 
 \end{figure}
 \subsection{Smart APP: WEB}
 
@@ -162,7 +162,7 @@ Puede apreciarse la dinámica de la conectividad, en la que los datos son enviad
     
 \begin{figure} [H] \centering 
 \caption{Figura 4: Login ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{Login.PNG}
+\includegraphics[width=0.45\textwidth]{Login.PNG}
 \end{figure}
 
 La pagina principal cuenta con 4 opciones:
@@ -178,14 +178,14 @@ La pagina principal cuenta con 4 opciones:
     
 \begin{figure} [H] \centering 
 \caption{Figura 5: Perfil ( Aplicación WEB )}
-\includegraphics[width=0.4\textwidth]{Perfil.PNG}
+\includegraphics[width=0.45\textwidth]{Perfil.PNG}
 \end{figure}
 
     Si el usuario ha ingresado a la aplicación web y es un usuario de tipo Coach, este podrá ver los datos de todos los atletas asignados a este, además, tiene la capacidad de monitorear el rendimiento de cada uno a través sus historiales.
     
 \begin{figure} [H] \centering 
 \caption{Figura 6: Coach-Atleta ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{CoachAtleta.PNG}
+\includegraphics[width=0.45\textwidth]{CoachAtleta.PNG}
 \end{figure}
 
 \subsubsection{Ritmo Cardiaco:}
@@ -193,14 +193,14 @@ La pagina principal cuenta con 4 opciones:
     
 \begin{figure} [H] \centering 
 \caption{Figura 6: Ritmo Cardiaco ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{RitmoC.PNG}
+\includegraphics[width=0.45\textwidth]{RitmoC.PNG}
 \end{figure}
 
     Con la ayuda de la opción "ver historial" es posible visualizar todas las sesiones de actividad física que el usuario ha realizado hasta el momento y dentro de cada sección los datos del pulso que se han recolectado.
     
 \begin{figure} [H] \centering 
 \caption{Figura 7: Historial Ritmo Cardiaco ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{RitmoCh.PNG}
+\includegraphics[width=0.45\textwidth]{RitmoCh.PNG}
 \end{figure}
 
 \subsubsection{Temperatura:}
@@ -208,7 +208,7 @@ La pagina principal cuenta con 4 opciones:
     
 \begin{figure} [H] \centering 
 \caption{Figura 8: Temperatura ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{temp.jpg}
+\includegraphics[width=0.45\textwidth]{temp.jpg}
 \end{figure}
 
 \subsubsection{Oxigeno:}
@@ -216,7 +216,7 @@ La pagina principal cuenta con 4 opciones:
     
 \begin{figure} [H] \centering 
 \caption{Figura 9: Oxigeno ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{oxig.jpg}
+\includegraphics[width=0.45\textwidth]{oxig.jpg}
 \end{figure}
 
 
@@ -224,19 +224,19 @@ La pagina principal cuenta con 4 opciones:
     
 \begin{figure} [H] \centering 
 \caption{Figura 9: Historial Rutina ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{hist.jpg}
+\includegraphics[width=0.45\textwidth]{hist.jpg}
 \end{figure}
 
     El usuario coach puede seguir las rutinas de los atletas asignados y observar sus historiales
     
 \begin{figure} [H] \centering 
 \caption{Figura 10: Visualización de rutinas por parte de un Coach ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{HistAtle.jpg}
+\includegraphics[width=0.45\textwidth]{HistAtle.jpg}
 \end{figure}
 
 \begin{figure} [H] \centering 
 \caption{Figura 11: Visualización de atletas asignados a un coach ( Página WEB )}
-\includegraphics[width=0.4\textwidth]{AsigAtle.jpg}
+\includegraphics[width=0.45\textwidth]{AsigAtle.jpg}
 \end{figure}
 
 
