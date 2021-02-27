@@ -114,16 +114,17 @@ Las dimensiones son de
     Se han diseñado y programado algoritmos y rutinas para la recolección constante de datos sobre el estado del cuerpo del usuario mientras este realiza actividades físicas, esto a través de sensores; las rutinas están diseñadas para que los datos obtenidos puedan ser información de utilidad y procurando eficiencia y simplicidad al momento de gestionar su recolección y transmisión. Estos datos son procesados con la ayuda de un microcontrolador ARDUINO, que a la vez envía dichos datos obtenidos al dispositivo móvil del usuario, para su posterior trasmisión al servidor y almacenamiento en la nube.. la razón de haber elegido a ARDUINO fue debido a su capacidad y flexibilidad para realizar diversas tareas, costo accesible y su simple implementación.
     
 \subsection{Sensores}
+Para realizar las diferentes mediciones y lecturas sobre el estado corporal del usuario se ha hecho uso de los siguientes sensores:
 \begin{itemize}
     \item[$\bullet$]\textbf{Sensor de temperatura, LM34} para determinar la temperatura corporal del usuario.
-    \item[$\bullet$]\textbf{Sensor de pulso y oxigeno..., Max30102} para medir el ritmo cardiaco y niveles de oxigeno del usuario mientras se ejercita.
+    \item[$\bullet$]\textbf{Sensor de pulso y oxigeno, Max30102} para medir tanto el ritmo cardiaco como los niveles de oxigeno en la sangre del usuario mientras este realiza actividades físicas.
 \end{itemize}
 \subsection{Conexión}
     La comunicación a utilizar entre la banda inteligente y el dispositivo móvil del usuario será a través de conexión \textbf{Bluethoot} exclusivamente, el dispositivo arduino recolecta la información para ser transmitida desde el módulo \textbf{Bluethoot} a el dispositivo móvil, una vez los datos hayan sidos recolectados y normalizados estos serán enviados.  al dispositivo móvil que contara con conexión a internet y que a su vez realiza peticiones \textbf{HTTP} al servidor a través de una \textbf{API/REST}, que mediara el envío y recepción la información al dispositivo móvil del usuario, para posteriormente almacenar la información en una base de datos en al nube, específicamente a una base de datos de \textbf{Mongo DB.} Ver figura 2. \newline
 \begin{figure} [H] \centering 
 \caption{Representación de conexión}
 \includegraphics[width=0.5\textwidth]{Arquitectura.png} 
-Puede apreciarse la dinámica de la conectividad, en la que los datos son enviados desde la banda al móvil, este a su vez a realiza las peticiones HTTP de una API/REST, usando los servicio AWS (Amazon Web Services) de Armazón, para posteriormente almacenar la información.
+Puede apreciarse la dinámica de la conectividad, en la que los datos son enviados desde la banda al móvil, este a su vez realiza las peticiones HTTP a una API/REST, usando los servicio AWS (Amazon Web Services) de Armazón, para posteriormente almacenar la información en MongoDB.
 \end{figure}
 
 \subsection{Análisis}
