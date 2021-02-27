@@ -20,10 +20,12 @@ usuario, además cuenta con una serie de reportes que lo ayudaran a ver su histo
 ### App Movil intermediaria
 * 📱 [App_Inventor](https://github.com/mit-cml)
 
+
 ### APIs, BD, Servidores y Hosting
 * ⛓ [ExpressJS](https://github.com/expressjs)
-* 💾 [Mongo DB](https://github.com/mongodb/mongo)
-* 📦 [AWS](https://aws.amazon.com/es/)
+* 💾 [Mongo DB_Atlas](https://github.com/mongodb/mongo)
+* 📦 [AWS_EC2](https://aws.amazon.com/es/)
+
 
 ### Prenda Inteligente
 * 💡 Arduino Mega

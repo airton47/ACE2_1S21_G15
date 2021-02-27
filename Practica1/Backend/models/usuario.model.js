@@ -9,7 +9,8 @@ const usuarioSchema = new Schema({
         required: true,
         unique: true,
         trim: true,
-        minlength: 3
+        minlength: 3,
+        index: true
     },
     password: { type: String, required: true },
     nombres: { type: String, required: true },
