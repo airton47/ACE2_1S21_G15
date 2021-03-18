@@ -1,3 +1,17 @@
+
+/*#region ESTILOS DE COLORES:*/
+
+/*
+azul : #3F3FF7 -  Hover: #3333FF
+aliceblue(fondo de gráficos) aliceblue, lightgray(border)
+verde : #99CC99 -  Hover: #98d973
+amarillo : #F7C03F -  Hover: #FFCC33
+morado : #AB19AB -  Hover: #990099
+*/
+/*#endregion FIN ESTILOS DE COLORES PARA BOTONES*/
+
+/*#region Elementos Generales*/
+
 *{
     margin: 0;
     padding:0;
@@ -19,6 +33,9 @@ header {
     margin-top: 10px;
     box-sizing: border-box;
     font-size: larger;
+    display: flex;
+    flex-direction: row wrap;
+    justify-content: space-between;
 }
 
 footer {
@@ -37,15 +54,17 @@ footer {
 }
 
 canvas{ /*Canvas se empleará como contenedor de los gráficos*/
-    width: 60%;
     border: 1px solid lightgray;
     border-radius: 25px;
     background-color: aliceblue;
     margin: auto;
     box-sizing: border-box;
+    margin-top: 25px;
 }
 
+/*#endregion Fin de Elementos Generales*/
 
+/*#region Contenedores Principales*/
 #main{
     display: flex;
     justify-content: space-around;
@@ -65,18 +84,95 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
 #visualizador{ /* contenedor "section" con los distintos visores que se activan con Vue.js*/
     width: 85%;
     height: auto;
-    box-sizing: border-box; /* background-color:purple; */
+    box-sizing: border-box; 
+}
+
+#barraInformativa{
+    display: flex;
+    flex-direction: row nowrap;
+    justify-content: space-between; 
+    width: 40%; 
+}
+
+header h1{ /*titulo principal*/
+    width: 40%; 
+    font-size: larger;
+}
+
+.lectorTiempo{ /*fecha y hora*/
+    font-size: small;
+    color: #e1e1e1;
+    text-align: center;
+    height: auto;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    width: 20%;
+}
+
+#controladorSesion{ /*contiene el icono de cierre de sesión*/
+    margin-bottom: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    width: 5%;
+    text-align: center;
+    height: auto;
+    padding: 0;
+}
+
+/*#endregion Contenedores Principales*/
+
+/*#region Contenedores especiales*/
+
+/*Div que encierra a los botones de medición en las distintas subventanas*/
+.opcionesDeAnalisis{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    width: 85%;
+}
+
+/*Div que contiene los datos fdeportivos del usuario en la subventana de Perfil*/
+#contenedorDatosDeportivos{
+    border-left: 2px solid #49AB80;
+}
+
+.historialesGenerales{
+    width: 50%;
+    margin: auto;
+    height: auto;
 }
 
 
+/*#endregion Contenedores especiales*/
+
+/*#region Titulos, párrafos y referencias*/
+
 /* Titulos de toda la página */
-.titulos{
+.titulos,  .titulosMenu{
     margin-top: 15px;
     color: #F8F6F5;
     font-size: larger;
     text-align: center;
 }
 
+/*referencia de Freepik Storyset en el footer*/
+#referenciaImagenes{
+    color: #e1e1e1;
+}
+
+#indicadoresDePulso, #indicadoresDeTemperatura, #indicadoresDeOxigeno,  #datosPerfil, #datosDeportivos, #datosNuevoAtleta{
+    margin: auto;
+    width: 100%;
+    text-align: center;
+    color: #F8F6F5;
+    font-size: larger;
+}
+
+/*#endregion Titulos, párrafos y referencias*/
+
+/*#region Subventanas y Submenus*/
 
 /* Vue.js se encarga de aplicar el estilo activado o desactivado: */
 
@@ -118,7 +214,9 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
     overflow-x: hidden;
 }
 
+/*#endregion Subventanas y Submenus*/
 
+/*#region Estilos de tablas*/
 /*TABLAS DE DATOS:*/
 
 thead{
@@ -126,7 +224,7 @@ thead{
 }
 
 tbody{
-    height: 300px;
+    height: 70px;
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -148,20 +246,36 @@ td, th{
     color: black;  
     margin: auto;
     font-size: 85%;
+    width: 95%;
 }
 
-/* Este estilo se le aplica a todas las tablas */
-
-#contenedorTablaHistorialCardiaco{
-    height: 75%;
-    width: 90%;
-    margin: auto;
-    overflow: hidden;
+#contenedorTablaHistorialPulsoAtletas tbody, #contenedorTablaHistorialTemperaturaAtletas tbody, #contenedorTablaHistorialOxigenoAtletas tbody{
+    height: 50px;
 }
 
-/* Estilos de scrolls: */
+.tablasDetallada{
+    display: flex;
+    flex-direction: row nowrap;
+    justify-content: space-between;
+    width: 100%;
+}
+.tablasDetallada table{
+    width: 15%;
+}
 
-/*Edición de scrolls de tablas*/
+.tablaPromedios table{
+    width: 35%;
+}
+
+.tablaRutinas table{
+    width: 40%;
+}
+
+/*#endregion Fin Estilos de tablas*/
+
+/*#region Scrolls*/
+
+/*#region Edición de scrolls de tablas*/
 tbody::-webkit-scrollbar { /* barra del scroll */
     width: 10px;     /* Tamaño del scroll en vertical */
     height: 10px;    /*Tamaño del scroll en horizontal */
@@ -190,7 +304,9 @@ tbody::-webkit-scrollbar-track { /* rastreador de la barra de scroll */
     border-radius: 5px;
 }
 
-/* edición de scroll-bars de visores */
+/*#endregion  Fin Edición de scrolls de tablas*/
+
+/*#region  Edición de scroll-bars de visores */
 
 .visores::-webkit-scrollbar {
     width: 10px;     /* Tamaño del scroll en vertical */
@@ -220,7 +336,11 @@ tbody::-webkit-scrollbar-track { /* rastreador de la barra de scroll */
     border-radius: 5px;
 }
 
-/*Estilos de Botones */
+/*#endregion Fin Edición de scroll-bars de visores */
+
+/*#endregion Scrolls*/
+
+/*#region Estilos de Botones */
 button{
     cursor: pointer;
     box-shadow: 0 2px 8px 0 rgba(0,0,0,0.07);
@@ -228,32 +348,17 @@ button{
     border: none;
     color: #fff;
     font-size: 15px;
-    color: #fff;
     padding: 9px 18px;
     margin-bottom: 10px;
 }
 
-/*Estilo de los vis que encierran a los botones para estar centralizasdos
-sin afectar directamente la alineación del editor codemirror*/
 .contenedorBotonAccionador{
     text-align: center;
     margin-bottom: 5px;
 }
 
-/*  estilo definido de botón */
-/* #botonEjecucionPulso, #botonGuardadoPulso, #botonVerHistorialPulso { 
-    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.07);
-    border-radius: 4px;
-    border: none;
-    color: #fff;
-    font-size: 15px;
-    color: #fff;
-    padding: 9px 18px;
-    margin-bottom: 10px;
-} */
-
 /* dibuja y coloca "antes" el simbolo de play(triángulo acostado) */
-#botonEjecucionPulso:before{ 
+#botonEjecucionPulso:before, #botonEjecucionTemperatura:before, #botonEjecucionOxigeno:before{ 
     content: "";
     width: 0;
     height: 0;
@@ -264,62 +369,102 @@ sin afectar directamente la alineación del editor codemirror*/
     margin-right: 5px;
 }
 
-#botonGuardadoPulso{
-    background-color: #3F3FF7;
+#botonEjecucionPulso, #botonEjecucionTemperatura, #botonEjecucionOxigeno{
+    background-color: #70B090;
 }
 
-#botonGuardadoPulso:hover{
-    background-color: #3333FF;
+#botonEjecucionPulso:hover, #botonEjecucionTemperatura:hover, #botonEjecucionOxigeno:hover{
+    background-color: #669999;
     transition: 0.5s;
 }
 
-#botonEjecucionPulso{
-    background-color: #99CC99;
+#botonVerHistorialPulso, #botonVerHistorialTemperatura, #botonVerHistorialOxigeno, #botonVerAtletas, #botonAgregarAtleta{
+    background-color: #006666;
 }
 
-#botonEjecucionPulso:hover{
-    background-color: #98d973;
+#botonVerHistorialPulso:hover , #botonVerHistorialTemperatura:hover, #botonVerHistorialOxigeno:hover, #botonVerAtletas:hover, #botonAgregarAtleta:hover{
+    background-color: #016161;
     transition: 0.5s;
 }
 
-#botonVerHistorialPulso{
-    background-color: #F7C03F;
+#botonRegresarPerfil{
+    background-color: #70B090;
 }
 
-#botonVerHistorialPulso:hover{
-    background-color: #FFCC33;
+#botonRegresarPerfil:hover{
+    background-color: #669999;
     transition: 0.5s;
 }
 
-/*ESTILOS DE COLORES PARA BOTONES:
+/*#endregion Estilos de Botones */
 
-azul : #3F3FF7 -  Hover: #3333FF
-verde : #99CC99 -  Hover: #98d973
-amarillo : #F7C03F -  Hover: #FFCC33
-morado : #AB19AB -  Hover: #990099
-transition: 0.5s;
+/*#region Iconos*/
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../Íconos/fonts/icomoon.eot?mbn88v');
+    src:  url('../Íconos/fonts/icomoon.eot?mbn88v#iefix') format('embedded-opentype'),
+      url('../Íconos/fonts/icomoon.ttf?mbn88v') format('truetype'),
+      url('../Íconos/fonts/icomoon.woff?mbn88v') format('woff'),
+      url('../Íconos/fonts/icomoon.svg?mbn88v#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+  
+  [class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .icon-switch:before {
+    content: "\e9b6";
+  }
 
-ESTILOS DE VISOR GRÁFICO {
-    width: 75%;
-    height: 375px;
-    border: 1px solid lightgray;
-    border-radius: 25px;
-    background-color: aliceblue;
-    margin: auto;
-}
+  .icon-eye:before {
+    content: "\e9ce";
+  }
 
+  .icon-stats-dots:before {
+    content: "\e99b";
+  }
 
-*/
+  .icon-eye, .icon-switch, .icon-stats-dots{
+    color: #006666;
+    cursor: pointer;
+  }
 
+  .icon-switch{
+    font-size: large;
+    color: #F0F0F0;
+  }
 
-/*Contenedores dinámicos*/
+  .icon-switch:hover, .icon-eye:hover, .icon-stats-dots:hover{
+    color: #41B883;
+    transition: 0.5;
+  }
+
+ 
+/*#endregion fin iconos*/
+
+/*#region Contenedores dinámicos de las subventanas*/
 
 .contenedorDinamico{
     display: flex;
     flex-flow: row nowrap;
-    height: 80%;
+    height: 100%;
     width: 95%;
     margin: auto;
+    padding: 0;
 }
 
 .primerSeparador, .segundoSeparador{
@@ -328,19 +473,14 @@ ESTILOS DE VISOR GRÁFICO {
     width: 50%;
     align-items: center;
     height: auto;
+    padding: 0;
 }
 
+/*#endregion Contenedores dinámicos*/
 
-/*Indicadores de Pulso*/
-#indicadoresDePulso{
-    margin: auto;
-    width: 100%;
-    text-align: center;
-    color: #F8F6F5;
-    font-size: larger;
-}
+/*#region Inputs(de tipo texto) para mostrar los datos*/
 
-#indicadoresDePulso input{
+#indicadoresDePulso input, #indicadoresDeTemperatura input, #indicadoresDeOxigeno input{
     text-align: center;
     font-size: larger;
     color: #F8F6F5;
@@ -350,40 +490,324 @@ ESTILOS DE VISOR GRÁFICO {
     width: 50px;
 }
 
-#opcionesDeAnalisis{
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-around;
-    width: 85%;
+#datosPerfil input, #datosDeportivos input, #datosNuevoAtleta input{
+    text-align: center;
+    font-size: large;
+    color: #F8F6F5;
+    border: none;
+    border-bottom: 1px solid #49AB80;
+    background-color: #34495E;
+    width: 160px;
 }
 
+#atletasNoAsignados{
+    border: 2px solid #49AB80;
+    border-radius: 5px;
+    background-color: #34495E;
+    color: #F8F6F5;
+    font-size: large;
+    padding-left: 3%;
+    padding-right: 3%;
+}
 
+/*#endregion Inputs(de tipo texto) para mostrar los datos*/
 
-/* Reestructuración web responsive: */
+/*#region Imágenes*/
+#imagenPerfil{
+    width: auto;
+    height: 55%;
+}
 
-/* Titulos y textos mas pequeños */
-@media screen and (min-width: 850px) and (max-width: 1240px){
-    /* Titulos de toda la página */
-    .titulos{
-        font-size: medium;
+/*#endregion Imágenes*/
+
+/*#region covertor LogIn Y SigIn*/ 
+#covertor{
+    position: fixed;
+    background-color: #344c5c;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+}
+/*#endregion covertor LogIn Y SigIn */ 
+
+/*#region Estilos con Media querys para dispositivos/pantallas con demasiada altura*/
+@media screen and  (min-height: 850px){
+
+    #main{
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-around;
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        align-items: stretch; /* background-color: red; */
     }
 
-    #opcionesDeAnalisis{
+    #menu{ /* contenedor section con las opociones del menu */
+        display: flex;
+        justify-content: space-around;
+        flex-flow: row nowrap; 
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+    }
+
+    .opcionesMenu{
+        padding: 1%;
+        height: auto;
+        width: 25%;
+        box-sizing: border-box;
+    }
+
+    .opcionesMenuDesactivadas{
+        padding: 1%;
+        height: auto;
+        width: 25%;
+        box-sizing: border-box;
+    }
+
+    .contenedorDinamico{
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+        justify-content: space-evenly;
+    }
+
+    .primerSeparador, .segundoSeparador{
+        margin: auto;
+        width: 100%;
+        height: auto;
+    }
+
+    .opcionesDeAnalisis{
+        width: 100%;
+        flex-flow: column nowrap;
+        justify-content: space-between;
+    }
+
+    #visualizador{ /* contenedor section con los distintos visores que se activan con Vue.js*/
+        width: 100%;
+        height: 1050px;
+        box-sizing: border-box; /* background-color:purple; */
+    }
+
+    #contenedorDatosDeportivos{
+        border-style: none;
+        border-top: 2px solid #49AB80;
+    }
+}
+/*#endregion Estilos con Media querys para dispositivos/pantallas con demasiada altura*/
+
+/*#region Estilos con Media querys para dispositivos/pantallas con poco ancho*/
+@media screen and  (max-width: 474px){
+    header{
+        display: block;
+    }
+
+    #barraInformativa , header h1{ /*titulo principal y barra informatica*/
+        width: 100%; 
+    }
+    
+    
+    .titulosMenu{
+       font-size: 50%;
+    }
+
+   .titulos{
+       font-size: 60%;
+   }
+
+   #main{
+       display: flex;
+       flex-flow: column nowrap;
+       justify-content: space-around;
+       width: 100%;
+       height: auto;
+       box-sizing: border-box;
+       align-items: stretch; /* background-color: red; */
+   }
+
+   #menu{ /* contenedor section con las opociones del menu */
+       display: flex;
+       justify-content: space-around;
+       flex-flow: row nowrap; 
+       width: 100%;
+       height: auto;
+       box-sizing: border-box;
+   }
+
+   #visualizador{ /* contenedor section con los distintos visores que se activan con Vue.js*/
+       width: 100%;
+       height: 600px;
+       box-sizing: border-box; /* background-color:purple; */
+   }
+
+   .opcionesMenu{
+       padding: 1%;
+       height: auto;
+       width: 25%;
+       box-sizing: border-box;
+   }
+
+   .opcionesMenuDesactivadas{
+       padding: 1%;
+       height: auto;
+       width: 25%;
+       box-sizing: border-box;
+   }
+
+   .contenedorDinamico{
+       display: flex;
+       flex-flow: column nowrap;
+       height: 100%;
+       justify-content: space-evenly;
+   }
+
+   .primerSeparador, .segundoSeparador{
+       margin: auto;
+       width: 100%;
+       height: 50%;
+   }
+
+   .opcionesDeAnalisis{
+       width: 100%;
+       flex-flow: column nowrap;
+       justify-content: space-between;
+   }
+
+   #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+       font-size: smaller;
+   }
+
+   #imagenPerfil{
+       width: 175px;
+       height: 175px;
+   }
+
+   #contenedorDatosDeportivos{
+       border-style: none;
+       border-top: 2px solid #49AB80;
+   }
+
+   .historialesGenerales{
+        width: 90%;
+        margin: auto;
+        height: auto;
+    }
+
+}
+/*#endregion Estilos con Media querys para dispositivos/pantallas con poco ancho*/
+
+/*#region Estilos con Media querys para ancho min: 475px y max: 619px*/
+/* Textos mas pequeñps */
+@media screen and  (min-width: 475px) and  (max-width: 619px){
+    /* Titulos de toda la página y menu */
+    
+    header{
+        display: block;
+    }
+
+    #barraInformativa , header h1{ /*titulo principal y barra informatica*/
+        width: 100%; 
+    }
+
+    .titulos,  .titulosMenu{
+        font-size: smaller;
+    }
+
+    .tabla{
+        font-size: 80%;
+    }
+
+    #main{
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-around;
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        align-items: stretch; 
+    }
+
+    #menu{ /* contenedor section con las opciones del menu */
+        display: flex;
+        justify-content: space-around;
+        flex-flow: row nowrap; 
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+    }
+
+    #visualizador{ /* contenedor section con los distintos visores que se activan con Vue.js*/
+        width: 100%;
+        height: 400px;
+        box-sizing: border-box; /* background-color:purple; */
+    }
+
+    .opcionesMenu{
+        padding: 2%;
+        height: auto;
+        width: 25%;
+        box-sizing: border-box;
+    }
+
+    .opcionesMenuDesactivadas{
+        padding: 2%;
+        height: auto;
+        width: 25%;
+        box-sizing: border-box;
+    }
+
+    .contenedorDinamico{
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+    }
+
+    .primerSeparador, .segundoSeparador{
+        margin: auto;
+        width: 90%;
+        height: auto;
+    }
+
+    .opcionesDeAnalisis{
         width: 100%;
     }
 
+    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+        font-size: small;
+    }
+
+    #imagenPerfil{
+        width: 175px;
+        height: 175px;
+    }
+
+    #contenedorDatosDeportivos{
+        border-style: none;
+        border-top: 2px solid #49AB80;
+    }
+
+    .historialesGenerales{
+        width: 90%;
+        margin: auto;
+        height: auto;
+    }
     
 }
+/*#endregion Estilos con Media querys para para ancho min: 475px y max-width: 619px*/
+
+/*#region Estilos con Media querys para ancho min: 620px y max: 860px*/
 
 /* Titulo mas pequeños, cambios de orientación de flex del menu */
-@media screen and (min-width: 501px) and  (max-width: 849px){
-    /* Titulos de toda la página */
-    .titulos{
+@media screen and (min-width: 620px) and  (max-width: 860px){
+    /* Titulos de toda la página y menu*/
+    .titulos,  .titulostitulosMenu{
         font-size: small;
     }
 
    .tabla{
-       font-size: 50%;
+       font-size: 80%;
    }
     
     #main{
@@ -432,6 +856,7 @@ ESTILOS DE VISOR GRÁFICO {
     .contenedorDinamico{
         display: flex;
         flex-flow: column nowrap;
+        justify-content: space-between;
         height: 100%;
     }
 
@@ -441,150 +866,36 @@ ESTILOS DE VISOR GRÁFICO {
         height: 45%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input ,#datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
         font-size: medium;
     }
+
+    #contenedorDatosDeportivos{
+        border-style: none;
+        border-top: 2px solid #49AB80;
+    }
     
 }
+/*#endregion Estilos con Media querys para ancho min: 620px y max: 860px*/
 
-/* Textos mas pequeñps */
-@media screen and  (min-width: 450px) and  (max-width: 500px){
-    /* Titulos de toda la página */
-    .titulos{
-        font-size: smaller;
+/*#region Estilos con Media Querys para pantalla estándar de ancho min:861px y max: 2500px */
+/* Titulos y textos mas pequeños */
+@media screen and (min-width: 861px) and (max-width: 2500px){
+    /* Titulos de toda la página y menu */
+    .titulos,  .titulosMenu{
+        font-size: medium;
     }
 
-    .tabla{
-        font-size: 15%;
-    }
-
-    #main{
-        display: flex;
-        flex-flow: column nowrap;
-        justify-content: space-around;
+    .opcionesDeAnalisis{
         width: 100%;
-        height: auto;
-        box-sizing: border-box;
-        align-items: stretch; /* background-color: red; */
-    }
-
-    #menu{ /* contenedor section con las opociones del menu */
-        display: flex;
-        justify-content: space-around;
-        flex-flow: row nowrap; 
-        width: 100%;
-        height: auto;
-        box-sizing: border-box;
-    }
-
-    #visualizador{ /* contenedor section con los distintos visores que se activan con Vue.js*/
-        width: 100%;
-        height: 600px;
-        box-sizing: border-box; /* background-color:purple; */
-    }
-
-    .opcionesMenu{
-        padding: 2%;
-        height: auto;
-        width: 25%;
-        box-sizing: border-box;
-    }
-
-    .opcionesMenuDesactivadas{
-        padding: 2%;
-        height: auto;
-        width: 25%;
-        box-sizing: border-box;
-    }
-
-    .contenedorDinamico{
-        display: flex;
-        flex-flow: column nowrap;
-        height: 100%;
-    }
-
-    .primerSeparador, .segundoSeparador{
-        margin: auto;
-        width: 90%;
-        height: auto;
-    }
-
-    #opcionesDeAnalisis{
-        width: 100%;
-    }
-
-    #indicadoresDePulso,   #indicadoresDePulso  input{
-        font-size: small;
-    }
-
-    
+    }    
 }
+/*#endregion Estilos con Media Querys para pantalla estándar de ancho min:861px y max: 1240px */
 
-@media screen and  (max-width: 449px){
-    .titulos{
-        font-size: 50%;
-    }
+/*#region Edición de SweetAlerts personalizados*/
 
-    #main{
-        display: flex;
-        flex-flow: column nowrap;
-        justify-content: space-around;
-        width: 100%;
-        height: auto;
-        box-sizing: border-box;
-        align-items: stretch; /* background-color: red; */
-    }
+/* .swal2-container.swal2-shown {
+    background: url('../Imagenes/fondo-login.png');
+  } */
 
-    #menu{ /* contenedor section con las opociones del menu */
-        display: flex;
-        justify-content: space-around;
-        flex-flow: row nowrap; 
-        width: 100%;
-        height: auto;
-        box-sizing: border-box;
-    }
-
-    #visualizador{ /* contenedor section con los distintos visores que se activan con Vue.js*/
-        width: 100%;
-        height: 600px;
-        box-sizing: border-box; /* background-color:purple; */
-    }
-
-    .opcionesMenu{
-        padding: 1%;
-        height: auto;
-        width: 25%;
-        box-sizing: border-box;
-    }
-
-    .opcionesMenuDesactivadas{
-        padding: 1%;
-        height: auto;
-        width: 25%;
-        box-sizing: border-box;
-    }
-
-    .contenedorDinamico{
-        display: flex;
-        flex-flow: column nowrap;
-        height: 100%;
-    }
-
-    .primerSeparador, .segundoSeparador{
-        margin: auto;
-        width: 100%;
-        height: auto;
-    }
-
-    #opcionesDeAnalisis{
-        width: 100%;
-        flex-flow: column nowrap;
-        justify-content: space-between;
-    }
-
-    #indicadoresDePulso,   #indicadoresDePulso  input{
-        font-size: smaller;
-    }
-}
-
-
+/*#endregion Edición de SweetAlerts personalizados*/
