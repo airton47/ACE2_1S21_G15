@@ -43,17 +43,14 @@
         <!-- #region Menu de Opciones -->
         <section id="menu">
             <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil || estadoVisualizadores.estadoAtletas ? estiloActual.activo : estiloActual.inactivo]">
-                <h2 class="titulosMenu">{{titulos.secccion_Perfil}} </h2>
+                <h2 class="titulosMenu">{{titulos.seccion_Perfil}} </h2>
             </div>
-            <div v-on:click="activarVisorRitmoCardiaco" v-bind:class="[estadoVisualizadores.estadoRitmoCardiaco ? estiloActual.activo : estiloActual.inactivo]">
-                <h2 class="titulosMenu"> {{titulos.secccion_Ritmo_Cardiaco}} </h2>
+            <div v-on:click="activarVisorRendimiento" v-bind:class="[estadoVisualizadores.estadoRendimiento ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulosMenu"> {{titulos.seccion_Rendimiento}} </h2>
             </div>
-            <div v-on:click="activarVisorTemperatura" v-bind:class="[estadoVisualizadores.estadoTemperatura ? estiloActual.activo : estiloActual.inactivo]">
-                <h2 class="titulosMenu">{{titulos.secccion_Temperatura}} </h2>
-            </div>
-            <div v-on:click="activarVisorOxigeno" v-bind:class="[estadoVisualizadores.estadoOxigeno ? estiloActual.activo : estiloActual.inactivo]">
-                <h2 class="titulosMenu">{{titulos.seccion_Oxigeno}}</h2>
-            </div>   
+            <div v-on:click="activarVisorHistorial" v-bind:class="[estadoVisualizadores.estadoHistorial ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulosMenu">{{titulos.seccion_Historial}} </h2>
+            </div>  
         </section> 
          <!-- #endregion Menu de Opciones -->
         <!-- #region Visores/Subventanas -->
@@ -98,17 +95,34 @@
                 </div>
             </div>
             <!-- #endregion Visor Perfil -->
-            <!-- #region Visor Ritmo Cardiaco -->
-            <div  v-show= "estadoVisualizadores.estadoRitmoCardiaco" class="visores">
-                <div class = "contenedorDinamico">
-                    <div class= "primerSeparador">
+            <!-- #region Visor Rendimiento en Vivo -->
+            <div  v-show= "estadoVisualizadores.estadoRendimiento" class="visores">
+                    <div class = "contenedorMayor">
+                        <!-- #region Visor Panel de Control -->
+                        <br>
+                            <h2 class="titulos">{{titulos.visorSalud}}</h2>
+                        <br>
+                        <p class="infoJustificada">La sección de rendimiento permite poder visualizar tu estado fisico reflejado por el guante activado, 
+                            permitiendo asi poder analizar tu información de manera fluida. Inicia tu evaluación para poder visualizar
+                            tus mediciones en tiempo real:
+                        </p>
+                        <br>
+                        <div class="opcionesDeAnalisis">
+                            <div class="contenedorBotonAccionador">
+                                <button id="botonInicioEvaluacion">Iniciar Evaluación</button>
+                            </div>
+                            <div class="contenedorBotonAccionador">
+                                <button id="botonFinEvaluacion">Detener Evaluación</button>
+                            </div>
+                        </div>
+                        <!-- #endregion Visor Panel de Control -->
+                        <br>
+                        <!-- #region Visor Ritmo Cardiaco -->
                         <h2 class="titulos">{{titulos.visorCardiaco}}</h2>
                         <br>
-                        <canvas id="visorGraficoRitmoCardiaco" width="90%" height="35%"></canvas>
+                        <canvas id="visorGraficoRitmoCardiaco" width="60%" height="20%"></canvas>
                         <br>
-                    </div>
-                    <div class= "segundoSeparador">
-                        <h2 class="titulos">{{titulos.seccion_indicadoresPulso}}</h2>
+                        <h2 class="titulos">{{titulos.visorTemperatura}}</h2>
                         <br>
                         <div class="indicadoresSalud">
                             <br>
@@ -118,30 +132,10 @@
                                 <p>Mi ritmo promedio: <input v-bind:value="indicadoresDeSaludVariables.pulsoPromedio" type="text" readonly="readonly">(Lpm)</p>
                             </form>
                         </div>
-                        <br><br>
-                        <div class="opcionesDeAnalisis">
-                            <div class="contenedorBotonAccionador">
-                                <button id="botonEjecucionPulso">Evaluar Ritmo C.</button>
-                            </div>
-                            <div class="contenedorBotonAccionador">
-                                <button id="botonVerHistorialPulso">Ver Historial</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-            </div>
-            <!-- #endregion Ritmo Cardiaco -->
-            <!-- #region Visor Temperatura -->
-            <div  v-show= "estadoVisualizadores.estadoTemperatura" class="visores" >
-                <div class = "contenedorDinamico">
-                    <div class= "primerSeparador">
-                        <h2 class="titulos">{{titulos.visorTemperatura}}</h2>
+                        <!-- #endregion Ritmo Cardiaco -->
                         <br>
-                        <canvas id="visorGraficoTemperatura" width="90%" height="35%"></canvas>
-                    </div>
-                    <div class= "segundoSeparador">
-                        <h2 class="titulos">{{titulos.seccion_indicadoresTemperatura}}</h2>
+                        <!-- #region Visor Temperatura -->
+                        <canvas id="visorGraficoTemperatura" width="60%" height="20%"></canvas>
                         <br>
                         <div class="indicadoresSalud">
                             <br>
@@ -155,31 +149,12 @@
                                 <p>Temperatura promedio: <input v-bind:value="indicadoresDeSaludVariables.temperaturaPromedio" type="text" readonly="readonly">°C</p>
                             </form>
                         </div>
+                        <!-- #endregion Visor Temperatura -->
                         <br>
-                        <br>
-                        <div class="opcionesDeAnalisis">
-                            <div class="contenedorBotonAccionador">
-                                <button id="botonEjecucionTemperatura">Evaluar Temp.</button>
-                            </div>
-                            <div class="contenedorBotonAccionador">
-                                <button id="botonVerHistorialTemperatura">Ver Historial</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-            </div>
-            <!-- #endregion Visor Temperatura -->
-            <!-- #region Visor Oxigeno -->
-            <div  v-show= "estadoVisualizadores.estadoOxigeno" class="visores">
-                <div class = "contenedorDinamico">
-                    <div class= "primerSeparador">
+                        <!-- #region Visor Oxigeno -->
                         <h2 class="titulos">{{titulos.visorOxigeno}}</h2>
                         <br>
-                        <canvas id="visorGraficoOxigeno" width="90%" height="35%"></canvas>
-                    </div>
-                    <div class= "segundoSeparador">
-                        <h2 class="titulos">{{titulos.seccion_indicadoresOxigeno}}</h2>
+                        <canvas id="visorGraficoOxigeno" width="60%" height="20%"></canvas>
                         <br>
                         <div class="indicadoresSalud">
                             <br>
@@ -189,21 +164,45 @@
                                 <p>Nivel de Oxigeno promedio: <input v-bind:value="indicadoresDeSaludVariables.oxigenoPromedio" type="text" readonly="readonly">(O)</p>
                             </form>
                         </div>
+                        <!-- #endregion Visor Oxigeno -->
                         <br>
+                        <!-- #region Visor Velocidad -->
+                        <h2 class="titulos">{{titulos.visorVelocidad}}</h2>
                         <br>
-                        <div class="opcionesDeAnalisis">
-                            <div class="contenedorBotonAccionador">
-                                <button id="botonEjecucionOxigeno">Evaluar Oxígeno</button>
-                            </div>
-                            <div class="contenedorBotonAccionador">
-                                <button id="botonVerHistorialOxigeno">Ver Historial</button>
-                            </div>
+                        <canvas id="visorGraficoVelocidad" width="60%" height="20%"></canvas>
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form id="indicadoresDeVelocidad">      
+                                <p>Velocidad actual: <input v-bind:value="indicadoresDeSaludVariables.velocidadActual" type="text" readonly="readonly">m/s</p>
+                                <br>
+                                <p>Velocidad maxima: <input v-bind:value="indicadoresDeSaludVariables.velocidadMaxima" type="text" readonly="readonly">m/s</p>
+                                <br>
+                                <p>Velocidad minima: <input v-bind:value="indicadoresDeSaludVariables.velocidadMinima" type="text" readonly="readonly">m/s</p>
+                                <br>
+                                <p>Velocidad promedio: <input v-bind:value="indicadoresDeSaludVariables.velocidadPromedio" type="text" readonly="readonly">m/s</p>
+                            </form>
                         </div>
-                    </div>
+                        <!-- #endregion Visor Velocidad -->
+                        <br>
+                        <!-- #region Visor Distancia -->
+                        <h2 class="titulos">{{titulos.visorDistancia}}</h2>
+                        <br>
+                        <canvas id="visorGraficoDistancia" width="60%" height="20%"></canvas>
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form id="indicadoresDeDistancia">      
+                                <p>Distancia actual: <input v-bind:value="indicadoresDeSaludVariables.distanciaActual" type="text" readonly="readonly">m</p>
+                                <br>
+                                <p>Distancia total: <input v-bind:value="indicadoresDeSaludVariables.distanciaTotal" type="text" readonly="readonly">m</p>
+                            </form>
+                        </div>
+                        <!-- #endregion Visor Distancia -->
+                        <br>
                 </div>
-                <br>
             </div>
-            <!-- #endregion Visor Oxigeno -->
+            <!-- #endregion Visor Rendimiento en Vivo -->
             <!-- #region Visor Historial -->
             <div v-show= "estadoVisualizadores.estadoHistorial" class="visores">
                 <h2 class="titulos">{{titulos.visorHistorial}}</h2>
@@ -357,7 +356,7 @@
     <footer>
         <article>
             <h4>Arquitectura de Computadores y Ensambladores 2 Sección: N</h4>
-            <p>Práctica # 1: Tecnología Vestible para Ejercicio, Ilustraciones de <a id="referenciaImagenes" href="https://storyset.com/data"> Freepik Storyset</a></p>
+            <p>Proyecto # 1: Tecnología Vestible para Ejercicio, Ilustraciones de <a id="referenciaImagenes" href="https://storyset.com/data"> Freepik Storyset</a></p>
         </article>
     </footer>
     <!-- #endregion Pie de Página -->

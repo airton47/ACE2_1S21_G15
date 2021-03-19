@@ -16,20 +16,19 @@ var mainApp = new Vue({
 	data: {
     //#region DATA
 	    titulos: {
-        secccion_Perfil: "Perfil",
-        secccion_Ritmo_Cardiaco: "Ritmo Cardíaco",
-        secccion_Temperatura: "Temperatura",
-        seccion_Oxigeno: "Oxígeno",
+        seccion_Perfil: "Perfil",
+        seccion_Rendimiento: "Rendimiento",
+        seccion_Historial: "Historiales",
         visorDatosPersonales: "Mis Datos Personales",
         visorDatosDeportivos: "Mis Datos Deportivos",
+        visorSalud: "Control de Rendimiento",
         visorCardiaco: "Mi Control de Ritmo Cardiaco",
-        seccion_indicadoresPulso: "Indicadores de Ritmo Cardiaco:",
-        seccion_indicadoresTemperatura: "Indicadores de Temperatura:",
-        seccion_indicadoresOxigeno: "Indicadores de Oxígeno:",
         visorHistorial:"Mis Historiales",
         visorDetallesRutinas:"Mis Detalles",
         visorTemperatura: "Mi Control de Temperatura",
         visorOxigeno: "Mi Control de Oxígeno en la Sangre",
+        visorVelocidad: "Mi Control de Velocidad",
+        visorDistancia: "Mi Control de Distancia",
         visorAtletas: "Atletas Asignados:",
         seccionNuevosAtletas: "Atletas no asignados:",
         visorAtletasHistorialCardiaco: "Ritmo Cardíaco:",
@@ -39,9 +38,7 @@ var mainApp = new Vue({
       },
       estadoVisualizadores: {
         estadoPerfil: true,
-        estadoRitmoCardiaco: false,
-        estadoTemperatura: false,
-        estadoOxigeno: false,
+        estadoRendimiento: false,
         estadoHistorial: false,
         estadoAtletas: false
       },
@@ -70,12 +67,19 @@ var mainApp = new Vue({
         oxigenoPromedio: 0,
         cantidadMedicionesPrevia:0,
         cantidadMedicionesActual:0,
-        indicadorSeguimiento:true
+        indicadorSeguimiento:true,
+        velocidadActual: 0,
+        velocidadMaxima: 0,
+        velocidadMinima: 0,
+        velocidadPromedio: 0,
+        velocidadMaxima: 0,
+        distanciaActual: 0,
+        distanciaTotal: 0,
       },
       datosDePerfilEnSesion:{
         tipo: '---',
         username: '---',
-        estadoTipo: false, //Coach es true, false es atleta
+        estadoTipo: true, //Coach es true, false es atleta
         id: '---',
         nombres: '----',
         apellidos: '----',
@@ -98,53 +102,26 @@ var mainApp = new Vue({
         //#region METHODS
         activarVisorPerfil: function(){
             this.estadoVisualizadores.estadoPerfil = true;
-            this.estadoVisualizadores.estadoRitmoCardiaco = false;
+            this.estadoVisualizadores.estadoRendimiento = false;
             this.estadoVisualizadores.estadoHistorial = false;
-            this.estadoVisualizadores.estadoTemperatura = false;
-            this.estadoVisualizadores.estadoOxigeno = false;
             this.estadoVisualizadores.estadoAtletas = false;
         },
-        activarVisorRitmoCardiaco: function(){
+        activarVisorRendimiento: function(){
             this.estadoVisualizadores.estadoPerfil = false;
-            this.estadoVisualizadores.estadoRitmoCardiaco = true;
+            this.estadoVisualizadores.estadoRendimiento = true;
             this.estadoVisualizadores.estadoHistorial = false;
-            this.estadoVisualizadores.estadoTemperatura = false;
-            this.estadoVisualizadores.estadoOxigeno = false;
             this.estadoVisualizadores.estadoAtletas = false;
-            mainApp.reiniciarVisoresMedicionesEnVivo();
-        },
-        activarVisorTemperatura: function(){
-            this.estadoVisualizadores.estadoPerfil = false;
-            this.estadoVisualizadores.estadoRitmoCardiaco = false;
-            this.estadoVisualizadores.estadoHistorial = false;
-            this.estadoVisualizadores.estadoTemperatura = true;
-            this.estadoVisualizadores.estadoOxigeno = false;
-            this.estadoVisualizadores.estadoAtletas = false;
-            mainApp.reiniciarVisoresMedicionesEnVivo();
-        },
-        activarVisorOxigeno: function(){
-            this.estadoVisualizadores.estadoPerfil = false;
-            this.estadoVisualizadores.estadoRitmoCardiaco = false;
-            this.estadoVisualizadores.estadoHistorial = false;
-            this.estadoVisualizadores.estadoTemperatura = false;
-            this.estadoVisualizadores.estadoOxigeno = true;
-            this.estadoVisualizadores.estadoAtletas = false;
-            mainApp.reiniciarVisoresMedicionesEnVivo();
         },
         activarVisorAtletas: function(){
             this.estadoVisualizadores.estadoPerfil = false;
-            this.estadoVisualizadores.estadoRitmoCardiaco = false;
+            this.estadoVisualizadores.estadoRendimiento = false;
             this.estadoVisualizadores.estadoHistorial = false;
-            this.estadoVisualizadores.estadoTemperatura = false;
-            this.estadoVisualizadores.estadoOxigeno = false;
             this.estadoVisualizadores.estadoAtletas = true;
         },
         activarVisorHistorial: function(){
           this.estadoVisualizadores.estadoPerfil = false;
-          this.estadoVisualizadores.estadoRitmoCardiaco = false;
+          this.estadoVisualizadores.estadoRendimiento = false;
           this.estadoVisualizadores.estadoHistorial = true;
-          this.estadoVisualizadores.estadoTemperatura = false;
-          this.estadoVisualizadores.estadoOxigeno = false;
           this.estadoVisualizadores.estadoAtletas = false;
           //Reiniciamos los gráficos y tablas:
           dataGraficoHistorialActual.splice(0, dataGraficoHistorialActual.length);
@@ -276,6 +253,66 @@ let  graficoOxigeno = new Chart(
 
 //#endregion OXIGENO:
 
+//#region VELOCIDAD:
+
+let contenedor_graf_Velocidad = document.getElementById('visorGraficoVelocidad');
+let dataVelocidadGrafico = [];
+let labelsVelocidadGrafico = [];
+let config_graf_Velocidad = {
+  type: 'line',
+  data: {
+    labels:labelsVelocidadGrafico,
+    datasets: [{
+      label: 'Velocidades actuales',
+      data:dataVelocidadGrafico,
+      backgroundColor: 'rgba(102,153,153, 1)',
+      borderColor: 'rgba(102,153,153, 0.4)', //el borde lo interpreta como el color de la linea
+      pointBackgroundColor:'rgba(102,153,153, 1)',
+      fill: false,
+      lineTension: 0.5
+    }]
+  },
+    options: {}
+};
+
+
+let  graficoVelocidad = new Chart(
+  contenedor_graf_Velocidad,
+  config_graf_Velocidad
+);
+
+//#endregion VELOCIDAD:
+
+//#region DISTANCIA:
+
+let contenedor_graf_Distancia = document.getElementById('visorGraficoDistancia');
+let dataDistanciaGrafico = [];
+let labelsDistanciaGrafico = [];
+let config_graf_Distancia = {
+  type: 'line',
+  data: {
+    labels:labelsDistanciaGrafico,
+    datasets: [{
+      label: 'Distancias actuales',
+      data:dataDistanciaGrafico,
+      backgroundColor: 'rgba(102,153,153, 1)',
+      borderColor: 'rgba(102,153,153, 0.4)', //el borde lo interpreta como el color de la linea
+      pointBackgroundColor:'rgba(102,153,153, 1)',
+      fill: false,
+      lineTension: 0.5
+    }]
+  },
+    options: {}
+};
+
+
+let  graficoDistancia = new Chart(
+  contenedor_graf_Distancia,
+  config_graf_Distancia
+);
+
+//#endregion DISTANCIA:
+
 //#region HISTORIAL
 
 let contenedor_graf_historial = document.getElementById('visorGraficoHistorial');
@@ -348,7 +385,7 @@ mainApp.controladoresDeHistoriales.listaRutinas.push({
 //Ejecución de Login y Registro
 actualizarFecha();
 ejecutarReloj();
-Mensajes.ejecutarLogin();
+//Mensajes.ejecutarLogin();
 
 //#region Control de Fecha y Hora
 
@@ -371,9 +408,9 @@ function ejecutarReloj(){
 //#region Asignación de funciones a botones:
 
 //#region Ventanas
-document.getElementById('botonVerHistorialPulso').addEventListener("click", Procesos.verHistorialPersonal);
-document.getElementById('botonVerHistorialTemperatura').addEventListener("click", Procesos.verHistorialPersonal);
-document.getElementById('botonVerHistorialOxigeno').addEventListener("click", Procesos.verHistorialPersonal);
+//document.getElementById('botonVerHistorialPulso').addEventListener("click", Procesos.verHistorialPersonal);
+//document.getElementById('botonVerHistorialTemperatura').addEventListener("click", Procesos.verHistorialPersonal);
+//document.getElementById('botonVerHistorialOxigeno').addEventListener("click", Procesos.verHistorialPersonal);
 document.getElementById('botonVerAtletas').addEventListener("click", Procesos.mostrarVisorAtletasAsignados);
 document.getElementById('botonRegresarPerfil').addEventListener("click", mainApp.activarVisorPerfil);
 //#endregion Ventanas
@@ -386,9 +423,9 @@ document.getElementById('controladorSesion').addEventListener("click", Mensajes.
 //#region Acciones API
 document.getElementById('botonAgregarAtleta').addEventListener("click", Procesos.asignarAtletaNoAsignado);
 document.getElementById('atletasNoAsignados').addEventListener("change", Procesos.obtenerNombresAtletaNoAsignado);
-document.getElementById('botonEjecucionPulso').addEventListener("click", Procesos.ejecutarMedicionEnVivo.bind(null, "Ritmo"));
-document.getElementById('botonEjecucionTemperatura').addEventListener("click", Procesos.ejecutarMedicionEnVivo.bind(null, "Temperatura"));
-document.getElementById('botonEjecucionOxigeno').addEventListener("click", Procesos.ejecutarMedicionEnVivo.bind(null, "Oxigeno"));
+document.getElementById('botonInicioEvaluacion').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
+//document.getElementById('botonEjecucionTemperatura').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
+//document.getElementById('botonEjecucionOxigeno').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
 //#endregion Acciones API
 
 //#endregion Asignación de funciones a botones

@@ -115,6 +115,7 @@ function regresarPantallaValidacion(){
 }
 
 function mostrarDespedidaSesion(){
+  mainApp.reiniciarVisoresMedicionesEnVivo();
  swal(mensajeDespedidaSesion);
  setTimeout(regresarPantallaValidacion, 2500); //se espera la duración dfel mensaje para ejecutar el proceso
 }
@@ -442,6 +443,25 @@ async function recolectarDatosRegistro(){
 //#endregion Recolección de datos Log In y Sign In
 
 //#region Analítica
+let mensajeMedicionFinalizada = {
+  title: 'Mediciones Finalizadas',
+  html: '<b>Su ritmo cardiaco, oxigeno y temperatura se midieron con éxito</b>.',
+  imageUrl: "Imagenes/Pulso.gif", //es la ruta desde el HTML
+  imageWidth: 250,
+  imageHeight: 250,
+  imageAlt: 'Pulso: de Storyset',
+  showConfirmButton: true,
+  confirmButtonColor: '#669999',
+  confirmButtonText: 'Aceptar',
+  allowEscapeKey: false,
+  allowOutsideClick: false,
+  
+}
+
+function mostrarMensajeMedicionEnVivoFinalizada(){
+  swal(mensajeMedicionFinalizada);
+}
+
 let mensajePulso = {
   title: 'Pulso evaluado',
   html: '<b>Tu pulso fue evaluado con éxito durante esta rutina</b>.',
@@ -506,5 +526,6 @@ Mensajes.mensajeEvaluacionTemperatura = mensajeEvaluacionTemperatura;
 Mensajes.ejecutarLogOut = ejecutarLogOut;
 Mensajes.mensajeFalloGetAPI = mensajeFalloGetAPI;
 Mensajes.mensajeFalloPostAPI = mensajeFalloPostAPI;
+Mensajes.mostrarMensajeMedicionEnVivoFinalizada = mostrarMensajeMedicionEnVivoFinalizada;
 
 export {Mensajes};

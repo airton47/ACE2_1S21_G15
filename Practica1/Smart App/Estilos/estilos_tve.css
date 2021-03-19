@@ -62,6 +62,11 @@ canvas{ /*Canvas se empleará como contenedor de los gráficos*/
     margin-top: 25px;
 }
 
+.infoJustificada{
+    color: #F0F0F0;
+    text-align: justify;
+}
+
 /*#endregion Fin de Elementos Generales*/
 
 /*#region Contenedores Principales*/
@@ -162,7 +167,7 @@ header h1{ /*titulo principal*/
     color: #e1e1e1;
 }
 
-#indicadoresDePulso, #indicadoresDeTemperatura, #indicadoresDeOxigeno,  #datosPerfil, #datosDeportivos, #datosNuevoAtleta{
+#indicadoresDePulso, #indicadoresDeTemperatura, #indicadoresDeOxigeno, #indicadoresDeVelocidad, #indicadoresDeDistancia, #datosPerfil, #datosDeportivos, #datosNuevoAtleta{
     margin: auto;
     width: 100%;
     text-align: center;
@@ -358,7 +363,7 @@ button{
 }
 
 /* dibuja y coloca "antes" el simbolo de play(triángulo acostado) */
-#botonEjecucionPulso:before, #botonEjecucionTemperatura:before, #botonEjecucionOxigeno:before{ 
+#botonInicioEvaluacion:before{ 
     content: "";
     width: 0;
     height: 0;
@@ -369,20 +374,30 @@ button{
     margin-right: 5px;
 }
 
-#botonEjecucionPulso, #botonEjecucionTemperatura, #botonEjecucionOxigeno{
+/* dibuja y coloca "antes" el simbolo de Stop(cuadrado) */
+#botonFinEvaluacion:before{ 
+    content: "";
+    width: 0;
+    height: 0;
+    border: 5px solid #fff;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+#botonInicioEvaluacion{
     background-color: #70B090;
 }
 
-#botonEjecucionPulso:hover, #botonEjecucionTemperatura:hover, #botonEjecucionOxigeno:hover{
+#botonInicioEvaluacion:hover{
     background-color: #669999;
     transition: 0.5s;
 }
 
-#botonVerHistorialPulso, #botonVerHistorialTemperatura, #botonVerHistorialOxigeno, #botonVerAtletas, #botonAgregarAtleta{
+#botonFinEvaluacion,  #botonVerAtletas, #botonAgregarAtleta{
     background-color: #006666;
 }
 
-#botonVerHistorialPulso:hover , #botonVerHistorialTemperatura:hover, #botonVerHistorialOxigeno:hover, #botonVerAtletas:hover, #botonAgregarAtleta:hover{
+#botonFinEvaluacion:hover ,  #botonVerAtletas:hover, #botonAgregarAtleta:hover{
     background-color: #016161;
     transition: 0.5s;
 }
@@ -476,11 +491,20 @@ button{
     padding: 0;
 }
 
+.contenedorMayor{
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    width: 80%;
+    margin: auto;
+    padding: 0;
+}
+
 /*#endregion Contenedores dinámicos*/
 
 /*#region Inputs(de tipo texto) para mostrar los datos*/
 
-#indicadoresDePulso input, #indicadoresDeTemperatura input, #indicadoresDeOxigeno input{
+#indicadoresDePulso input, #indicadoresDeTemperatura input, #indicadoresDeOxigeno input, #indicadoresDeVelocidad input, #indicadoresDeDistancia input{
     text-align: center;
     font-size: larger;
     color: #F8F6F5;
@@ -522,7 +546,7 @@ button{
 
 /*#region covertor LogIn Y SigIn*/ 
 #covertor{
-    position: fixed;
+    position: fixed; display: none;
     background-color: #344c5c;
     height: 100%;
     width: 100%;
@@ -531,7 +555,7 @@ button{
 /*#endregion covertor LogIn Y SigIn */ 
 
 /*#region Estilos con Media querys para dispositivos/pantallas con demasiada altura*/
-@media screen and  (min-height: 850px){
+@media screen and  (min-height: 800px){
 
     #main{
         display: flex;
@@ -555,14 +579,14 @@ button{
     .opcionesMenu{
         padding: 1%;
         height: auto;
-        width: 25%;
+        width: 33%;
         box-sizing: border-box;
     }
 
     .opcionesMenuDesactivadas{
         padding: 1%;
         height: auto;
-        width: 25%;
+        width: 33%;
         box-sizing: border-box;
     }
 
@@ -645,14 +669,14 @@ button{
    .opcionesMenu{
        padding: 1%;
        height: auto;
-       width: 25%;
+       width: 33%;
        box-sizing: border-box;
    }
 
    .opcionesMenuDesactivadas{
        padding: 1%;
        height: auto;
-       width: 25%;
+       width: 33%;
        box-sizing: border-box;
    }
 
@@ -675,7 +699,7 @@ button{
        justify-content: space-between;
    }
 
-   #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+   #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeVelocidad, #indicadoresDeDistancia, #indicadoresDeVelocidad input, #indicadoresDeDistancia input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
        font-size: smaller;
    }
 
@@ -747,14 +771,14 @@ button{
     .opcionesMenu{
         padding: 2%;
         height: auto;
-        width: 25%;
+        width: 33%;
         box-sizing: border-box;
     }
 
     .opcionesMenuDesactivadas{
         padding: 2%;
         height: auto;
-        width: 25%;
+        width: 33%;
         box-sizing: border-box;
     }
 
@@ -774,7 +798,7 @@ button{
         width: 100%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeVelocidad, #indicadoresDeDistancia, #indicadoresDeVelocidad input, #indicadoresDeDistancia input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
         font-size: small;
     }
 
@@ -840,7 +864,7 @@ button{
         border: #3F3F5C solid;
         padding: 2%;
         height: auto;
-        width: 25%;
+        width: 33%;
         box-sizing: border-box;
     }
 
@@ -849,7 +873,7 @@ button{
         border: #3F3F5C solid;
         padding: 2%;
         height: auto;
-        width: 25%;
+        width: 33%;
         box-sizing: border-box;
     }
 
@@ -866,7 +890,7 @@ button{
         height: 45%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input ,#datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeVelocidad, #indicadoresDeDistancia, #indicadoresDeVelocidad input, #indicadoresDeDistancia input, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input ,#datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
         font-size: medium;
     }
 
