@@ -56,7 +56,7 @@
 %TEXTO_SUBRAYADO -> \underline{<texto>}
 
 %TITTULO DEL ARTICULO
-\title{\Huge IoT Práctica Uno -  Banda Inteligente - Arquitectura de Computadores y Ensambladores 2 }
+\title{\Huge IoT Proyecto Uno -  Banda Inteligente - Arquitectura de Computadores y Ensambladores 2 }
 %AUTORES DEL ARTICULO
 
 \author{\newline Airton Yelstin de León Obando (201602836) - Rol: Analítico}
@@ -118,6 +118,7 @@ Para realizar las diferentes mediciones y lecturas sobre el estado corporal del 
 \begin{itemize}
     \item[$\bullet$]\textbf{Sensor de temperatura, LM34} para determinar la temperatura corporal del usuario.
     \item[$\bullet$]\textbf{Sensor de pulso y oxigeno, Max30102} para medir tanto el ritmo cardiaco como los niveles de oxigeno en la sangre del usuario mientras este realiza actividades físicas.
+    \item[$\bullet$]\textbf{Acelerómetro} para medir magnitudes físicas, como velocidad y distancia.
 \end{itemize}
 \subsection{Conexión}
     La comunicación a utilizar entre la banda inteligente y el dispositivo móvil del usuario será a través de conexión \textbf{Bluethoot} exclusivamente, el dispositivo arduino recolecta la información para ser transmitida desde el módulo \textbf{Bluethoot} a el dispositivo móvil, una vez los datos hayan sidos recolectados y normalizados estos serán enviados.  al dispositivo móvil que contara con conexión a internet y que a su vez realiza peticiones \textbf{HTTP} al servidor a través de una \textbf{API/REST}, que mediara el envío y recepción la información al dispositivo móvil del usuario, para posteriormente almacenar la información en una base de datos en al nube, específicamente a una base de datos de \textbf{Mongo DB.} Ver figura 2. \newline
