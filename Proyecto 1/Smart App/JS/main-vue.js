@@ -34,7 +34,9 @@ var mainApp = new Vue({
         visorAtletasHistorialTemperatura: "Temperatura:",
         visorAtletasHistorialOxígeno: "Oxígeno:",
         medicionesHistoriales: "Mis Rutinas",
-        medicionesNavetee: "Mis Pruebas Course-Navetee"
+        medicionesNavetee: "Mis Pruebas Course-Navetee",
+        medicionesSemana: "Detalle Semanal",
+        detalleGeneralNavetee: "Detalle General"
       },
       estadoVisualizadores: {
         estadoPerfil: true,
@@ -51,7 +53,11 @@ var mainApp = new Vue({
         listaMedicionesTemperaturas: [],
         listaMedicionesOxigenos: [],
         listaRutinas: [],
-        listaAnaliticas: []
+        listaAnaliticas: [],
+        listaPruebasTotales: [],
+        listaPruebasFiltradas: [],
+        listaRepeticiones: [],
+        listaSemanasActivas: []
       },
       controladoresDeHistorialesCoach: {
         listaAtletas: []
@@ -75,8 +81,12 @@ var mainApp = new Vue({
         velocidadMaxima: 0,
         distanciaActual: 0,
         distanciaTotal: 0,
+        pruebasCompletadas: 0,
         pruebasFalladas: 0,
         pruebasRendidas: 0,
+        repeticionesPromedioSemana: 0,
+        repeticionesMinSemana: 0,
+        repeticionesMaxSemana: 0
       },
       datosDePerfilEnSesion:{
         tipo: '---',
@@ -415,7 +425,7 @@ mainApp.controladoresDeHistoriales.listaRutinas.push({
 //Ejecución de Login y Registro
 actualizarFecha();
 ejecutarReloj();
-//Mensajes.ejecutarLogin();
+Mensajes.ejecutarLogin();
 
 //#region Control de Fecha y Hora
 
@@ -432,6 +442,7 @@ function actualizarHora(){
 function ejecutarReloj(){
   setInterval(actualizarHora, 1000);
 }
+
 
 //#endregion Control de Fecha y Hora
 
@@ -453,7 +464,8 @@ document.getElementById('controladorSesion').addEventListener("click", Mensajes.
 //#region Acciones API
 document.getElementById('botonAgregarAtleta').addEventListener("click", Procesos.asignarAtletaNoAsignado);
 document.getElementById('atletasNoAsignados').addEventListener("change", Procesos.obtenerNombresAtletaNoAsignado);
-document.getElementById('botonInicioEvaluacion').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
+document.getElementById('botonInicioEvaluacion').addEventListener("click", Procesos.ejecutarMedicionEnVivo); 
+document.getElementById('selectorSemana').addEventListener("change", Procesos.mostrarPruebasFiltradasFecha);
 //document.getElementById('botonEjecucionTemperatura').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
 //document.getElementById('botonEjecucionOxigeno').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
 //#endregion Acciones API

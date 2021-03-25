@@ -5,6 +5,8 @@ import "regenerator-runtime/runtime.js"; //permite la compilación de Async en B
 
 const Procesos = {};
 
+const rutaAWS = 'http://ec2-3-141-95-126.us-east-2.compute.amazonaws.com:5000';
+
 //#region Solicitudes GET
 async function obtenerInfoPorAPI(urlAPI, complementoURLAPI){
     try{
@@ -17,34 +19,51 @@ async function obtenerInfoPorAPI(urlAPI, complementoURLAPI){
 }
 
 async function obtenerUsernamesSistema(){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/getUsernames';
+    const urlAPI = rutaAWS + '/usuarios/getUsernames';
     const usuariosDelSistema = await obtenerInfoPorAPI(urlAPI, '');
     return usuariosDelSistema;
 }
 
 async function obtenerDatosUsuarioEspecifico(username){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/getUsuario/';
+    const urlAPI = rutaAWS + '/usuarios/getUsuario/';
     const datosRecibidos = await obtenerInfoPorAPI(urlAPI, username);
     return datosRecibidos;
 }
 
 async function obtenerDatosCompletosUsuariosSistema(){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/getUsuarios';
+    const urlAPI = rutaAWS + '/usuarios/getUsuarios';
     const datosUsuariosDelSistema = await obtenerInfoPorAPI(urlAPI, '');
     return datosUsuariosDelSistema;
 }
 
 async function obtenerAtletasBajoCoach(coach){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/getAtletaFromCoach/';
+    const urlAPI = rutaAWS + '/usuarios/getAtletaFromCoach/';
     const datosAtletas = await obtenerInfoPorAPI(urlAPI, coach);
     return datosAtletas;
 }
 
 async function obtenerHistorialesAtleta(atleta){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/tests/getTest/';
+    const urlAPI = rutaAWS + '/tests/getTest/';
     const datosHistorialesAtleta = await obtenerInfoPorAPI(urlAPI, atleta);
     return datosHistorialesAtleta;
 }
+
+//#region Pruebas Course-Navetee
+
+async function obtenerEstadosNaveteeAtleta(atleta){
+    const urlAPI = rutaAWS + '/pruebas/getIntentos/';
+    const datosEstadosAtleta = await obtenerInfoPorAPI(urlAPI, atleta);
+    return datosEstadosAtleta;
+}
+
+async function obtenerPruebasNaveteeAtleta(atleta){
+    const urlAPI = rutaAWS + '/pruebas/getPruebas/';
+    const datosPruebasAtleta = await obtenerInfoPorAPI(urlAPI, atleta);
+    return datosPruebasAtleta;
+}
+
+
+//#endregion Pruebas Course-Navetee
 
 //#endregion Solicitudes GET
 
@@ -68,19 +87,19 @@ async function enviarInfoAPI(informacion, urlAPI, complementoURLAPI){
 }
 
 async function crearNuevoAtleta(infoAtleta){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/addAtleta';
+    const urlAPI = rutaAWS + '/usuarios/addAtleta';
     const respuestaEnvio = await enviarInfoAPI(infoAtleta, urlAPI, '');
     return respuestaEnvio;
 }
 
 async function crearNuevoCoach(infoCoach){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/addCoach';
+    const urlAPI = rutaAWS + '/usuarios/addCoach';
     const respuestaEnvio = await enviarInfoAPI(infoCoach, urlAPI, '');
     return respuestaEnvio;
 }
 
 async function asignarAtletaACoach(coach, atleta){
-    const urlAPI = 'http://ec2-3-129-62-242.us-east-2.compute.amazonaws.com/usuarios/addAtletaToCoach/';
+    const urlAPI = rutaAWS + '/usuarios/addAtletaToCoach/';
     const respuestaEnvio = await enviarInfoAPI(atleta, urlAPI, coach);
     return respuestaEnvio;
 }
@@ -96,7 +115,7 @@ function verHistorialPersonal(){
      Procesos.obtenerHistorialesPersonales();
 }
 
-function obtenerHistorialesCompletos(){
+function obtenerHistorialesCompletos(){ //lo emplea el coach para obtener el historial del atleta seleccionado
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
     let usernameAtleta = filaActual.firstChild.textContent;
     mainApp.evaluacionAtleta.username = usernameAtleta;
@@ -109,10 +128,10 @@ function obtenerHistorialesCompletos(){
         allowEscapeKey: false,
         allowOutsideClick: false
     });
-    setTimeout(mostrarVisorRutinas, 2300);
+    setTimeout(mostrarVisorRutinasyPruebas, 2300);
 }
 
-function obtenerHistorialesPersonales(){
+function obtenerHistorialesPersonales(){ //se emplea para saber el historial del usuario en sesión
     swal({
         title: 'Recolectando historiales de ' + mainApp.evaluacionAtleta.username,
         html: '<b>Cargando mediciones recientes...</b>',
@@ -122,7 +141,7 @@ function obtenerHistorialesPersonales(){
         allowEscapeKey: false,
         allowOutsideClick: false
     });
-    setTimeout(mostrarVisorRutinas, 2300);
+    setTimeout(mostrarVisorRutinasyPruebas, 2300);
 }
 
 function obtenerDetallesRutina(){
@@ -140,7 +159,37 @@ function obtenerDetallesRutina(){
     setTimeout(mostrarDetalleRutinaTablas, 2500);
 }
 
-function obtenerGrafico(){
+function obtenerDetallesPruebaNavetee(){
+    let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
+    let fechaRutina = filaActual.firstChild.textContent;
+    mainApp.evaluacionAtleta.fechaRutina = fechaRutina;
+    swal({
+        html: '<b>Cargando detalles de Prueba...</b>',
+        timer: 2500,
+        showConfirmButton: false,
+        type: 'info',
+        allowEscapeKey: false,
+        allowOutsideClick: false
+    });
+    setTimeout(mostrarDatosRepeticionSeleccionada, 2500);
+}
+
+function obtenerDetallesRepeticion(){
+    let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
+    let fechaRutina = filaActual.firstChild.textContent;
+    mainApp.evaluacionAtleta.fechaRutina = fechaRutina;
+    swal({
+        html: '<b>Cargando detalles de Repetición...</b>',
+        timer: 2500,
+        showConfirmButton: false,
+        type: 'info',
+        allowEscapeKey: false,
+        allowOutsideClick: false
+    });
+    //setTimeout(, 2500);
+}
+
+function obtenerGraficoRutina(){
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
     let fechaRutina = filaActual.firstChild.textContent;
     mainApp.evaluacionAtleta.fechaRutina = fechaRutina;
@@ -168,6 +217,44 @@ function obtenerGrafico(){
         });
         setTimeout(mostrarGraficoMedicionesRutina, 2500);
       });
+}
+
+function obtenerGraficoRepeticionNavetee(){
+    let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
+    let fechaRutina = filaActual.firstChild.textContent;
+    mainApp.evaluacionAtleta.fechaRutina = fechaRutina;
+    swal({
+        title: 'Grafico de mediciones',
+        text: 'Seleccione cúal medición se graficará:',
+        input: 'select',
+        inputOptions: {
+          Velocidad: 'Velocidad',
+          Distancia: 'Distancia',
+        },
+        allowEscapeKey: false,
+        allowOutsideClick: false
+      }).then( result => {
+        const medicionSeleccionada = result.value;
+        mainApp.evaluacionAtleta.medicionGrafico = medicionSeleccionada;
+        swal({
+            html: '<b>Generando gráfico de  '+ medicionSeleccionada+'</b>',
+            timer: 2500,
+            showConfirmButton: false,
+            type: 'success',
+            allowEscapeKey: false,
+            allowOutsideClick: false
+        });
+        setTimeout(mostrarGraficoMedicionesRutina, 2500);
+      });
+}
+
+async function obtenerEstadosPruebasAtleta(){
+    const estados = await obtenerEstadosNaveteeAtleta(mainApp.evaluacionAtleta.username);
+    /* console.log("ESTADOS DE PRUEBAS:");
+    console.log(JSON.stringify(estados)); */
+    mainApp.indicadoresDeSaludVariables.pruebasFalladas = estados.fallidos;
+    mainApp.indicadoresDeSaludVariables.pruebasRendidas = estados.rendidos;
+    mainApp.indicadoresDeSaludVariables.pruebasCompletadas = estados.completos;
 }
 
 async function mostrarAtletasAsignados(coach){
@@ -203,6 +290,60 @@ async function mostrarRutinasAtletaActual(){
             fecha: elemento.fecha,
         });  
     }); 
+}
+
+async function actualizarPruebasNaveteeAtletaActual(){
+    //Vaciamos la tabla actual
+    mainApp.controladoresDeHistoriales.listaPruebasTotales.splice(0, mainApp.controladoresDeHistoriales.listaPruebasTotales.length);
+    //recolectamos los historiales del atleta con la API
+    let pruebasRecolectadas = await obtenerPruebasNaveteeAtleta(mainApp.evaluacionAtleta.username);
+    //obtenemos las semans que ha realizado pruebas el usuario (especificamente el domingo/inicio de semana)
+    //este listado se proyecta en el selctor de semans mediante VUE
+    mainApp.controladoresDeHistoriales.listaSemanasActivas = generarSemanasActivas(pruebasRecolectadas);
+    mainApp.controladoresDeHistoriales.listaPruebasTotales = pruebasRecolectadas;
+    //establecemso el indicador DE SELECCION COMO OPCIÓN PREDETERMINADA
+    document.getElementById("selectorSemana").selectedIndex = "0";
+    
+}
+
+function filtrarPruebasFecha(){
+    //establecemos el rango de fecha base
+    let selector = document.getElementById("selectorSemana");
+    let inicioSemana = selector.options[selector.selectedIndex].text;
+    let limiteDeSemana = obtenerProximoInicioSemana(inicioSemana);
+    //ingresamos los nuevos datos, VUE los mostrará por si solo como se indicó en el HTML
+    limpiarReportesNavetee();
+    mainApp.controladoresDeHistoriales.listaPruebasTotales.forEach(elemento => {
+        let fechaEstandarizada = elemento.fecha.replace(/-/g, '\/');
+        let fechaPrueba = new Date(); fechaPrueba.setTime(Date.parse(fechaEstandarizada));
+        let tiempoMinimo = new Date(); tiempoMinimo.setTime(Date.parse(inicioSemana));
+        let tiempoMaximo = new Date(); tiempoMaximo.setTime(Date.parse(limiteDeSemana));
+        if( fechaPrueba.getTime() >= tiempoMinimo.getTime() && fechaPrueba.getTime() < tiempoMaximo.getTime()){
+            mainApp.controladoresDeHistoriales.listaPruebasFiltradas.push({
+                fecha: fechaEstandarizada,
+                numRepeticiones: elemento.repeticiones.length,
+                estadoPrueba: elemento.estado,
+                distanciaTotal: elemento.distancia,
+                repeticiones: elemento.repeticiones
+            });  
+            //alert("inicio: " + inicioSemana + "\nfin: " + limiteDeSemana  + "\nfecha normal: " + fechaEstandarizada + "\ntiempo Inicio: " + tiempoMinimo.getTime() + "\ntiempo fin: " + tiempoMaximo.getTime() + "\ntiempo fecha: " + fechaPrueba.getTime());
+        } else{
+            //alert("NO EQUIVALE \ninicio: " + inicioSemana + "\nfin: " + limiteDeSemana  + "\nfecha normal: " + fechaEstandarizada + "\ntiempo Inicio: " + tiempoMinimo.getTime() + "\ntiempo fin: " + tiempoMaximo.getTime() + "\ntiempo fecha: " + fechaPrueba.getTime());
+        }
+    }); 
+}
+
+async function mostrarPruebasFiltradasFecha(){
+    swal({
+        html: '<b>Filtrando pruebas... </b>',
+        timer: 2500,
+        showConfirmButton: false,
+        type: 'info',
+        allowEscapeKey: false,
+        allowOutsideClick: false
+    });
+    await filtrarPruebasFecha();
+    setTimeout(generarBotonesTablaPruebas, 2400);
 }
 
 function generarBotonesTablaAtletas(){
@@ -245,7 +386,35 @@ function generarBotonesTablaRutinas(){
         iconoGrafico.alt = "Graficar datos";
         iconoGrafico.title = "Graficar Datos";
         contenedorActivadorGraficos.appendChild(iconoGrafico);
-        contenedorActivadorGraficos.addEventListener("click", Procesos.obtenerGrafico);
+        contenedorActivadorGraficos.addEventListener("click", Procesos.obtenerGraficoRutina);
+        fila.appendChild(contenedorActivadorGraficos);
+    }); 
+}
+
+function generarBotonesTablaPruebas(){
+    document.querySelectorAll('#cuerpoPruebasAtleta tr')
+    .forEach(fila =>{
+        let contenedorActivadorDetalles = document.createElement('td');
+        let iconoVisor = document.createElement('span');
+        iconoVisor.className="icon-eye";
+        iconoVisor.alt = "Ver Detalles";
+        iconoVisor.title = "Ver Detalles";
+        contenedorActivadorDetalles.appendChild(iconoVisor);
+        contenedorActivadorDetalles.addEventListener("click", Procesos.obtenerDetallesPruebaNavetee);
+        fila.appendChild(contenedorActivadorDetalles);
+    }); 
+}
+
+function generarBotonesTablaRepeticiones(){
+    document.querySelectorAll('#cuerpoRepeticionesPrueba tr')
+    .forEach(fila =>{
+        let contenedorActivadorGraficos = document.createElement('td');
+        let iconoGrafico = document.createElement('span');
+        iconoGrafico.className="icon-stats-dots";
+        iconoGrafico.alt = "Graficar datos";
+        iconoGrafico.title = "Graficar Datos";
+        contenedorActivadorGraficos.appendChild(iconoGrafico);
+        contenedorActivadorGraficos.addEventListener("click", Procesos.obtenerGraficoRepeticionNavetee);
         fila.appendChild(contenedorActivadorGraficos);
     }); 
 }
@@ -259,12 +428,36 @@ function vaciarBotonesTablaRutinas(){
     }); 
 }
 
+function vaciarBotonesTablaPruebas(){
+    //esta tabla se vacia de esta forma porque posee botones dinámicos
+    /* mainApp.activarVisorHistorial */
+    document.querySelectorAll('#cuerpoPruebasAtleta tr')
+    .forEach(fila =>{
+        fila.removeChild(fila.lastChild); //el último hijo es una columna que tiene al boton
+    }); 
+}
 
-async function mostrarVisorRutinas(){
+function vaciarBotonesTablaRepeticiones(){
+    //esta tabla se vacia de esta forma porque posee botones dinámicos
+    /* mainApp.activarVisorHistorial */
+    document.querySelectorAll('#cuerpoRepeticionesPrueba tr')
+    .forEach(fila =>{
+        fila.removeChild(fila.lastChild); //el último hijo es una columna que tiene al boton
+    }); 
+}
+
+
+async function mostrarVisorRutinasyPruebas(){
     mainApp.activarVisorHistorial();
     await mostrarRutinasAtletaActual();
     //generamos los botones para ver los detalles de rutina y la opción de graficarlos
     generarBotonesTablaRutinas();
+    //Actualizamos las pruebas navetee realizadas por el atleta, y con ello mostramos las semans de actividad
+    await actualizarPruebasNaveteeAtletaActual();
+    //mostramos el estado general de las pruebas (fallidas, rendidas y demás)
+    obtenerEstadosPruebasAtleta();
+    //limpiamos la tabla y el listado de repeticiones
+    limpiarReportesNavetee();
 }
 
 async function mostrarDetalleRutinaTablas(){
@@ -302,6 +495,48 @@ async function mostrarDetalleRutinaTablas(){
         }
     }); 
 }
+
+function mostrarDetallePruebaTablas(){
+    let pruebaActual;
+    mainApp.controladoresDeHistoriales.listaPruebasFiltradas.forEach(prueba => {
+        if (prueba.fecha === mainApp.evaluacionAtleta.fechaRutina){
+            pruebaActual = prueba;
+        } 
+    });
+    //vaciamos la lista por si tiene datos previos
+    vaciarBotonesTablaRepeticiones();
+    mainApp.controladoresDeHistoriales.listaRepeticiones.splice(0, mainApp.controladoresDeHistoriales.listaRepeticiones.length);
+    //ingresamos los nuevos datos, VUE los mostrará por si solo como se indicó en el HTML
+    console.log("Prueba Seleccionada");
+    console.log(JSON.stringify(pruebaActual));
+    pruebaActual.repeticiones.forEach(elemento => {
+        mainApp.controladoresDeHistoriales.listaRepeticiones.push({
+            numRepeticion:elemento.numero,
+            velPromedio: elemento.velPromedio,
+            velMax: elemento.velMax,
+            velMin: elemento.velMin,
+            distanciaR: elemento.distanciaR
+        }); 
+    }); 
+}
+
+function limpiarReportesNavetee(){
+    /*vacia las tablas y los listados que proyectan la información de las pruebas y repeticiones,
+    esto con el fin que no irrumpan en el contenido de próximos análisis*/
+    vaciarBotonesTablaRepeticiones();
+    mainApp.controladoresDeHistoriales.listaRepeticiones.splice(0, mainApp.controladoresDeHistoriales.listaRepeticiones.length);
+    vaciarBotonesTablaPruebas();
+    mainApp.controladoresDeHistoriales.listaPruebasFiltradas.splice(0, mainApp.controladoresDeHistoriales.listaPruebasFiltradas.length);
+}
+
+async function mostrarDatosRepeticionSeleccionada(){
+    await mostrarDetallePruebaTablas();
+    generarBotonesTablaRepeticiones();
+    /*Se usa await porque asi se espera que la información cargada en tabla
+    sea actualizada por Vue, si no se espera entonces buscará agregar los botones de graficado
+    previo a que se carguen los datos en la tabla, y al no encontrar nada no agregaria ningún boton */
+}
+
 
 async function mostrarGraficoMedicionesRutina(){
     const historialesRecolectados = await obtenerHistorialesAtleta(mainApp.evaluacionAtleta.username);
@@ -344,6 +579,80 @@ async function mostrarGraficoMedicionesRutina(){
 }
 
 //#endregion Acciones Historiales
+
+
+//#region Control de fecha
+
+function obtenerPrimerDiaSemana(fechaEntrada){
+    //FORMATO DE ENTRADA: MM/DD/YYYY Con hora opcional, se fuerza a usar diagonales y no "-"
+    let controladorFecha = new Date(fechaEntrada.replace(/-/g, '\/'));
+    let diaDomingo = 0;
+    let inicioDeMes = 1;
+    let mes; let diaMS = 86400000;
+    let digitosVista = 2; //cuantos digitos se desean ver del dia o mes (por eso se les concatena un 0)
+    while(controladorFecha.getDay() != diaDomingo) {
+      //Si el dia actual no es domingo entonces se retrocede hasta encontrarlo
+      if(controladorFecha.getDate() == inicioDeMes){
+          /*si llegamos a un punto donde nos encontramos en el inicio de mes,
+          entonces también debemos reducir un mes, porque si no los dias seguirán reduciendoce
+          como deben pero seguiremos en el mismo mes*/
+        let fechaNuevaMS = controladorFecha.getTime() - diaMS; //ms
+        controladorFecha.setTime(fechaNuevaMS);
+      }else{
+        controladorFecha.setDate(controladorFecha.getDate() - 1);
+      }
+    }
+    mes = controladorFecha.getMonth()+1; //los meses inician en 0 (Ej: enero mes 0)
+    //FORMATO DE SALIDA: MM/DD/YYYY 
+    return ('0' + mes.toString()).slice(-digitosVista) + '/' + ('0' + controladorFecha.getDate()).slice(-digitosVista) + '/' + controladorFecha.getFullYear();
+}
+
+function obtenerProximoInicioSemana(fechaEntrada){
+    //FORMATO DE ENTRADA: MM/DD/YYYY Con hora opcional, se fuerza a usar diagonales y no "-"
+    let controladorFecha = new Date(fechaEntrada.replace(/-/g, '\/'));
+    let diaDomingo = 0;
+    let inicioDeMes = 1;
+    let mes; let diaMS= 86400000;
+    let digitosVista = 2; //cuantos digitos se desean ver del dia o mes (por eso se les concatena un 0)
+    //se incremente un dia con el fin que si se inserta una fecha inicial(domingo) pueda obtenr aún asi el otro domingo 
+    controladorFecha.setDate(controladorFecha.getDate() + 1);
+    while(controladorFecha.getDay() != diaDomingo) {
+      //Si el dia actual no es domingo entonces avanza hasta encontrarlo
+        if(controladorFecha.getDate() == inicioDeMes){
+            /*si llegamos a un punto donde nos encontramos en el inicio de mes,
+            entonces también debemos aumentar un mes, porque si no los dias seguirán aumentandose
+            como deben pero seguiremos en el mismo mes*/
+            //A la fecha en milisegundos le restamos una dia en milisegundos
+            let fechaNuevaMS = controladorFecha.getTime() + diaMS; //ms
+            controladorFecha.setTime(fechaNuevaMS);
+        }else{
+             controladorFecha.setDate(controladorFecha.getDate() + 1);
+        }
+    }
+    mes = controladorFecha.getMonth()+1; //los meses inician en 0 (Ej: enero mes 0)
+    //FORMATO DE SALIDA: MM/DD/YYYY 
+    return ('0' + mes.toString()).slice(-digitosVista) + '/' + ('0' + controladorFecha.getDate()).slice(-digitosVista) + '/' + controladorFecha.getFullYear();
+}
+
+function generarSemanasActivas(listaPruebasAtleta){
+    let listaSemanasActivas = [];
+    let fechaInicioSemana;
+    listaPruebasAtleta.forEach(prueba =>{
+        //si la fecha ya existe en la lista no se agrega
+        //si no existe se agrega el domingo/inicio de semana de la correspondiente fecha que ingresamos
+        fechaInicioSemana = obtenerPrimerDiaSemana(prueba.fecha.replace(/-/g, '\/')).split(" ")[0]; 
+        //El split nos permite quedarnos solo con la fecha y omitir la hora, y replace obtener un formato de fecha con "/" y no con "-"
+        listaSemanasActivas.includes(fechaInicioSemana) ? console.log("no se agregó la fecha")  : listaSemanasActivas.push(fechaInicioSemana); 
+    });
+    //listaSemanasActivas.reverse((a)=> new Date(a).getTime());
+    return listaSemanasActivas;
+}
+
+
+
+
+  
+//#endregion Control de fecha
 
 //#region Acciones sobre Coach y Atletas
 
@@ -485,8 +794,12 @@ Procesos.generarBotonesTablaRutinas = generarBotonesTablaRutinas;
 Procesos.obtenerHistorialesCompletos = obtenerHistorialesCompletos;
 Procesos.obtenerHistorialesPersonales = obtenerHistorialesPersonales;
 Procesos.obtenerDetallesRutina = obtenerDetallesRutina;
-Procesos.obtenerGrafico = obtenerGrafico;
+Procesos.obtenerGraficoRutina = obtenerGraficoRutina;
+Procesos.obtenerDetallesRepeticion = obtenerDetallesRepeticion;
+Procesos.obtenerGraficoRepeticionNavetee = obtenerGraficoRepeticionNavetee;
+Procesos.obtenerDetallesPruebaNavetee = obtenerDetallesPruebaNavetee;
 Procesos.crearNuevoCoach = crearNuevoCoach;
+Procesos.mostrarPruebasFiltradasFecha = mostrarPruebasFiltradasFecha;
 Procesos.asignarAtletaACoach = asignarAtletaACoach;
 Procesos.obtenerUsuariosNoAsignados = obtenerUsuariosNoAsignados;
 Procesos.mostrarVisorAtletasAsignados = mostrarVisorAtletasAsignados;

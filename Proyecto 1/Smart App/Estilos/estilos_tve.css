@@ -276,6 +276,10 @@ td, th{
     width: 40%;
 }
 
+.tablaPruebas table{
+    width: 60%;
+}
+
 /*#endregion Fin Estilos de tablas*/
 
 /*#region Scrolls*/
@@ -524,7 +528,7 @@ button{
     width: 160px;
 }
 
-#atletasNoAsignados{
+.selectorOpcionesMultiples{
     border: 2px solid #49AB80;
     border-radius: 5px;
     background-color: #34495E;
@@ -546,7 +550,7 @@ button{
 
 /*#region covertor LogIn Y SigIn*/ 
 #covertor{
-    position: fixed; display: none;
+    position: fixed; 
     background-color: #344c5c;
     height: 100%;
     width: 100%;
@@ -640,6 +644,14 @@ button{
    .titulos{
        font-size: 60%;
    }
+
+   .tablaRutinas table{
+        width: 80%;
+    }
+
+    .tablaPruebas table{
+        width: 95%;
+    }
 
    #main{
        display: flex;
@@ -741,6 +753,14 @@ button{
 
     .tabla{
         font-size: 80%;
+    }
+
+    .tablaRutinas table{
+        width: 80%;
+    }
+
+    .tablaPruebas table{
+        width: 95%;
     }
 
     #main{
