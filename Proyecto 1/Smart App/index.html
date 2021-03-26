@@ -48,7 +48,7 @@
             <div v-on:click="activarVisorRendimiento" v-bind:class="[estadoVisualizadores.estadoRendimiento ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu"> {{titulos.seccion_Rendimiento}} </h2>
             </div>
-            <div v-on:click="activarVisorHistorial" v-bind:class="[estadoVisualizadores.estadoHistorial ? estiloActual.activo : estiloActual.inactivo]">
+            <div id = "opcionHistorial" v-on:click="activarVisorHistorial" v-bind:class="[estadoVisualizadores.estadoHistorial && estadoVisualizadores.estadoHistorialPropio ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.seccion_Historial}} </h2>
             </div>  
         </section> 

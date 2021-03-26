@@ -1,5 +1,5 @@
 
-import {mainApp, dataGraficoHistorialActual,graficoHistorial, labelsGraficoHistorialActual,colorGraficoHistorialActual,colorHoverGraficoHistorialActual, dataRitmoGrafico, labelsRitmoGrafico, dataTemperaturaGrafico, labelsTemperaturaGrafico, dataOxigenoGrafico, labelsOxigenoGrafico, graficoRitmoCardiaco, graficoOxigeno, graficoTemperatura} from "./main-vue";
+import {mainApp, dataGraficoHistorialActual,graficoHistorial, labelsGraficoHistorialActual,colorGraficoHistorialActual,colorHoverGraficoHistorialActual, dataRitmoGrafico, labelsRitmoGrafico, dataTemperaturaGrafico, labelsTemperaturaGrafico, dataOxigenoGrafico, labelsOxigenoGrafico, graficoRitmoCardiaco, graficoOxigeno, graficoTemperatura, componentesGrafNavetee} from "./main-vue";
 import {Mensajes} from './Mensajes';
 import "regenerator-runtime/runtime.js"; //permite la compilación de Async en Babel
 
@@ -119,6 +119,7 @@ function obtenerHistorialesCompletos(){ //lo emplea el coach para obtener el his
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
     let usernameAtleta = filaActual.firstChild.textContent;
     mainApp.evaluacionAtleta.username = usernameAtleta;
+    mainApp.estadoVisualizadores.estadoHistorialPropio = false;
     swal({
         title: 'Recolectando historiales de ' + usernameAtleta,
         html: '<b>Cargando mediciones recientes...</b>',
@@ -132,6 +133,8 @@ function obtenerHistorialesCompletos(){ //lo emplea el coach para obtener el his
 }
 
 function obtenerHistorialesPersonales(){ //se emplea para saber el historial del usuario en sesión
+    mainApp.estadoVisualizadores.estadoHistorialPropio = true;
+    mainApp.evaluacionAtleta.username = mainApp.datosDePerfilEnSesion.username;
     swal({
         title: 'Recolectando historiales de ' + mainApp.evaluacionAtleta.username,
         html: '<b>Cargando mediciones recientes...</b>',
@@ -174,21 +177,6 @@ function obtenerDetallesPruebaNavetee(){
     setTimeout(mostrarDatosRepeticionSeleccionada, 2500);
 }
 
-function obtenerDetallesRepeticion(){
-    let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
-    let fechaRutina = filaActual.firstChild.textContent;
-    mainApp.evaluacionAtleta.fechaRutina = fechaRutina;
-    swal({
-        html: '<b>Cargando detalles de Repetición...</b>',
-        timer: 2500,
-        showConfirmButton: false,
-        type: 'info',
-        allowEscapeKey: false,
-        allowOutsideClick: false
-    });
-    //setTimeout(, 2500);
-}
-
 function obtenerGraficoRutina(){
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
     let fechaRutina = filaActual.firstChild.textContent;
@@ -221,8 +209,8 @@ function obtenerGraficoRutina(){
 
 function obtenerGraficoRepeticionNavetee(){
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
-    let fechaRutina = filaActual.firstChild.textContent;
-    mainApp.evaluacionAtleta.fechaRutina = fechaRutina;
+    let repeticionSeleccionada = filaActual.firstChild.textContent;
+    mainApp.evaluacionAtleta.repeticionPrueba = repeticionSeleccionada;
     swal({
         title: 'Grafico de mediciones',
         text: 'Seleccione cúal medición se graficará:',
@@ -235,7 +223,7 @@ function obtenerGraficoRepeticionNavetee(){
         allowOutsideClick: false
       }).then( result => {
         const medicionSeleccionada = result.value;
-        mainApp.evaluacionAtleta.medicionGrafico = medicionSeleccionada;
+        mainApp.evaluacionAtleta.medicionGraficoNavetee = medicionSeleccionada;
         swal({
             html: '<b>Generando gráfico de  '+ medicionSeleccionada+'</b>',
             timer: 2500,
@@ -244,7 +232,7 @@ function obtenerGraficoRepeticionNavetee(){
             allowEscapeKey: false,
             allowOutsideClick: false
         });
-        setTimeout(mostrarGraficoMedicionesRutina, 2500);
+        setTimeout(mostrarGraficoMedicionesNavetee, 2500);
       });
 }
 
@@ -343,7 +331,35 @@ async function mostrarPruebasFiltradasFecha(){
         allowOutsideClick: false
     });
     await filtrarPruebasFecha();
+    await obtenerAnalisisRepeticionesSemana();
     setTimeout(generarBotonesTablaPruebas, 2400);
+}
+
+function obtenerAnalisisRepeticionesSemana(){
+    let sumatoriaRepeticiones = mainApp.controladoresDeHistoriales.listaPruebasFiltradas.reduce(function(totalReps, siguienteValor){
+        return totalReps + siguienteValor.numRepeticiones; //Regresa el total más el siguiente
+    }, 0); //Pero si no encuentras nada o no hay siguiente, regresa 0
+    let promedioRepeticiones = sumatoriaRepeticiones / mainApp.controladoresDeHistoriales.listaPruebasFiltradas.length;
+    let repeticionesMin = mainApp.controladoresDeHistoriales.listaPruebasFiltradas.reduce(function(repMenor, siguienteValor){
+        console.log(repMenor + "" + siguienteValor.numRepeticiones );
+        if (repMenor < siguienteValor.numRepeticiones){
+            return repMenor
+        }
+        return siguienteValor.numRepeticiones
+    }, mainApp.controladoresDeHistoriales.listaPruebasFiltradas[0].numRepeticiones);
+    let repeticionesMax = mainApp.controladoresDeHistoriales.listaPruebasFiltradas.reduce(function(repMenor, siguienteValor){
+        console.log(repMenor + "" + siguienteValor.numRepeticiones );
+        if (repMenor > siguienteValor.numRepeticiones){
+            return repMenor
+        }
+        return siguienteValor.numRepeticiones
+    }, mainApp.controladoresDeHistoriales.listaPruebasFiltradas[0].numRepeticiones);
+    actualizarAnalisisSemanal(promedioRepeticiones, repeticionesMin, repeticionesMax);
+}
+function actualizarAnalisisSemanal(promedio, min, max){
+    mainApp.indicadoresDeSaludVariables.repeticionesPromedioSemana = promedio;
+    mainApp.indicadoresDeSaludVariables.repeticionesMinSemana = min;
+    mainApp.indicadoresDeSaludVariables.repeticionesMaxSemana = max;
 }
 
 function generarBotonesTablaAtletas(){
@@ -458,6 +474,8 @@ async function mostrarVisorRutinasyPruebas(){
     obtenerEstadosPruebasAtleta();
     //limpiamos la tabla y el listado de repeticiones
     limpiarReportesNavetee();
+    //activamos el visor
+    mainApp.estadoVisualizadores.estadoHistorial = true;
 }
 
 async function mostrarDetalleRutinaTablas(){
@@ -515,18 +533,23 @@ function mostrarDetallePruebaTablas(){
             velPromedio: elemento.velPromedio,
             velMax: elemento.velMax,
             velMin: elemento.velMin,
-            distanciaR: elemento.distanciaR
+            distanciaR: elemento.distanciaR,
+            distanciaT: pruebaActual.distanciaTotal,
+            velocidades: elemento.velocidad //conjunto de velocidades
         }); 
     }); 
 }
 
 function limpiarReportesNavetee(){
-    /*vacia las tablas y los listados que proyectan la información de las pruebas y repeticiones,
+    /*vacia las tablas y los listados que proyectan la información de las pruebas y repeticiones (incluyendo los gráficos),
     esto con el fin que no irrumpan en el contenido de próximos análisis*/
+    limpiarContenidoGraficoHistorialNavetee();
     vaciarBotonesTablaRepeticiones();
     mainApp.controladoresDeHistoriales.listaRepeticiones.splice(0, mainApp.controladoresDeHistoriales.listaRepeticiones.length);
     vaciarBotonesTablaPruebas();
     mainApp.controladoresDeHistoriales.listaPruebasFiltradas.splice(0, mainApp.controladoresDeHistoriales.listaPruebasFiltradas.length);
+    //reiniciamos los valores del análisis semanal de repeticiones
+    actualizarAnalisisSemanal(0,0,0);
 }
 
 async function mostrarDatosRepeticionSeleccionada(){
@@ -576,6 +599,44 @@ async function mostrarGraficoMedicionesRutina(){
         }
     }); 
     graficoHistorial.update();
+}
+
+async function mostrarGraficoMedicionesNavetee(){
+    //vaciamos los elementos del gráfico por si tiene datos previos
+    limpiarContenidoGraficoHistorialNavetee();
+    //ingresamos los nuevos datos, VUE los mostrará por si solo como se indicó en el HTML
+    mainApp.controladoresDeHistoriales.listaRepeticiones.forEach(elemento => {
+        if(elemento.numRepeticion  == mainApp.evaluacionAtleta.repeticionPrueba){
+            if(mainApp.evaluacionAtleta.medicionGraficoNavetee == 'Velocidad'){
+                //se empujar un cero para que el gráfico situe ese punto como base
+                empujarDatoGraficoNavetee(0, 'rgba(239,174,61, 0.4)', 'rgb(239,174,61)'); 
+                elemento.velocidades.forEach(velocidad =>{
+                empujarDatoGraficoNavetee(velocidad, 'rgba(239,174,61, 0.4)', 'rgb(239,174,61)'); 
+                });
+            }else{ 
+                //se empujar un cero para que el gráfico situe ese punto como base
+                empujarDatoGraficoNavetee(0, 'rgba(102,153,153, 0.4)', 'rgb(102,153,153)');
+                empujarDatoGraficoNavetee(elemento.distanciaR, 'rgba(102,153,153, 0.4)', 'rgb(102,153,153)');
+                empujarDatoGraficoNavetee(elemento.distanciaT, 'rgba(102,153,153, 0.4)', 'rgb(102,153,153)');
+            }
+        }
+    }); 
+    componentesGrafNavetee.graficoHistorialNavetee.update();
+}
+
+function limpiarContenidoGraficoHistorialNavetee(){
+    componentesGrafNavetee.dataGraficoHistorialNaveteeActual.splice(0, componentesGrafNavetee.dataGraficoHistorialNaveteeActual.length);
+    componentesGrafNavetee.labelsGraficoHistorialNaveteeActual.splice(0, componentesGrafNavetee.labelsGraficoHistorialNaveteeActual.length);
+    componentesGrafNavetee.colorGraficoHistorialNaveteeActual.splice(0, componentesGrafNavetee.colorGraficoHistorialNaveteeActual.length);
+    componentesGrafNavetee.colorHoverGraficoHistorialNaveteeActual.splice(0, componentesGrafNavetee.colorHoverGraficoHistorialNaveteeActual.length);
+    componentesGrafNavetee.graficoHistorialNavetee.update();
+}
+
+function empujarDatoGraficoNavetee(dato, color, colorHover){
+    componentesGrafNavetee.dataGraficoHistorialNaveteeActual.push(dato); 
+    componentesGrafNavetee.labelsGraficoHistorialNaveteeActual.push(dato); 
+    componentesGrafNavetee.colorGraficoHistorialNaveteeActual.push(color); 
+    componentesGrafNavetee.colorHoverGraficoHistorialNaveteeActual.push(colorHover); 
 }
 
 //#endregion Acciones Historiales
@@ -795,7 +856,6 @@ Procesos.obtenerHistorialesCompletos = obtenerHistorialesCompletos;
 Procesos.obtenerHistorialesPersonales = obtenerHistorialesPersonales;
 Procesos.obtenerDetallesRutina = obtenerDetallesRutina;
 Procesos.obtenerGraficoRutina = obtenerGraficoRutina;
-Procesos.obtenerDetallesRepeticion = obtenerDetallesRepeticion;
 Procesos.obtenerGraficoRepeticionNavetee = obtenerGraficoRepeticionNavetee;
 Procesos.obtenerDetallesPruebaNavetee = obtenerDetallesPruebaNavetee;
 Procesos.crearNuevoCoach = crearNuevoCoach;

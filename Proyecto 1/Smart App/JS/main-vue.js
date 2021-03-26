@@ -42,7 +42,8 @@ var mainApp = new Vue({
         estadoPerfil: true,
         estadoRendimiento: false,
         estadoHistorial: false,
-        estadoAtletas: false
+        estadoAtletas: false,
+        estadoHistorialPropio: false
       },
       estiloActual:{
         activo: "opcionesMenu",
@@ -106,7 +107,9 @@ var mainApp = new Vue({
         nombreAtleta: '---',
         apellidoAtleta: '---',
         fechaRutina: '',
-        medicionGrafico: ''
+        repeticionPrueba: '',
+        medicionGrafico: '',
+        medicionGraficoNavetee: ''
       }
     //#endregion DATA
     },
@@ -117,23 +120,25 @@ var mainApp = new Vue({
             this.estadoVisualizadores.estadoRendimiento = false;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = false;
+            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorRendimiento: function(){
             this.estadoVisualizadores.estadoPerfil = false;
             this.estadoVisualizadores.estadoRendimiento = true;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = false;
+            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorAtletas: function(){
             this.estadoVisualizadores.estadoPerfil = false;
             this.estadoVisualizadores.estadoRendimiento = false;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = true;
+            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorHistorial: function(){
           this.estadoVisualizadores.estadoPerfil = false;
           this.estadoVisualizadores.estadoRendimiento = false;
-          this.estadoVisualizadores.estadoHistorial = true;
           this.estadoVisualizadores.estadoAtletas = false;
           //Reiniciamos los gráficos y tablas:
           dataGraficoHistorialActual.splice(0, dataGraficoHistorialActual.length);
@@ -379,6 +384,14 @@ let  graficoHistorialNavetee = new Chart(
   config_graf_historial_navetee
 );
 
+let componentesGrafNavetee = {
+  dataGraficoHistorialNaveteeActual: dataGraficoHistorialNaveteeActual,
+  labelsGraficoHistorialNaveteeActual: labelsGraficoHistorialNaveteeActual,
+  colorGraficoHistorialNaveteeActual: colorGraficoHistorialNaveteeActual,
+  colorHoverGraficoHistorialNaveteeActual: colorHoverGraficoHistorialNaveteeActual,
+  graficoHistorialNavetee: graficoHistorialNavetee
+};
+
 //#endregion HISTORIAL PRUEBAS COURSE-NAVETEE
 
 //#endregion GRAFICOS
@@ -454,6 +467,7 @@ function ejecutarReloj(){
 //document.getElementById('botonVerHistorialOxigeno').addEventListener("click", Procesos.verHistorialPersonal);
 document.getElementById('botonVerAtletas').addEventListener("click", Procesos.mostrarVisorAtletasAsignados);
 document.getElementById('botonRegresarPerfil').addEventListener("click", mainApp.activarVisorPerfil);
+document.getElementById('opcionHistorial').addEventListener("click", Procesos.obtenerHistorialesPersonales);
 //#endregion Ventanas
 
 //#region Mensajes
@@ -487,5 +501,6 @@ export {
   labelsOxigenoGrafico,
   graficoRitmoCardiaco,
   graficoOxigeno,
-  graficoTemperatura
+  graficoTemperatura,
+  componentesGrafNavetee
 };
