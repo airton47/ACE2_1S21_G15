@@ -72,14 +72,11 @@ var mainApp = new Vue({
         temperaturaPromedio: 0,
         oxigenoActual: 0,
         oxigenoPromedio: 0,
-        cantidadMedicionesPrevia:0,
-        cantidadMedicionesActual:0,
         indicadorSeguimiento:true,
         velocidadActual: 0,
         velocidadMaxima: 0,
         velocidadMinima: 0,
         velocidadPromedio: 0,
-        velocidadMaxima: 0,
         distanciaActual: 0,
         distanciaTotal: 0,
         pruebasCompletadas: 0,
@@ -160,8 +157,7 @@ var mainApp = new Vue({
           this.indicadoresDeSaludVariables.temperaturaPromedio = 0;
           this.indicadoresDeSaludVariables.oxigenoActual = 0;
           this.indicadoresDeSaludVariables.oxigenoPromedio = 0;
-          this.indicadoresDeSaludVariables.cantidadMedicionesActual = 0;
-          this.indicadoresDeSaludVariables.cantidadMedicionesPrevia = 0;
+          this.indicadoresDeSaludVariables.indicadorSeguimiento = true;
           //reinicio de gráficos:
           dataRitmoGrafico.splice(0, dataRitmoGrafico.length);
           labelsRitmoGrafico.splice(0, labelsRitmoGrafico.length);
@@ -169,9 +165,15 @@ var mainApp = new Vue({
           labelsTemperaturaGrafico.splice(0, labelsTemperaturaGrafico.length);
           dataOxigenoGrafico.splice(0, dataOxigenoGrafico.length);
           labelsOxigenoGrafico.splice(0, labelsOxigenoGrafico.length);
+          componentesNaveteeLive.dataVelocidadGrafico.splice(0,componentesNaveteeLive.dataVelocidadGrafico.length);
+          componentesNaveteeLive.labelsVelocidadGrafico.splice(0,componentesNaveteeLive.labelsVelocidadGrafico.length);
+          componentesNaveteeLive.dataDistanciaGrafico.splice(0,componentesNaveteeLive.dataDistanciaGrafico.length);
+          componentesNaveteeLive.labelsDistanciaGrafico.splice(0,componentesNaveteeLive.labelsDistanciaGrafico.length);
           graficoRitmoCardiaco.update();
           graficoOxigeno.update();
           graficoTemperatura.update();
+          componentesNaveteeLive.graficoVelocidad.update();
+          componentesNaveteeLive.graficoDistancia.update();
       }
       //#endregion METHODS
     }
@@ -328,6 +330,15 @@ let  graficoDistancia = new Chart(
   config_graf_Distancia
 );
 
+let componentesNaveteeLive = {
+  dataVelocidadGrafico: dataVelocidadGrafico,
+  labelsVelocidadGrafico: labelsVelocidadGrafico,
+  graficoVelocidad: graficoVelocidad,
+  dataDistanciaGrafico: dataDistanciaGrafico,
+  labelsDistanciaGrafico: labelsDistanciaGrafico,
+  graficoDistancia: graficoDistancia
+};
+
 //#endregion DISTANCIA:
 
 //#region HISTORIAL RUTINAS ESTÁNDAR
@@ -462,9 +473,6 @@ function ejecutarReloj(){
 //#region Asignación de funciones a botones:
 
 //#region Ventanas
-//document.getElementById('botonVerHistorialPulso').addEventListener("click", Procesos.verHistorialPersonal);
-//document.getElementById('botonVerHistorialTemperatura').addEventListener("click", Procesos.verHistorialPersonal);
-//document.getElementById('botonVerHistorialOxigeno').addEventListener("click", Procesos.verHistorialPersonal);
 document.getElementById('botonVerAtletas').addEventListener("click", Procesos.mostrarVisorAtletasAsignados);
 document.getElementById('botonRegresarPerfil').addEventListener("click", mainApp.activarVisorPerfil);
 document.getElementById('opcionHistorial').addEventListener("click", Procesos.obtenerHistorialesPersonales);
@@ -478,10 +486,9 @@ document.getElementById('controladorSesion').addEventListener("click", Mensajes.
 //#region Acciones API
 document.getElementById('botonAgregarAtleta').addEventListener("click", Procesos.asignarAtletaNoAsignado);
 document.getElementById('atletasNoAsignados').addEventListener("change", Procesos.obtenerNombresAtletaNoAsignado);
-document.getElementById('botonInicioEvaluacion').addEventListener("click", Procesos.ejecutarMedicionEnVivo); 
 document.getElementById('selectorSemana').addEventListener("change", Procesos.mostrarPruebasFiltradasFecha);
-//document.getElementById('botonEjecucionTemperatura').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
-//document.getElementById('botonEjecucionOxigeno').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
+document.getElementById('botonInicioEvaluacion').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
+document.getElementById('botonFinEvaluacion').addEventListener("click", Procesos.finalizarMedicionEnVivo);
 //#endregion Acciones API
 
 //#endregion Asignación de funciones a botones
@@ -502,5 +509,6 @@ export {
   graficoRitmoCardiaco,
   graficoOxigeno,
   graficoTemperatura,
-  componentesGrafNavetee
+  componentesGrafNavetee,
+  componentesNaveteeLive
 };

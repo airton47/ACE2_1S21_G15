@@ -1,5 +1,5 @@
 
-import {mainApp, dataGraficoHistorialActual,graficoHistorial, labelsGraficoHistorialActual,colorGraficoHistorialActual,colorHoverGraficoHistorialActual, dataRitmoGrafico, labelsRitmoGrafico, dataTemperaturaGrafico, labelsTemperaturaGrafico, dataOxigenoGrafico, labelsOxigenoGrafico, graficoRitmoCardiaco, graficoOxigeno, graficoTemperatura, componentesGrafNavetee} from "./main-vue";
+import {mainApp, dataGraficoHistorialActual,graficoHistorial, labelsGraficoHistorialActual,colorGraficoHistorialActual,colorHoverGraficoHistorialActual, dataRitmoGrafico, labelsRitmoGrafico, dataTemperaturaGrafico, labelsTemperaturaGrafico, dataOxigenoGrafico, labelsOxigenoGrafico, graficoRitmoCardiaco, graficoOxigeno, graficoTemperatura, componentesGrafNavetee, componentesNaveteeLive} from "./main-vue";
 import {Mensajes} from './Mensajes';
 import "regenerator-runtime/runtime.js"; //permite la compilación de Async en Babel
 
@@ -641,7 +641,6 @@ function empujarDatoGraficoNavetee(dato, color, colorHover){
 
 //#endregion Acciones Historiales
 
-
 //#region Control de fecha
 
 function obtenerPrimerDiaSemana(fechaEntrada){
@@ -786,12 +785,18 @@ async function medirEnVivo(){
     let historialesRecolectados = await obtenerHistorialesAtleta(mainApp.datosDePerfilEnSesion.username);
     //buscamos la medición mas reciente o en vivo(la última)
     let medicionActual = historialesRecolectados[historialesRecolectados.length-1];
+    let pruebasRecolectadas = await obtenerPruebasNaveteeAtleta(mainApp.datosDePerfilEnSesion.username);
+    let medicionNaveteeActual = pruebasRecolectadas[pruebasRecolectadas.length-1];
+    let repeticionActual = medicionNaveteeActual.repeticiones[medicionNaveteeActual.repeticiones.length-1]
     /*Puede ser cualquier medicion ya que siempre se envia la misma cantidad para las 3, 
     se escogio´temperatura ya que su sensor es más estable:*/
-    mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = medicionActual.temperatura.length-1;
-    if(mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual != mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia){
+    try{
         //Ritmo Cardiaco
+        let ritmoMax = 160;
         mainApp.indicadoresDeSaludVariables.pulsoActual = medicionActual.pulso[medicionActual.pulso.length-1];
+        if(mainApp.indicadoresDeSaludVariables.pulsoActual > ritmoMax){
+            notificarAumentoCardiaco();
+        }
         mainApp.indicadoresDeSaludVariables.pulsoPromedio = medicionActual.pulsoPromedio;
         dataRitmoGrafico.push(medicionActual.pulso[medicionActual.pulso.length-1]);
         labelsRitmoGrafico.push(medicionActual.pulso[medicionActual.pulso.length-1]);
@@ -810,19 +815,30 @@ async function medirEnVivo(){
         dataOxigenoGrafico.push(medicionActual.oxigeno[medicionActual.oxigeno.length-1]);
         labelsOxigenoGrafico.push(medicionActual.oxigeno[medicionActual.oxigeno.length-1]);
         graficoOxigeno.update();
-        //actualizamos el estado
-        mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.temperatura.length;
-        mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = true;
-    }else{
-        mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.temperatura.length;
-        mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
+        //Velocidad
+        mainApp.indicadoresDeSaludVariables.velocidadActual = repeticionActual.velocidad[repeticionActual.velocidad.length-1];
+        mainApp.indicadoresDeSaludVariables.velocidadMaxima = repeticionActual.velMax;
+        mainApp.indicadoresDeSaludVariables.velocidadMinima = repeticionActual.velMin;
+        mainApp.indicadoresDeSaludVariables.velocidadPromedio = repeticionActual.velPromedio;
+        componentesNaveteeLive.dataVelocidadGrafico.push(mainApp.indicadoresDeSaludVariables.velocidadActual);
+        componentesNaveteeLive.labelsVelocidadGrafico.push(mainApp.indicadoresDeSaludVariables.velocidadActual);
+        componentesNaveteeLive.graficoVelocidad.update();
+        //Distancia
+        mainApp.indicadoresDeSaludVariables.distanciaActual = repeticionActual.distanciaR;
+        mainApp.indicadoresDeSaludVariables.distanciaTotal = medicionNaveteeActual.distancia;
+        componentesNaveteeLive.dataDistanciaGrafico.push(mainApp.indicadoresDeSaludVariables.distanciaActual);
+        componentesNaveteeLive.labelsDistanciaGrafico.push(mainApp.indicadoresDeSaludVariables.distanciaActual);
+    componentesNaveteeLive.graficoDistancia.update();
+    }catch(exception){
+        console.log("hubo un fallo al obtener los datos");
     }
 }
 
 const timer = ms => new Promise(res => setTimeout(res, ms));
 
 async function ejecutarMedicionEnVivo(){
-    let tiempoEspera = 7000; //milisegundos
+    habilitarBotonFinEvaluacion();
+     let tiempoEspera = 7000; //milisegundos
     mainApp.reiniciarVisoresMedicionesEnVivo();
     swal({
         html: '<b>Iniciando proyección de datos...</b>',
@@ -836,9 +852,31 @@ async function ejecutarMedicionEnVivo(){
         await timer(tiempoEspera); 
         medirEnVivo();
     }while(mainApp.indicadoresDeSaludVariables.indicadorSeguimiento);
-    mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = 0;
-    mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = 0;
-    Mensajes.mostrarMensajeMedicionEnVivoFinalizada();
+    Mensajes.mostrarMensajeMedicionEnVivoFinalizada(); 
+}
+
+function finalizarMedicionEnVivo(){
+    mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
+    habilitarBotonInicioEvaluacion();
+}
+
+function notificarAumentoCardiaco(){
+    Mensajes.mostrarMensajeAumentoCardiaco();
+    finalizarMedicionEnVivo();
+}
+
+function habilitarBotonInicioEvaluacion(){
+    let botonInicio = document.getElementById('botonInicioEvaluacion');
+    let botonFin = document.getElementById('botonFinEvaluacion');
+    botonFin.disabled = true;
+    botonInicio.disabled = false;
+}
+
+function habilitarBotonFinEvaluacion(){
+    let botonInicio = document.getElementById('botonInicioEvaluacion');
+    let botonFin = document.getElementById('botonFinEvaluacion');
+    botonFin.disabled = false;
+    botonInicio.disabled = true;
 }
 
 //#endregion Mediciones en Vivo
@@ -867,5 +905,6 @@ Procesos.verHistorialPersonal = verHistorialPersonal;
 Procesos.asignarAtletaNoAsignado = asignarAtletaNoAsignado;
 Procesos.obtenerNombresAtletaNoAsignado = obtenerNombresAtletaNoAsignado;
 Procesos.ejecutarMedicionEnVivo = ejecutarMedicionEnVivo;
+Procesos.finalizarMedicionEnVivo = finalizarMedicionEnVivo;
 
 export{Procesos};

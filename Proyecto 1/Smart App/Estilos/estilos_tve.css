@@ -415,6 +415,10 @@ button{
     transition: 0.5s;
 }
 
+#botonFinEvaluacion:disabled, #botonInicioEvaluacion:disabled{
+    background-color: #9ba39f;
+}
+
 /*#endregion Estilos de Botones */
 
 /*#region Iconos*/
