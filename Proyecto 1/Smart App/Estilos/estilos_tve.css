@@ -167,7 +167,7 @@ header h1{ /*titulo principal*/
     color: #e1e1e1;
 }
 
-#indicadoresDePulso, #indicadoresDeTemperatura, #indicadoresDeOxigeno, #indicadoresDeVelocidad, #indicadoresDeDistancia, #datosPerfil, #datosDeportivos, #datosNuevoAtleta{
+.proyectorResultados{
     margin: auto;
     width: 100%;
     text-align: center;
@@ -274,6 +274,10 @@ td, th{
 
 .tablaRutinas table{
     width: 40%;
+}
+
+.tablaPruebas table{
+    width: 60%;
 }
 
 /*#endregion Fin Estilos de tablas*/
@@ -411,6 +415,10 @@ button{
     transition: 0.5s;
 }
 
+#botonFinEvaluacion:disabled, #botonInicioEvaluacion:disabled{
+    background-color: #9ba39f;
+}
+
 /*#endregion Estilos de Botones */
 
 /*#region Iconos*/
@@ -504,7 +512,7 @@ button{
 
 /*#region Inputs(de tipo texto) para mostrar los datos*/
 
-#indicadoresDePulso input, #indicadoresDeTemperatura input, #indicadoresDeOxigeno input, #indicadoresDeVelocidad input, #indicadoresDeDistancia input{
+.proyectorResultados input{
     text-align: center;
     font-size: larger;
     color: #F8F6F5;
@@ -524,7 +532,7 @@ button{
     width: 160px;
 }
 
-#atletasNoAsignados{
+.selectorOpcionesMultiples{
     border: 2px solid #49AB80;
     border-radius: 5px;
     background-color: #34495E;
@@ -546,7 +554,7 @@ button{
 
 /*#region covertor LogIn Y SigIn*/ 
 #covertor{
-    position: fixed; display: none;
+    position: fixed; 
     background-color: #344c5c;
     height: 100%;
     width: 100%;
@@ -641,6 +649,14 @@ button{
        font-size: 60%;
    }
 
+   .tablaRutinas table{
+        width: 80%;
+    }
+
+    .tablaPruebas table{
+        width: 95%;
+    }
+
    #main{
        display: flex;
        flex-flow: column nowrap;
@@ -699,7 +715,7 @@ button{
        justify-content: space-between;
    }
 
-   #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeVelocidad, #indicadoresDeDistancia, #indicadoresDeVelocidad input, #indicadoresDeDistancia input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+   .proyectorResultados,  .proyectorResultados input{
        font-size: smaller;
    }
 
@@ -741,6 +757,14 @@ button{
 
     .tabla{
         font-size: 80%;
+    }
+
+    .tablaRutinas table{
+        width: 80%;
+    }
+
+    .tablaPruebas table{
+        width: 95%;
     }
 
     #main{
@@ -798,7 +822,7 @@ button{
         width: 100%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeVelocidad, #indicadoresDeDistancia, #indicadoresDeVelocidad input, #indicadoresDeDistancia input, #indicadoresDeTemperatura, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input, #datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+    .proyectorResultados,  .proyectorResultados input{
         font-size: small;
     }
 
@@ -890,7 +914,7 @@ button{
         height: 45%;
     }
 
-    #indicadoresDePulso,   #indicadoresDePulso  input, #indicadoresDeTemperatura, #indicadoresDeVelocidad, #indicadoresDeDistancia, #indicadoresDeVelocidad input, #indicadoresDeDistancia input, #indicadoresDeTemperatura input, #indicadoresDeOxigeno, #indicadoresDeOxigeno input ,#datosPerfil, #datosDeportivos, #datosPerfil input, #datosDeportivos input, #datosNuevoAtleta, #datosNuevoAtleta input, #atletasNoAsignados{
+    .proyectorResultados,  .proyectorResultados input{
         font-size: medium;
     }
 

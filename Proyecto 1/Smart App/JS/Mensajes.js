@@ -444,8 +444,8 @@ async function recolectarDatosRegistro(){
 
 //#region Analítica
 let mensajeMedicionFinalizada = {
-  title: 'Mediciones Finalizadas',
-  html: '<b>Su ritmo cardiaco, oxigeno y temperatura se midieron con éxito</b>.',
+  title: 'Proceso Finalizado',
+  html: '<b>Sus mediciones se evaluaron con éxito</b>.',
   imageUrl: "Imagenes/Pulso.gif", //es la ruta desde el HTML
   imageWidth: 250,
   imageHeight: 250,
@@ -460,6 +460,25 @@ let mensajeMedicionFinalizada = {
 
 function mostrarMensajeMedicionEnVivoFinalizada(){
   swal(mensajeMedicionFinalizada);
+}
+
+let mensajeAumentoCardiaco = {
+  title: 'Por favor deténgase!!!',
+  html: '<b>Su ritmo cardíaco se ha elevado demasiado, debe parar el entrenamiento</b>.',
+  imageUrl: "Imagenes/Temperatura.gif", //es la ruta desde el HTML
+  imageWidth: 250,
+  imageHeight: 250,
+  imageAlt: 'Aumento de Pulso: de Storyset',
+  showConfirmButton: true,
+  confirmButtonColor: '#669999',
+  confirmButtonText: 'Aceptar',
+  allowEscapeKey: false,
+  allowOutsideClick: false,
+  
+}
+
+function mostrarMensajeAumentoCardiaco(){
+  swal(mensajeAumentoCardiaco);
 }
 
 let mensajePulso = {
@@ -523,6 +542,7 @@ Mensajes.recolectarCredencialesAcceso = recolectarCredencialesAcceso;
 Mensajes.mensajeEvaluacionOxigeno = mensajeEvaluacionOxigeno;
 Mensajes.mensajeEvaluacionPulso = mensajeEvaluacionPulso;
 Mensajes.mensajeEvaluacionTemperatura = mensajeEvaluacionTemperatura;
+Mensajes.mostrarMensajeAumentoCardiaco = mostrarMensajeAumentoCardiaco;
 Mensajes.ejecutarLogOut = ejecutarLogOut;
 Mensajes.mensajeFalloGetAPI = mensajeFalloGetAPI;
 Mensajes.mensajeFalloPostAPI = mensajeFalloPostAPI;

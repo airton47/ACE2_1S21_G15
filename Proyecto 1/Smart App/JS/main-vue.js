@@ -23,8 +23,7 @@ var mainApp = new Vue({
         visorDatosDeportivos: "Mis Datos Deportivos",
         visorSalud: "Control de Rendimiento",
         visorCardiaco: "Mi Control de Ritmo Cardiaco",
-        visorHistorial:"Mis Historiales",
-        visorDetallesRutinas:"Mis Detalles",
+        visorDetallesRutinas:"Detalles de Rutina",
         visorTemperatura: "Mi Control de Temperatura",
         visorOxigeno: "Mi Control de Oxígeno en la Sangre",
         visorVelocidad: "Mi Control de Velocidad",
@@ -34,13 +33,17 @@ var mainApp = new Vue({
         visorAtletasHistorialCardiaco: "Ritmo Cardíaco:",
         visorAtletasHistorialTemperatura: "Temperatura:",
         visorAtletasHistorialOxígeno: "Oxígeno:",
-        medicionesHistoriales: "Rutinas Guardadas"
+        medicionesHistoriales: "Mis Rutinas",
+        medicionesNavetee: "Mis Pruebas Course-Navetee",
+        medicionesSemana: "Detalle Semanal",
+        detalleGeneralNavetee: "Detalle General"
       },
       estadoVisualizadores: {
         estadoPerfil: true,
         estadoRendimiento: false,
         estadoHistorial: false,
-        estadoAtletas: false
+        estadoAtletas: false,
+        estadoHistorialPropio: false
       },
       estiloActual:{
         activo: "opcionesMenu",
@@ -51,7 +54,11 @@ var mainApp = new Vue({
         listaMedicionesTemperaturas: [],
         listaMedicionesOxigenos: [],
         listaRutinas: [],
-        listaAnaliticas: []
+        listaAnaliticas: [],
+        listaPruebasTotales: [],
+        listaPruebasFiltradas: [],
+        listaRepeticiones: [],
+        listaSemanasActivas: []
       },
       controladoresDeHistorialesCoach: {
         listaAtletas: []
@@ -65,16 +72,19 @@ var mainApp = new Vue({
         temperaturaPromedio: 0,
         oxigenoActual: 0,
         oxigenoPromedio: 0,
-        cantidadMedicionesPrevia:0,
-        cantidadMedicionesActual:0,
         indicadorSeguimiento:true,
         velocidadActual: 0,
         velocidadMaxima: 0,
         velocidadMinima: 0,
         velocidadPromedio: 0,
-        velocidadMaxima: 0,
         distanciaActual: 0,
         distanciaTotal: 0,
+        pruebasCompletadas: 0,
+        pruebasFalladas: 0,
+        pruebasRendidas: 0,
+        repeticionesPromedioSemana: 0,
+        repeticionesMinSemana: 0,
+        repeticionesMaxSemana: 0
       },
       datosDePerfilEnSesion:{
         tipo: '---',
@@ -94,7 +104,9 @@ var mainApp = new Vue({
         nombreAtleta: '---',
         apellidoAtleta: '---',
         fechaRutina: '',
-        medicionGrafico: ''
+        repeticionPrueba: '',
+        medicionGrafico: '',
+        medicionGraficoNavetee: ''
       }
     //#endregion DATA
     },
@@ -105,23 +117,25 @@ var mainApp = new Vue({
             this.estadoVisualizadores.estadoRendimiento = false;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = false;
+            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorRendimiento: function(){
             this.estadoVisualizadores.estadoPerfil = false;
             this.estadoVisualizadores.estadoRendimiento = true;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = false;
+            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorAtletas: function(){
             this.estadoVisualizadores.estadoPerfil = false;
             this.estadoVisualizadores.estadoRendimiento = false;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = true;
+            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorHistorial: function(){
           this.estadoVisualizadores.estadoPerfil = false;
           this.estadoVisualizadores.estadoRendimiento = false;
-          this.estadoVisualizadores.estadoHistorial = true;
           this.estadoVisualizadores.estadoAtletas = false;
           //Reiniciamos los gráficos y tablas:
           dataGraficoHistorialActual.splice(0, dataGraficoHistorialActual.length);
@@ -143,8 +157,7 @@ var mainApp = new Vue({
           this.indicadoresDeSaludVariables.temperaturaPromedio = 0;
           this.indicadoresDeSaludVariables.oxigenoActual = 0;
           this.indicadoresDeSaludVariables.oxigenoPromedio = 0;
-          this.indicadoresDeSaludVariables.cantidadMedicionesActual = 0;
-          this.indicadoresDeSaludVariables.cantidadMedicionesPrevia = 0;
+          this.indicadoresDeSaludVariables.indicadorSeguimiento = true;
           //reinicio de gráficos:
           dataRitmoGrafico.splice(0, dataRitmoGrafico.length);
           labelsRitmoGrafico.splice(0, labelsRitmoGrafico.length);
@@ -152,9 +165,15 @@ var mainApp = new Vue({
           labelsTemperaturaGrafico.splice(0, labelsTemperaturaGrafico.length);
           dataOxigenoGrafico.splice(0, dataOxigenoGrafico.length);
           labelsOxigenoGrafico.splice(0, labelsOxigenoGrafico.length);
+          componentesNaveteeLive.dataVelocidadGrafico.splice(0,componentesNaveteeLive.dataVelocidadGrafico.length);
+          componentesNaveteeLive.labelsVelocidadGrafico.splice(0,componentesNaveteeLive.labelsVelocidadGrafico.length);
+          componentesNaveteeLive.dataDistanciaGrafico.splice(0,componentesNaveteeLive.dataDistanciaGrafico.length);
+          componentesNaveteeLive.labelsDistanciaGrafico.splice(0,componentesNaveteeLive.labelsDistanciaGrafico.length);
           graficoRitmoCardiaco.update();
           graficoOxigeno.update();
           graficoTemperatura.update();
+          componentesNaveteeLive.graficoVelocidad.update();
+          componentesNaveteeLive.graficoDistancia.update();
       }
       //#endregion METHODS
     }
@@ -311,9 +330,18 @@ let  graficoDistancia = new Chart(
   config_graf_Distancia
 );
 
+let componentesNaveteeLive = {
+  dataVelocidadGrafico: dataVelocidadGrafico,
+  labelsVelocidadGrafico: labelsVelocidadGrafico,
+  graficoVelocidad: graficoVelocidad,
+  dataDistanciaGrafico: dataDistanciaGrafico,
+  labelsDistanciaGrafico: labelsDistanciaGrafico,
+  graficoDistancia: graficoDistancia
+};
+
 //#endregion DISTANCIA:
 
-//#region HISTORIAL
+//#region HISTORIAL RUTINAS ESTÁNDAR
 
 let contenedor_graf_historial = document.getElementById('visorGraficoHistorial');
 let dataGraficoHistorialActual = [];
@@ -339,7 +367,43 @@ let  graficoHistorial = new Chart(
   config_graf_historial
 );
 
-//#endregion HISTORIAL
+//#endregion HISTORIAL RUTINAS ESTÁNDAR
+
+//#region HISTORIAL PRUEBAS COURSE-NAVETEE
+
+let contenedor_graf_course_navetee = document.getElementById('visorGraficoNavetee');
+let dataGraficoHistorialNaveteeActual = [];
+let labelsGraficoHistorialNaveteeActual = [];
+let colorGraficoHistorialNaveteeActual = [];
+let colorHoverGraficoHistorialNaveteeActual = [];
+let config_graf_historial_navetee= {
+    type: 'bar',
+    data: {
+      labels:labelsGraficoHistorialNaveteeActual,
+      datasets:[{
+        label: 'Mediciones de Course-Navetee',
+        backgroundColor:colorGraficoHistorialNaveteeActual,
+        hoverBackgroundColor: colorHoverGraficoHistorialNaveteeActual,
+        data: dataGraficoHistorialNaveteeActual
+      }]
+    },
+    options: {}
+};
+
+let  graficoHistorialNavetee = new Chart(
+  contenedor_graf_course_navetee,
+  config_graf_historial_navetee
+);
+
+let componentesGrafNavetee = {
+  dataGraficoHistorialNaveteeActual: dataGraficoHistorialNaveteeActual,
+  labelsGraficoHistorialNaveteeActual: labelsGraficoHistorialNaveteeActual,
+  colorGraficoHistorialNaveteeActual: colorGraficoHistorialNaveteeActual,
+  colorHoverGraficoHistorialNaveteeActual: colorHoverGraficoHistorialNaveteeActual,
+  graficoHistorialNavetee: graficoHistorialNavetee
+};
+
+//#endregion HISTORIAL PRUEBAS COURSE-NAVETEE
 
 //#endregion GRAFICOS
 
@@ -385,7 +449,7 @@ mainApp.controladoresDeHistoriales.listaRutinas.push({
 //Ejecución de Login y Registro
 actualizarFecha();
 ejecutarReloj();
-//Mensajes.ejecutarLogin();
+Mensajes.ejecutarLogin();
 
 //#region Control de Fecha y Hora
 
@@ -403,16 +467,15 @@ function ejecutarReloj(){
   setInterval(actualizarHora, 1000);
 }
 
+
 //#endregion Control de Fecha y Hora
 
 //#region Asignación de funciones a botones:
 
 //#region Ventanas
-//document.getElementById('botonVerHistorialPulso').addEventListener("click", Procesos.verHistorialPersonal);
-//document.getElementById('botonVerHistorialTemperatura').addEventListener("click", Procesos.verHistorialPersonal);
-//document.getElementById('botonVerHistorialOxigeno').addEventListener("click", Procesos.verHistorialPersonal);
 document.getElementById('botonVerAtletas').addEventListener("click", Procesos.mostrarVisorAtletasAsignados);
 document.getElementById('botonRegresarPerfil').addEventListener("click", mainApp.activarVisorPerfil);
+document.getElementById('opcionHistorial').addEventListener("click", Procesos.obtenerHistorialesPersonales);
 //#endregion Ventanas
 
 //#region Mensajes
@@ -423,9 +486,9 @@ document.getElementById('controladorSesion').addEventListener("click", Mensajes.
 //#region Acciones API
 document.getElementById('botonAgregarAtleta').addEventListener("click", Procesos.asignarAtletaNoAsignado);
 document.getElementById('atletasNoAsignados').addEventListener("change", Procesos.obtenerNombresAtletaNoAsignado);
+document.getElementById('selectorSemana').addEventListener("change", Procesos.mostrarPruebasFiltradasFecha);
 document.getElementById('botonInicioEvaluacion').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
-//document.getElementById('botonEjecucionTemperatura').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
-//document.getElementById('botonEjecucionOxigeno').addEventListener("click", Procesos.ejecutarMedicionEnVivo);
+document.getElementById('botonFinEvaluacion').addEventListener("click", Procesos.finalizarMedicionEnVivo);
 //#endregion Acciones API
 
 //#endregion Asignación de funciones a botones
@@ -445,5 +508,7 @@ export {
   labelsOxigenoGrafico,
   graficoRitmoCardiaco,
   graficoOxigeno,
-  graficoTemperatura
+  graficoTemperatura,
+  componentesGrafNavetee,
+  componentesNaveteeLive
 };

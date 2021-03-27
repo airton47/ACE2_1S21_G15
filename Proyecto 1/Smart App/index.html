@@ -48,7 +48,7 @@
             <div v-on:click="activarVisorRendimiento" v-bind:class="[estadoVisualizadores.estadoRendimiento ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu"> {{titulos.seccion_Rendimiento}} </h2>
             </div>
-            <div v-on:click="activarVisorHistorial" v-bind:class="[estadoVisualizadores.estadoHistorial ? estiloActual.activo : estiloActual.inactivo]">
+            <div id = "opcionHistorial" v-on:click="activarVisorHistorial" v-bind:class="[estadoVisualizadores.estadoHistorial && estadoVisualizadores.estadoHistorialPropio ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.seccion_Historial}} </h2>
             </div>  
         </section> 
@@ -60,7 +60,7 @@
                 <div class = "contenedorDinamico">
                     <div class= "primerSeparador">
                         <h2 class="titulos">{{titulos.visorDatosPersonales}}</h2>
-                        <form id="datosPerfil">
+                        <form id="datosPerfil" class="proyectorResultados">
                             <br>
                             <p>Id: <input v-bind:value="datosDePerfilEnSesion.id" type="text" readonly="readonly"></p>
                             <br>
@@ -74,7 +74,7 @@
                         <br>
                         <h2 class="titulos">{{titulos.visorDatosDeportivos}}</h2>
                         <br>
-                        <form id="datosDeportivos">
+                        <form id="datosDeportivos" class="proyectorResultados">
                             <p>Usuario: <input v-bind:value="datosDePerfilEnSesion.username" type="text" readonly="readonly"></p>
                             <br>
                             <p>Tipo: <input v-bind:value="datosDePerfilEnSesion.tipo" type="text" readonly="readonly"></p>
@@ -112,7 +112,7 @@
                                 <button id="botonInicioEvaluacion">Iniciar Evaluación</button>
                             </div>
                             <div class="contenedorBotonAccionador">
-                                <button id="botonFinEvaluacion">Detener Evaluación</button>
+                                <button id="botonFinEvaluacion" disabled>Detener Evaluación</button>
                             </div>
                         </div>
                         <!-- #endregion Visor Panel de Control -->
@@ -126,7 +126,7 @@
                         <br>
                         <div class="indicadoresSalud">
                             <br>
-                            <form id="indicadoresDePulso">      
+                            <form id="indicadoresDePulso" class="proyectorResultados">      
                                 <p>Mi ritmo actual: <input v-bind:value="indicadoresDeSaludVariables.pulsoActual" type="text" readonly="readonly">(Lpm)</p>
                                 <br>
                                 <p>Mi ritmo promedio: <input v-bind:value="indicadoresDeSaludVariables.pulsoPromedio" type="text" readonly="readonly">(Lpm)</p>
@@ -139,7 +139,7 @@
                         <br>
                         <div class="indicadoresSalud">
                             <br>
-                            <form id="indicadoresDeTemperatura">      
+                            <form id="indicadoresDeTemperatura" class="proyectorResultados">      
                                 <p>Temperatura actual: <input v-bind:value="indicadoresDeSaludVariables.temperaturaActual" type="text" readonly="readonly">°C</p>
                                 <br>
                                 <p>Temperatura maxima: <input v-bind:value="indicadoresDeSaludVariables.temperaturaMaxima" type="text" readonly="readonly">°C</p>
@@ -158,7 +158,7 @@
                         <br>
                         <div class="indicadoresSalud">
                             <br>
-                            <form id="indicadoresDeOxigeno">      
+                            <form id="indicadoresDeOxigeno" class="proyectorResultados">      
                                 <p>Nivel de Oxigeno actual: <input v-bind:value="indicadoresDeSaludVariables.oxigenoActual" type="text" readonly="readonly">(O)</p>
                                 <br>
                                 <p>Nivel de Oxigeno promedio: <input v-bind:value="indicadoresDeSaludVariables.oxigenoPromedio" type="text" readonly="readonly">(O)</p>
@@ -173,7 +173,7 @@
                         <br>
                         <div class="indicadoresSalud">
                             <br>
-                            <form id="indicadoresDeVelocidad">      
+                            <form id="indicadoresDeVelocidad" class="proyectorResultados">      
                                 <p>Velocidad actual: <input v-bind:value="indicadoresDeSaludVariables.velocidadActual" type="text" readonly="readonly">m/s</p>
                                 <br>
                                 <p>Velocidad maxima: <input v-bind:value="indicadoresDeSaludVariables.velocidadMaxima" type="text" readonly="readonly">m/s</p>
@@ -192,7 +192,7 @@
                         <br>
                         <div class="indicadoresSalud">
                             <br>
-                            <form id="indicadoresDeDistancia">      
+                            <form id="indicadoresDeDistancia" class="proyectorResultados">      
                                 <p>Distancia actual: <input v-bind:value="indicadoresDeSaludVariables.distanciaActual" type="text" readonly="readonly">m</p>
                                 <br>
                                 <p>Distancia total: <input v-bind:value="indicadoresDeSaludVariables.distanciaTotal" type="text" readonly="readonly">m</p>
@@ -205,10 +205,7 @@
             <!-- #endregion Visor Rendimiento en Vivo -->
             <!-- #region Visor Historial -->
             <div v-show= "estadoVisualizadores.estadoHistorial" class="visores">
-                <h2 class="titulos">{{titulos.visorHistorial}}</h2>
-                <div class="historialesGenerales">
-                    <canvas id="visorGraficoHistorial" width="75%" height="35%"></canvas>
-                </div>
+                <!-- #region Historiales de Rutinas -->
                 <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
                 <br>
                 <div class="tablaRutinas">
@@ -225,6 +222,7 @@
                         </tbody>
                     </table>
                 </div>
+                <br>
                 <h2 class="titulos">{{titulos.visorDetallesRutinas}}</h2>
                 <br>
                 <div class="tablasDetallada">
@@ -296,7 +294,82 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="historialesGenerales">
+                    <canvas id="visorGraficoHistorial" width="75%" height="35%"></canvas>
+                </div>
                 <br>
+                <!-- #endregion Historiales de Rutinas -->
+                <!-- #region Historiales de Course-Navetee -->
+                <h2 class="titulos">{{titulos.medicionesNavetee}}</h2>
+                <br>
+                <div class="tablaPruebas">
+                    <div class="indicadoresSalud">
+                        <form id="indicadoresDePruebas" class="proyectorResultados">      
+                            <p>Semana: 
+                                <select id="selectorSemana" class="selectorOpcionesMultiples">
+                                    <option disabled>Elija una Semana</option>
+                                    <option  v-for="elemento in controladoresDeHistoriales.listaSemanasActivas">{{elemento}}</option>
+                                </select>
+                            </p>
+                            <br>
+                            <h2 class="titulos">{{titulos.detalleGeneralNavetee}}</h2>
+                            <br>
+                            <p>No. Pruebas: <input v-bind:value="indicadoresDeSaludVariables.pruebasCompletadas" type="text" readonly="readonly">(Completadas)</p>
+                            <br>
+                            <p>No. Pruebas: <input v-bind:value="indicadoresDeSaludVariables.pruebasFalladas" type="text" readonly="readonly">(Fallidas)</p>
+                            <br>
+                            <p>No. Pruebas: <input v-bind:value="indicadoresDeSaludVariables.pruebasRendidas" type="text" readonly="readonly">(Rendidas)</p>
+                            <br>
+                            <h2 class="titulos">{{titulos.medicionesSemana}}</h2>
+                            <br>
+                            <p>No. Repeticiones: <input v-bind:value="indicadoresDeSaludVariables.repeticionesPromedioSemana" type="text" readonly="readonly">(Promedio)</p>
+                            <br>
+                            <p>No. Repeticiones: <input v-bind:value="indicadoresDeSaludVariables.repeticionesMinSemana" type="text" readonly="readonly">(Mínimas)</p>
+                            <br>
+                            <p>No. Repeticiones: <input v-bind:value="indicadoresDeSaludVariables.repeticionesMaxSemana" type="text" readonly="readonly">(Máximas)</p>
+                            <br>
+                        </form>
+                    </div>
+                    <br>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Fecha</th><th>No. Repeticiones</th><th>Estado</th><th>Distancia Total</th><th>Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoPruebasAtleta">
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaPruebasFiltradas">
+                                <td>{{elemento.fecha}}</td>
+                                <td>{{elemento.numRepeticiones}}</td>
+                                <td>{{elemento.estadoPrueba}}</td>
+                                <td>{{elemento.distanciaTotal}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>No. Repetición</th><th>Velocidad Promedio</th><th>Velocidad Mínima</th><th> Velocidad Máxima</th><th>Distancia</th><th>Graficar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoRepeticionesPrueba">
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaRepeticiones">
+                                <td>{{elemento.numRepeticion}}</td>
+                                <td>{{elemento.velPromedio}}</td>
+                                <td>{{elemento.velMin}}</td>
+                                <td>{{elemento.velMax}}</td>
+                                <td>{{elemento.distanciaR}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+                <div class="historialesGenerales">
+                    <canvas id="visorGraficoNavetee" width="75%" height="35%"></canvas>
+                </div>
+                <br>
+                <!-- #endregion Historiales de Course-Navetee -->
             </div>
             <!-- #endregion Visor Historial -->
             <!-- #region Visor Atletas(De coach) -->
@@ -327,10 +400,10 @@
                 </div>
                 <br>
                 <h2 class="titulos">{{titulos.seccionNuevosAtletas}}</h2>
-                <form id="datosNuevoAtleta">
+                <form id="datosNuevoAtleta" class="proyectorResultados">
                     <br>
                     <p>Username: 
-                        <select id="atletasNoAsignados">
+                        <select id="atletasNoAsignados" class="selectorOpcionesMultiples">
                             <option selected>0000</option>
                             <option>0001</option>
                         </select>
