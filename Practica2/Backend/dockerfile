@@ -1,0 +1,17 @@
+FROM node 
+
+WORKDIR /app
+
+ADD . /app
+
+RUN npm install
+
+EXPOSE 5000
+
+ENV PORT 5000
+
+ENV ATLAS_URI mongodb+srv://giossan:caceres4e@cluster0.h0ji1.mongodb.net/practica1?retryWrites=true&w=majority
+
+CMD ["node", "server.js"]
+
+
