@@ -412,61 +412,46 @@ async function obtenerNombresAtletaNoAsignado(){
 
 //#region Mediciones en Vivo
 
-async function medirEnVivo(elementoMedicion){
+async function medirEnVivo(){
     let historialesRecolectados = await obtenerHistorialesAtleta(mainApp.datosDePerfilEnSesion.username);
     //buscamos la medición mas reciente o en vivo(la última)
     let medicionActual = historialesRecolectados[historialesRecolectados.length-1];
-    if(elementoMedicion == 'Ritmo'){
-        mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = medicionActual.pulso.length;
-        if(mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual != mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia){
-            mainApp.indicadoresDeSaludVariables.pulsoActual = medicionActual.pulso[medicionActual.pulso.length-1];
-            mainApp.indicadoresDeSaludVariables.pulsoPromedio = medicionActual.pulsoPromedio;
-            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.pulso.length;
-            dataRitmoGrafico.push(medicionActual.pulso[medicionActual.pulso.length-1]);
-            labelsRitmoGrafico.push(medicionActual.pulso[medicionActual.pulso.length-1]);
-            graficoRitmoCardiaco.update();
-            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = true;
-        }else{
-            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.pulso.length;
-            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
-        }
-    } 
-    else if(elementoMedicion == 'Temperatura'){
-        mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = medicionActual.temperatura.length-1;
-        if(mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual != mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia){
-            mainApp.indicadoresDeSaludVariables.temperaturaActual = medicionActual.temperatura[medicionActual.temperatura.length-1];
-            mainApp.indicadoresDeSaludVariables.temperaturaMaxima = medicionActual.tempMaxima;
-            mainApp.indicadoresDeSaludVariables.temperaturaMinima = medicionActual.tempMinima;
-            mainApp.indicadoresDeSaludVariables.temperaturaPromedio = medicionActual.tempPromedio;
-            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.temperatura.length-1;
-            dataTemperaturaGrafico.push(medicionActual.temperatura[medicionActual.temperatura.length-1]);
-            labelsTemperaturaGrafico.push(medicionActual.temperatura[medicionActual.temperatura.length-1]);
-            graficoTemperatura.update();
-            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = true;
-        }else{
-            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.temperatura.length;
-            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
-        }
+    /*Puede ser cualquier medicion ya que siempre se envia la misma cantidad para las 3, 
+    se escogio´temperatura ya que su sensor es más estable:*/
+    mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = medicionActual.temperatura.length-1;
+    if(mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual != mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia){
+        //Ritmo Cardiaco
+        mainApp.indicadoresDeSaludVariables.pulsoActual = medicionActual.pulso[medicionActual.pulso.length-1];
+        mainApp.indicadoresDeSaludVariables.pulsoPromedio = medicionActual.pulsoPromedio;
+        dataRitmoGrafico.push(medicionActual.pulso[medicionActual.pulso.length-1]);
+        labelsRitmoGrafico.push(medicionActual.pulso[medicionActual.pulso.length-1]);
+        graficoRitmoCardiaco.update();
+        //Temperatura
+        mainApp.indicadoresDeSaludVariables.temperaturaActual = medicionActual.temperatura[medicionActual.temperatura.length-1];
+        mainApp.indicadoresDeSaludVariables.temperaturaMaxima = medicionActual.tempMaxima;
+        mainApp.indicadoresDeSaludVariables.temperaturaMinima = medicionActual.tempMinima;
+        mainApp.indicadoresDeSaludVariables.temperaturaPromedio = medicionActual.tempPromedio;
+        dataTemperaturaGrafico.push(medicionActual.temperatura[medicionActual.temperatura.length-1]);
+        labelsTemperaturaGrafico.push(medicionActual.temperatura[medicionActual.temperatura.length-1]);
+        graficoTemperatura.update();
+        //Oxigeno
+        mainApp.indicadoresDeSaludVariables.oxigenoActual = medicionActual.oxigeno[medicionActual.oxigeno.length-1];
+        mainApp.indicadoresDeSaludVariables.oxigenoPromedio = medicionActual.oxigenoPromedio;
+        dataOxigenoGrafico.push(medicionActual.oxigeno[medicionActual.oxigeno.length-1]);
+        labelsOxigenoGrafico.push(medicionActual.oxigeno[medicionActual.oxigeno.length-1]);
+        graficoOxigeno.update();
+        //actualizamos el estado
+        mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.temperatura.length;
+        mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = true;
     }else{
-        mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = medicionActual.oxigeno.length-1;
-        if(mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual != mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia){
-            mainApp.indicadoresDeSaludVariables.oxigenoActual = medicionActual.oxigeno[medicionActual.oxigeno.length-1];
-            mainApp.indicadoresDeSaludVariables.oxigenoPromedio = medicionActual.oxigenoPromedio;
-            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.oxigeno.length-1;
-            dataOxigenoGrafico.push(medicionActual.oxigeno[medicionActual.oxigeno.length-1]);
-            labelsOxigenoGrafico.push(medicionActual.oxigeno[medicionActual.oxigeno.length-1]);
-            graficoOxigeno.update();
-            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = true;
-        }else{
-            mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.oxigeno.length;
-            mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
-        }
+        mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = medicionActual.temperatura.length;
+        mainApp.indicadoresDeSaludVariables.indicadorSeguimiento = false;
     }
 }
 
 const timer = ms => new Promise(res => setTimeout(res, ms));
 
-async function ejecutarMedicionEnVivo(elementoMedicion){
+async function ejecutarMedicionEnVivo(){
     let tiempoEspera = 7000; //milisegundos
     mainApp.reiniciarVisoresMedicionesEnVivo();
     swal({
@@ -479,17 +464,11 @@ async function ejecutarMedicionEnVivo(elementoMedicion){
     });
     do{
         await timer(tiempoEspera); 
-        medirEnVivo(elementoMedicion);
+        medirEnVivo();
     }while(mainApp.indicadoresDeSaludVariables.indicadorSeguimiento);
     mainApp.indicadoresDeSaludVariables.cantidadMedicionesPrevia = 0;
     mainApp.indicadoresDeSaludVariables.cantidadMedicionesActual = 0;
-    if(elementoMedicion == 'Ritmo'){
-        Mensajes.mensajeEvaluacionPulso();
-    }else if(elementoMedicion == 'Temperatura'){
-        Mensajes.mensajeEvaluacionTemperatura();
-    }else{
-        Mensajes.mensajeEvaluacionOxigeno();
-    }
+    Mensajes.mostrarMensajeMedicionEnVivoFinalizada();
 }
 
 //#endregion Mediciones en Vivo
