@@ -23,12 +23,14 @@ const routerRutinas = require('./routes/rutinas');
 const routerUsuarios = require('./routes/usuarios');
 const routerLogin = require('./routes/login');
 const routerPruebas = require('./routes/pruebas');
+const routerVO2 = require('./routes/vo2');
 
 app.use('/tests', routerTest);
 app.use('/rutinas', routerRutinas);
 app.use('/usuarios', routerUsuarios);
 app.use('/login', routerLogin);
 app.use('/pruebas', routerPruebas);
+app.use('/vo2max', routerVO2);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
