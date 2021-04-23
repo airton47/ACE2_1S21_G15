@@ -65,7 +65,7 @@ var mainApp = new Vue({
         listaRepeticiones: [],
         listaSemanasActivas: [],
         listaSesionesVO2: [],
-        listaPromediosMinVO2: []
+        listaPromediosMinutosVO2: []
       },
       indicadoresSesionVO2: {
         inhalacionMin: 0,
@@ -126,7 +126,9 @@ var mainApp = new Vue({
         repeticionPrueba: '',
         medicionGrafico: '',
         medicionGraficoNavetee: '',
-        medicionGraficoVO2: ''
+        medicionGraficoVO2: '',
+        numInhalacionesPrevias: 0,
+        numExhalacionesPrevias: 0
       }
     //#endregion DATA
     },
@@ -186,6 +188,8 @@ var mainApp = new Vue({
         this.indicadoresDeSaludVariables.exhalacionActual = 0;
         this.indicadoresDeSaludVariables.vo2Actual = 0;
         this.indicadoresDeSaludVariables.tiempoRestante= "05:00";
+        this.evaluacionAtleta.numExhalacionesPrevias = 0;
+        this.evaluacionAtleta.numInhalacionesPrevias = 0;
         componentesVolumnenesLive.dataVolumenesGrafico.splice(0, componentesVolumnenesLive.dataVolumenesGrafico.length);
         componentesVolumnenesLive.labelsVolumenesGrafico.splice(0, componentesVolumnenesLive.labelsVolumenesGrafico.length);
         componentesVolumnenesLive.graficoVO2.update();
@@ -201,6 +205,8 @@ var mainApp = new Vue({
         this.controladoresDeHistoriales.listaSesionesVO2.splice(0, this.controladoresDeHistoriales.listaSesionesVO2.length);
         componentesVolumnenesLive.dataVolumenesGrafico_hist.splice(0, componentesVolumnenesLive.dataVolumenesGrafico_hist.length);
         componentesVolumnenesLive.labelsVolumenesGrafico_hist.splice(0, componentesVolumnenesLive.labelsVolumenesGrafico_hist.length);
+        this.controladoresDeHistoriales.listaSesionesVO2.splice(0, mainApp.controladoresDeHistoriales.listaSesionesVO2.length);
+        this.controladoresDeHistoriales.listaPromediosMinutosVO2.splice(0, mainApp.controladoresDeHistoriales.listaPromediosMinutosVO2.length);
         componentesVolumnenesLive.graficoVO2Hist.update();
       },
       reiniciarGraficoVO2MAXHistorial: function(){

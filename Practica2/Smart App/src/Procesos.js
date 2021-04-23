@@ -985,14 +985,14 @@ async function ejecutarEspirometroEnVivo(){
             await timer(tiempoRecopilacionDatos);
             //recopilar datos
             actualizarLiveVO2MAX();
-            console.log("tik");
             tiempoInicial = tiempoInicial + tiempoRecopilacionDatos;
         } 
-        console.log("tok");
         TiempoSesion = TiempoSesion - 1000; //1 segundo
         mostrarTiemposRestanteVO2(TiempoSesion);
         //medirEnVivo();
     }while(TiempoSesion > 0);
+    mainApp.evaluacionAtleta.numExhalacionesPrevias = 0;
+    mainApp.evaluacionAtleta.numInhalacionesPrevias = 0;
     Mensajes.mostrarMensajeMedicionEnVivoFinalizada(); 
 }
 
@@ -1021,12 +1021,14 @@ async function actualizarLiveVO2MAX(){
     if(sesionesRecolectadas.length != 0){
         let sesionActual = sesionesRecolectadas[sesionesRecolectadas.length-1];
         console.log(sesionActual);
-        if(sesionActual.volInhalado.length > sesionActual.volExhalado.length && sesionActual.volInhalado.length > 0){
+        if(sesionActual.volInhalado.length > mainApp.evaluacionAtleta.numInhalacionesPrevias && sesionActual.volInhalado.length > 0){
             //Actualmente se esta inhalando
             empujarDatosLiveVO2(sesionActual.volInhalado[sesionActual.volInhalado.length-1], sesionActual, true);
-        }if(sesionActual.volInhalado.length < sesionActual.volExhalado.length && sesionActual.volExhalado.length > 0){
+            mainApp.evaluacionAtleta.numInhalacionesPrevias = sesionActual.volInhalado.length;
+        }if(sesionActual.volExhalado.length> mainApp.evaluacionAtleta.numExhalacionesPrevias && sesionActual.volExhalado.length > 0){
             //Actualmente se esta exhalando
             empujarDatosLiveVO2(sesionActual.volExhalado[sesionActual.volExhalado.length-1], sesionActual, false);
+            mainApp.evaluacionAtleta.numExhalacionesPrevias = sesionActual.volExhalado.length;
         }
     }
     
@@ -1042,15 +1044,17 @@ async function obtenerSesionesVO2 (){
             fecha: elemento.fecha,
             volExhalado: elemento.volExhalado,
             volInhalado: elemento.volInhalado,
-            vo2Max: elemento.vo2,
+            vo2Max: elemento.vo2.toFixed(3),
             volMaxExhalado: elemento.volMaxExhalado,
             volMinExhalado: elemento.volMinExhalado,
             volMaxInhalado: elemento.volMaxInhalado,
             volMinInhalado: elemento.volMinInhalado,
-            volPromExhalado: elemento.volPromExhalado,
-            volPromInhalado: elemento.volPromInhalado,
+            volPromExhalado: elemento.volPromExhalado.toFixed(3),
+            volPromInhalado: elemento.volPromInhalado.toFixed(3),
             volExhalado: elemento.volExhalado,
             volInhalado: elemento.volInhalado, 
+            promsInhalado: elemento.promsInhalado,
+            promsExhalado: elemento.promsExhalado
         });  
     }); 
 }
@@ -1072,16 +1076,25 @@ async function MostrarSesionesVO2(){
 }
 
 function plasmarDetallesSesion(){
+    mainApp.controladoresDeHistoriales.listaPromediosMinutosVO2.splice(0, mainApp.controladoresDeHistoriales.listaPromediosMinutosVO2.length);
     let filaActual = this.parentNode; //La fila actual donde se presionó el boton de historial
     let fechaSesionEscogida = filaActual.firstChild.textContent;
     mainApp.controladoresDeHistoriales.listaSesionesVO2.forEach(elemento =>{
         if(elemento.fecha == fechaSesionEscogida){
             mainApp.indicadoresSesionVO2.inhalacionMin = elemento.volMinInhalado;
             mainApp.indicadoresSesionVO2.inhalacionMax = elemento.volMaxInhalado;
-            mainApp.indicadoresSesionVO2.inhalacionProm = elemento.volPromInhalado;
+            mainApp.indicadoresSesionVO2.inhalacionProm = parseFloat(elemento.volPromInhalado).toFixed(3);
             mainApp.indicadoresSesionVO2.exhalacionMin = elemento.volMinExhalado;
             mainApp.indicadoresSesionVO2.exhalacionMax = elemento.volMaxExhalado;
-            mainApp.indicadoresSesionVO2.exhalacionProm = elemento.volPromExhalado;
+            mainApp.indicadoresSesionVO2.exhalacionProm = parseFloat(elemento.volPromExhalado).toFixed(3);
+            //mostramos los promedios por minuto
+            for(let desplazador = 0; desplazador < elemento.promsInhalado.length; desplazador++){
+                mainApp.controladoresDeHistoriales.listaPromediosMinutosVO2.push({
+                    numMinuto: desplazador + 1,
+                    promInhalacion: elemento.promsInhalado[desplazador].toFixed(3),
+                    promExhalacion: elemento.promsExhalado[desplazador].toFixed(3)
+                });
+            }
         }
     });
     swal({
@@ -1129,6 +1142,7 @@ function limpiarSesionesVO2(){
     mainApp.reiniciarHistorialVO2MAX();
     vaciarBotonesTablaSesiones();
     mainApp.controladoresDeHistoriales.listaSesionesVO2.splice(0, mainApp.controladoresDeHistoriales.listaSesionesVO2.length);
+    mainApp.controladoresDeHistoriales.listaPromediosMinutosVO2.splice(0, mainApp.controladoresDeHistoriales.listaPromediosMinutosVO2.length);
 }
 
 //#endregion Espirómetro en Vivo

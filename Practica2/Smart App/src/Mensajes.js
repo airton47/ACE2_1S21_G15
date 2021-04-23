@@ -116,6 +116,8 @@ function regresarPantallaValidacion(){
 
 function mostrarDespedidaSesion(){
   mainApp.reiniciarVisoresMedicionesEnVivo();
+  mainApp.reiniciarHistorialVO2MAX();
+  mainApp.reiniciarElementosVO2MAXLive();
  swal(mensajeDespedidaSesion);
  setTimeout(regresarPantallaValidacion, 2500); //se espera la duración dfel mensaje para ejecutar el proceso
 }
