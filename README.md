@@ -4,7 +4,7 @@
 Proyectos y prácticas del curso de Arquitectura de Computadores y Ensambladores 2, las cuales son:
 * Práctica # 1: Tecnología Vestible para Ejercicio.
 * Proyecto # 1: Tecnología Vestible para Ejercicio + Test Course-Navetee.
-* Práctica # 2
+* Práctica # 2: Espirómetro para VO2.
 * Proyecto # 2
 
 ## Desarrolladores ✒️
