@@ -8,6 +8,8 @@ const vo2maxSchema = new Schema({
     peso: {type: Number},
     volExhalado: [{type: Number}],
     volInhalado: [{type: Number}],
+    promsExhalado: [{type: Number}],
+    promsInhalado: [{type: Number}],
     volMaxExhalado: {type: Number},
     volMinExhalado: {type: Number},
     volMaxInhalado: {type: Number},
@@ -15,6 +17,7 @@ const vo2maxSchema = new Schema({
     volPromExhalado: {type: Number},
     volPromInhalado: {type: Number},
     vo2: {type: Number},
+    min: {type: Number},
 },{
     timestamps: true,
 })
