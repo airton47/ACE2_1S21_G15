@@ -29,6 +29,14 @@ router.route('/getByDate/:user').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/getEstado/:user').get((req, res) => {
+    const fecha = Date.parse(req.body.fecha);
+
+    Rutina.findOne({username: req.params.user, dateIndex: fecha})
+        .then(rut => res.json(rut.activo))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/iniciar').post((req, res) => {
     const username = req.body.username;
     const fecha = req.body.fecha;
