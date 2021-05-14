@@ -1,11 +1,11 @@
 # 🕹 ACE2_1S21_G15
 
 ## Descripción :scroll:
-Proyectos y prácticas del curso de Arquitectura de Computadores y Ensambladores 2, las cuales son:
+Proyectos y prácticas del curso de Arquitectura de Computadores y Ensambladores 2, los cuales son:
 * Práctica # 1: Tecnología Vestible para Ejercicio.
 * Proyecto # 1: Tecnología Vestible para Ejercicio + Test Course-Navetee.
 * Práctica # 2: Espirómetro para VO2.
-* Proyecto # 2
+* Proyecto # 2: Prenda inteligente orientada al IOT / Glove Fit.
 
 ## Desarrolladores ✒️
 
