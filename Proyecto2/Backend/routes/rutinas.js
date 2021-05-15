@@ -29,7 +29,7 @@ router.route('/getByDate/:user').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/getEstado/:user').get((req, res) => {
+router.route('/getEstado/:user').post((req, res) => {
     const fecha = Date.parse(req.body.fecha);
 
     Rutina.findOne({username: req.params.user, dateIndex: fecha})
@@ -38,11 +38,30 @@ router.route('/getEstado/:user').get((req, res) => {
 });
 
 router.route('/iniciar').post((req, res) => {
+
+    let dura = 1;
+    switch (req.body.intensidad){
+        case "S": 
+        dura = 3;
+        break; 
+        case "M":
+            dura = 7;
+            break;
+        case "I":
+            dura = 20;
+            break; 
+        default:
+            dura = 1;
+            break;
+    }
+
+    const calo = (req.body.peso * 3) / 60 * dura;
+
     const username = req.body.username;
     const fecha = req.body.fecha;
     const dateIndex = Date.parse(fecha);
     const peso = req.body.peso;
-    const calorias = 0;
+    const calorias = calo;
     const pulso = [];
     const maxPulso = 0;
     const minPulso = 0;
@@ -262,7 +281,6 @@ router.route('/finalizar/:user').post((req,res) => {
         .then(rut => {
 
             rut.activo = false;
-            rut.calorias = (rut.peso * 3)/60
 
             rut.save()
                 .then(() => res.json("Rutina finalizada"))
