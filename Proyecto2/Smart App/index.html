@@ -48,7 +48,7 @@
             <div v-on:click="activarVisorRendimiento" v-bind:class="[estadoVisualizadores.estadoRendimiento ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu"> {{titulos.seccion_Rendimiento}} </h2>
             </div>
-            <div id = "opcionHistorial" v-on:click="activarVisorHistorial" v-bind:class="[estadoVisualizadores.estadoHistorial && estadoVisualizadores.estadoHistorialPropio ? estiloActual.activo : estiloActual.inactivo]">
+            <div id = "opcionHistorial" v-on:click="activarVisorHistorial" v-bind:class="[estadoVisualizadores.estadoHistorial ? estiloActual.activo : estiloActual.inactivo]">
                 <h2 class="titulosMenu">{{titulos.seccion_Historial}} </h2>
             </div>   
         </section> 
@@ -76,8 +76,6 @@
                         <br>
                         <form id="datosDeportivos" class="proyectorResultados">
                             <p>Usuario: <input v-bind:value="datosDePerfilEnSesion.username" type="text" readonly="readonly"></p>
-                            <br>
-                            <p>Tipo: <input v-bind:value="datosDePerfilEnSesion.tipo" type="text" readonly="readonly"></p>
                             <br>
                             <p>Edad: <input v-bind:value="datosDePerfilEnSesion.edad" type="text" readonly="readonly"></p>
                             <br>
@@ -111,7 +109,7 @@
                             <br>
                             <form class="proyectorResultados">      
                                 <p>Intensidad: 
-                                    <select id="" class="selectorOpcionesMultiples">
+                                    <select id="selectorIntensidad" class="selectorOpcionesMultiples">
                                         <option selected>Suave</option>
                                         <option>Medio</option>
                                         <option>Intenso</option>
@@ -182,7 +180,7 @@
                         <div class="indicadoresSalud">
                             <br>
                             <form id="indicadoresDeVelocidad" class="proyectorResultados">      
-                                <p>Velocidad actual: <input v-bind:value="indicadoresDeSaludVariables.velocidadActual" type="text" readonly="readonly">m/s</p>
+                                <p>Aceleración: <input v-bind:value="indicadoresDeSaludVariables.velocidadActual" type="text" readonly="readonly">G</p>
                                 <br>
                             </form>
                         </div>
@@ -196,7 +194,7 @@
                         <div class="indicadoresSalud">
                             <br>
                             <form id="indicadoresDeDistancia" class="proyectorResultados">      
-                                <p>Distancia de Elevación: <input v-bind:value="indicadoresDeSaludVariables.distanciaActual" type="text" readonly="readonly">m</p>
+                                <p>Porcentaje de Elevación/Flexión: <input v-bind:value="indicadoresDeSaludVariables.distanciaActual" type="text" readonly="readonly">%</p>
                                 <br>
                             </form>
                         </div>
@@ -207,19 +205,18 @@
             <!-- #endregion Visor Rendimiento en Vivo -->
             <!-- #region Visor Historial -->
             <div v-show= "estadoVisualizadores.estadoHistorial" class="visores">
-                <!-- #region Historiales de Rutinas -->
                 <div class = "contenedorMayor">
                 <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
                 <br>
                 <div class="tablasSesionesVO2">
-                    <table class="tabla" >
+                    <table id = "" class="tabla" >
                         <thead>
                             <tr>
                                 <th>Fecha</th><th>Detalles</th><th>Graficar</th>
                             </tr>
                         </thead>
-                        <tbody id="cuerpoTablaSesiones" >
-                            <tr  v-for="elemento in controladoresDeHistoriales.listaSesionesVO2">
+                        <tbody id="cuerpoRutinasAtleta" >
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaRutinas">
                                 <td>{{elemento.fecha}}</td>
                             </tr>
                         </tbody>
@@ -235,14 +232,14 @@
                     <table class="tabla" >
                         <thead>
                             <tr>
-                                <th>Ritmo Minimo</th><th>Ritmo Máximo</th><th>Ritmo Promedio</th>
+                                <th>Ritmo Minimo (lpm)</th><th>Ritmo Máximo (lpm)</th><th>Ritmo Promedio (lpm)</th>
                             </tr>
                         </thead>
                         <tbody id="" >
                             <tr>
-                                <td>{{indicadoresSesionVO2.inhalacionMin}}</td>
-                                <td>{{indicadoresSesionVO2.inhalacionMax}}</td>
-                                <td>{{indicadoresSesionVO2.inhalacionProm}}</td>
+                                <td>{{indicadoresDeSaludHistorial.pulsoMinimo}}</td>
+                                <td>{{indicadoresDeSaludHistorial.pulsoMaximo}}</td>
+                                <td>{{indicadoresDeSaludHistorial.pulsoPromedio}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -252,14 +249,14 @@
                     <table class="tabla" >
                         <thead>
                             <tr>
-                                <th>Temperatura Minima</th><th>Temperatura Máxima</th><th>Temperatura Promedio</th>
+                                <th>Temperatura Minima (°C)</th><th>Temperatura Máxima (°C)</th><th>Temperatura Promedio (°C)</th>
                             </tr>
                         </thead>
                         <tbody id="" >
                             <tr>
-                                <td>{{indicadoresSesionVO2.exhalacionMin}}</td>
-                                <td>{{indicadoresSesionVO2.exhalacionMax}}</td>
-                                <td>{{indicadoresSesionVO2.exhalacionProm}}</td>
+                                <td>{{indicadoresDeSaludHistorial.temperaturaMinima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.temperaturaMaxima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.temperaturaPromedio}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -269,14 +266,14 @@
                     <table class="tabla" >
                         <thead>
                             <tr>
-                                <th>Oxígeno Minimo</th><th>Oxígeno Máximo</th><th>Oxígeno Promedio</th>
+                                <th>Oxígeno Minimo (O)</th><th>Oxígeno Máximo (O)</th><th>Oxígeno Promedio (O)</th>
                             </tr>
                         </thead>
                         <tbody id="" >
                             <tr>
-                                <td>{{indicadoresSesionVO2.exhalacionMin}}</td>
-                                <td>{{indicadoresSesionVO2.exhalacionMax}}</td>
-                                <td>{{indicadoresSesionVO2.exhalacionProm}}</td>
+                                <td>{{indicadoresDeSaludHistorial.oxigenoMinimo}}</td>
+                                <td>{{indicadoresDeSaludHistorial.oxigenoMaximo}}</td>
+                                <td>{{indicadoresDeSaludHistorial.oxigenoPromedio}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -288,14 +285,14 @@
                     <table class="tabla" >
                         <thead>
                             <tr>
-                                <th>Velocidad Minima</th><th>Velocidad Máxima</th><th>Velocidad Promedio</th>
+                                <th>Acel. Minima (G)</th><th>Acel. Máxima (G)</th><th>Acel Promedio (G)</th>
                             </tr>
                         </thead>
                         <tbody id="" >
                             <tr>
-                                <td>{{indicadoresSesionVO2.inhalacionMin}}</td>
-                                <td>{{indicadoresSesionVO2.inhalacionMax}}</td>
-                                <td>{{indicadoresSesionVO2.inhalacionProm}}</td>
+                                <td>{{indicadoresDeSaludHistorial.velocidadMinima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.velocidadMaxima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.velocidadPromedio}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -305,14 +302,33 @@
                     <table class="tabla" >
                         <thead>
                             <tr>
-                                <th>Distancia Minima</th><th>Distancia Máxima</th><th>Distancia Promedio</th>
+                                <th>Elevación Minima (%)</th><th>Elevación Máxima (%)</th><th>Elevación Promedio (%)</th>
                             </tr>
                         </thead>
                         <tbody id="" >
                             <tr>
-                                <td>{{indicadoresSesionVO2.exhalacionMin}}</td>
-                                <td>{{indicadoresSesionVO2.exhalacionMax}}</td>
-                                <td>{{indicadoresSesionVO2.exhalacionProm}}</td>
+                                <td>{{indicadoresDeSaludHistorial.distanciaMinima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.distanciaMaxima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.distanciaPromedio}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+                <div class="tablasSesionesVO2Simple">
+                    <h2 class="titulos">{{titulos.tituloDetallesEvaluacion}}</h2>
+                    <br>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Intensidad</th><th>Peso Considerado (Kg)</th><th>Calorías quemadas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="" >
+                            <tr>
+                                <td>{{indicadoresDeSaludHistorial.intensidad}}</td>
+                                <td>{{indicadoresDeSaludHistorial.pesoConsiderado}}</td>
+                                <td>{{indicadoresDeSaludHistorial.calorias}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -322,10 +338,9 @@
             <div class="historialesGenerales">
                 <canvas id="visorGraficoHistorial" width="75%" height="35%"></canvas>
             </div>
-        </div>
             <br>
+        </div>
             </div>
-            <!-- #endregion Historiales de Rutinas -->
             <!-- #endregion Visor Historial -->
             <!-- #region Visor Atletas(De coach) -->
             <div v-show= "estadoVisualizadores.estadoAtletas" class="visores">

@@ -116,10 +116,11 @@ function regresarPantallaValidacion(){
 
 function mostrarDespedidaSesion(){
   mainApp.reiniciarVisoresMedicionesEnVivo();
-  mainApp.reiniciarHistorialVO2MAX();
-  mainApp.reiniciarElementosVO2MAXLive();
+  mainApp.reiniciarRutinas();
+  mainApp.reiniciarTemporizador();
+  Procesos.limpiarTablasDetalleRutina();
  swal(mensajeDespedidaSesion);
- setTimeout(regresarPantallaValidacion, 2500); //se espera la duración dfel mensaje para ejecutar el proceso
+ setTimeout(regresarPantallaValidacion, 2500); //se espera la duración del mensaje para ejecutar el proceso
 }
 
 //#endregion LogIn y LogOut
@@ -444,14 +445,16 @@ async function recolectarDatosRegistro(){
 
 //#endregion Recolección de datos Log In y Sign In
 
+
+
 //#region Analítica
 let mensajeMedicionFinalizada = {
-  title: 'Proceso Finalizado',
-  html: '<b>Sus mediciones se evaluaron con éxito</b>.',
+  title: 'Resumen de Rutina',
+  html: '',
   imageUrl: "Imagenes/Pulso.gif", //es la ruta desde el HTML
-  imageWidth: 250,
-  imageHeight: 250,
-  imageAlt: 'Pulso: de Storyset',
+  imageWidth: 120,
+  imageHeight: 120,
+  imageAlt: 'Resumen de Resultados: de Storyset',
   showConfirmButton: true,
   confirmButtonColor: '#669999',
   confirmButtonText: 'Aceptar',
@@ -465,12 +468,115 @@ function mostrarMensajeMedicionEnVivoFinalizada(){
 }
 
 let mensajeAumentoCardiaco = {
-  title: 'Por favor deténgase!!!',
-  html: '<b>Su ritmo cardíaco se ha elevado demasiado, debe parar el entrenamiento</b>.',
+  title: 'Cuidado con su ritmo cardiaco!!!',
+  html: '<b>Su ritmo cardíaco se ha elevado demasiado, aligere su entrenamiento y respire tranquilamente</b>.',
   imageUrl: "Imagenes/Temperatura.gif", //es la ruta desde el HTML
+  timer: 7000,
   imageWidth: 250,
   imageHeight: 250,
   imageAlt: 'Aumento de Pulso: de Storyset',
+  showConfirmButton: false,
+  allowEscapeKey: false,
+  allowOutsideClick: false,
+  
+}
+
+function mostrarMensajeAumentoCardiaco(){
+  swal(mensajeAumentoCardiaco);
+}
+
+let mensajeAumentoTemperatura = {
+  title: 'Cuidado con su temperatura!!!',
+  html: '<b>Su temperatura se ha elevado demasiado por un golpe de calor, aligere su entrenamiento e hidrátese</b>.',
+  imageUrl: "Imagenes/Temperatura.gif", //es la ruta desde el HTML
+  timer: 7000,
+  imageWidth: 250,
+  imageHeight: 250,
+  imageAlt: 'Aumento de Temperatura: de Storyset',
+  showConfirmButton: false,
+  allowEscapeKey: false,
+  allowOutsideClick: false,
+  
+}
+
+function mostrarMensajeAumentoTemperatura(){
+  swal(mensajeAumentoTemperatura);
+}
+
+let mensajeDisminucionTemperatura = {
+  title: 'Cuidado con su temperatura!!!',
+  html: '<b>Su temperatura ha bajado demasiado, aumente la frecuencia y ritmo de su entrenamiento para estabilizarse</b>.',
+  imageUrl: "Imagenes/Degree.gif", //es la ruta desde el HTML
+  timer: 7000,
+  imageWidth: 250,
+  imageHeight: 250,
+  imageAlt: 'Disminucion de Temperatura: de Storyset',
+  showConfirmButton: false,
+  allowEscapeKey: false,
+  allowOutsideClick: false,
+  
+}
+
+function mostrarMensajeDisminucionTemperatura(){
+  swal(mensajeDisminucionTemperatura);
+}
+
+let mensajeRecordatorioRespiración = {
+  title: 'Estable',
+   html: '<b>Sus signos están estables, recuerde respirar tranquilamente durante su entrenamiento</b>',
+  timer: 7000,
+   showConfirmButton: false,
+   type: 'info',
+   allowEscapeKey: false,
+   allowOutsideClick: false
+};
+
+function mostrarRecordatorioRespiracion(){
+  swal(mensajeRecordatorioRespiración);
+}
+
+
+
+let mensajeElevacionFallida = {
+  title: 'Elevación fallida',
+   html: '<b>Su porcentaje de elevación de pesa es muy bajo, aumente la flexión del brazo durante el levantamiento</b>',
+   imageUrl: "Imagenes/Pesas.gif", //es la ruta desde el HTML
+  timer: 7000,
+  imageWidth: 250,
+  imageHeight: 250,
+   showConfirmButton: false,
+   allowEscapeKey: false,
+   allowOutsideClick: false
+};
+
+function mostrarElevacionFallida(){
+  swal(mensajeElevacionFallida);
+}
+
+let mensajeElevacionExitosa = {
+  title: 'Elevación correcta',
+   html: '<b>Su porcentaje de elevación es el ideal, mantenga la misma técnica para garantizar la prosperidad del ejercicio</b>',
+   imageUrl: "Imagenes/Pesas.gif", //es la ruta desde el HTML
+  timer: 7000,
+  imageWidth: 250,
+  imageHeight: 250,
+   showConfirmButton: false,
+   allowEscapeKey: false,
+   allowOutsideClick: false
+};
+
+function mostrarElevacionExitosa(){
+  swal(mensajeElevacionExitosa);
+}
+
+
+let mensajeIntensidadSuave = {
+  title: 'Intensidad Suave',
+  html: '<b>El modo suave tiene una duración de 03:00, esta basada para evaluar un precalentamiento o estiramiento breve</b>.',
+  imageUrl: "Imagenes/Chakras.gif", //es la ruta desde el HTML
+  imageWidth: 200,
+  imageHeight: 200,
+  imageAlt: 'Intensidad',
   showConfirmButton: true,
   confirmButtonColor: '#669999',
   confirmButtonText: 'Aceptar',
@@ -479,8 +585,47 @@ let mensajeAumentoCardiaco = {
   
 }
 
-function mostrarMensajeAumentoCardiaco(){
-  swal(mensajeAumentoCardiaco);
+function mostrarMensajeIntensidadSuave(){
+  swal(mensajeIntensidadSuave);
+}
+
+let mensajeIntensidadMedia = {
+  title: 'Intensidad Media',
+  html: '<b>La modalidad media tiene una duración de 07:00, esta basada para entrenamiento tipo HIIT para entrenamientos intensos de corta duración ó quema de calorias por cardio</b>.',
+  imageUrl: "Imagenes/Fitness.gif", //es la ruta desde el HTML
+  imageWidth: 200,
+  imageHeight: 200,
+  imageAlt: 'Intensidad',
+  showConfirmButton: true,
+  confirmButtonColor: '#669999',
+  confirmButtonText: 'Aceptar',
+  allowEscapeKey: false,
+  allowOutsideClick: false,
+  
+}
+
+function mostrarMensajeIntensidadMedia(){
+  swal(mensajeIntensidadMedia);
+}
+
+
+let mensajeIntensidadSuperIntensa = {
+  title: 'Modo Intenso',
+  html: '<b>El modo intenso tiene una duración de 20:00, esta basado para entrenamiento completos de larga duración o que empleen varios sets de ejercicios en toda la rutina</b>.',
+  imageUrl: "Imagenes/FitnessPro.gif", //es la ruta desde el HTML
+  imageWidth: 200,
+  imageHeight: 200,
+  imageAlt: 'Intensidad',
+  showConfirmButton: true,
+  confirmButtonColor: '#669999',
+  confirmButtonText: 'Aceptar',
+  allowEscapeKey: false,
+  allowOutsideClick: false,
+  
+}
+
+function mostrarMensajeIntensidadSuperIntensa(){
+  swal(mensajeIntensidadSuperIntensa);
 }
 
 let mensajePulso = {
@@ -549,5 +694,14 @@ Mensajes.ejecutarLogOut = ejecutarLogOut;
 Mensajes.mensajeFalloGetAPI = mensajeFalloGetAPI;
 Mensajes.mensajeFalloPostAPI = mensajeFalloPostAPI;
 Mensajes.mostrarMensajeMedicionEnVivoFinalizada = mostrarMensajeMedicionEnVivoFinalizada;
+Mensajes.mostrarMensajeIntensidadSuave = mostrarMensajeIntensidadSuave;
+Mensajes.mostrarMensajeIntensidadMedia = mostrarMensajeIntensidadMedia;
+Mensajes.mostrarMensajeIntensidadSuperIntensa = mostrarMensajeIntensidadSuperIntensa;
+Mensajes.mensajeMedicionFinalizada = mensajeMedicionFinalizada;
+Mensajes.mostrarRecordatorioRespiracion = mostrarRecordatorioRespiracion;
+Mensajes.mostrarMensajeAumentoTemperatura = mostrarMensajeAumentoTemperatura;
+Mensajes.mostrarMensajeDisminucionTemperatura = mostrarMensajeDisminucionTemperatura;
+Mensajes.mostrarElevacionExitosa = mostrarElevacionExitosa;
+Mensajes.mostrarElevacionFallida = mostrarElevacionFallida;
 
 export {Mensajes};

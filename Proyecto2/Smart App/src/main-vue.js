@@ -26,20 +26,20 @@ var mainApp = new Vue({
         visorDetallesRutinas:"Detalles de Rutina",
         visorTemperatura: "Mi Control de Temperatura",
         visorOxigeno: "Mi Control de Oxígeno en la Sangre",
-        visorVelocidad: "Mi Control de Velocidad",
+        visorVelocidad: "Mi Control de Aceleración de movimiento atlético",
         visorDistancia: "Mi Control de Elevación (Para Pesas)",
         visorAtletas: "Atletas Asignados:",
         seccionNuevosAtletas: "Atletas no asignados:",
         medicionesHistoriales: "Mis Rutinas",
         tituloDetallesVitales: "Detalles de Signos Vitales",
-        tituloDetalleAgiles: "Detalles de Agilidad"
+        tituloDetalleAgiles: "Detalles de Agilidad deportiva",
+        tituloDetallesEvaluacion: "Detalles de evaluación"
       },
       estadoVisualizadores: {
         estadoPerfil: true,
         estadoRendimiento: false,
         estadoHistorial: false,
         estadoAtletas: false,
-        estadoHistorialPropio: false,
       },
       estiloActual:{
         activo: "opcionesMenu",
@@ -56,14 +56,19 @@ var mainApp = new Vue({
         listaAtletas: []
       },
       indicadoresDeSaludVariables: {
+        analisisInteligente: 0,
         pulsoActual: 0,
         pulsoPromedio: 0,
+        pulsoMaximo: 0,
+        pulsoMinimo: 0,
         temperaturaActual: 0,
         temperaturaMaxima: 0,
         temperaturaMinima: 0,
         temperaturaPromedio: 0,
         oxigenoActual: 0,
         oxigenoPromedio: 0,
+        oxigenoMaximo: 0,
+        oxigenoMinimo: 0,
         indicadorSeguimiento:true,
         velocidadActual: 0,
         velocidadMaxima: 0,
@@ -71,6 +76,31 @@ var mainApp = new Vue({
         velocidadPromedio: 0,
         distanciaActual: 0,
         distanciaTotal: 0,
+        distanciaMaxima: 0,
+        distanciaMinima: 0,
+        calorias: 0,
+        tiempoRestante: "03:00",
+        milisegundosActividad: 180000
+      },
+      indicadoresDeSaludHistorial: {
+        pulsoPromedio: 0,
+        pulsoMaximo: 0,
+        pulsoMinimo: 0,
+        temperaturaMaxima: 0,
+        temperaturaMinima: 0,
+        temperaturaPromedio: 0,
+        oxigenoPromedio: 0,
+        oxigenoMaximo: 0,
+        oxigenoMinimo: 0,
+        velocidadMaxima: 0,
+        velocidadMinima: 0,
+        velocidadPromedio: 0,
+        distanciaPromedio: 0,
+        distanciaMaxima: 0,
+        distanciaMinima: 0,
+        pesoConsiderado: 0,
+        calorias: 0,
+        intensidad: "---",
         tiempoRestante: "00:00"
       },
       datosDePerfilEnSesion:{
@@ -107,26 +137,24 @@ var mainApp = new Vue({
             this.estadoVisualizadores.estadoRendimiento = false;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = false;
-            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorRendimiento: function(){
             this.estadoVisualizadores.estadoPerfil = false;
             this.estadoVisualizadores.estadoRendimiento = true;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = false;
-            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorAtletas: function(){
             this.estadoVisualizadores.estadoPerfil = false;
             this.estadoVisualizadores.estadoRendimiento = false;
             this.estadoVisualizadores.estadoHistorial = false;
             this.estadoVisualizadores.estadoAtletas = true;
-            this.estadoVisualizadores.estadoHistorialPropio = false;
         },
         activarVisorHistorial: function(){
           this.estadoVisualizadores.estadoPerfil = false;
-          this.estadoVisualizadores.estadoRendimiento = false;
-          this.estadoVisualizadores.estadoAtletas = false;
+            this.estadoVisualizadores.estadoRendimiento = false;
+            this.estadoVisualizadores.estadoHistorial = true;
+            this.estadoVisualizadores.estadoAtletas = false;
           //Reiniciamos los gráficos y tablas:
           dataGraficoHistorialActual.splice(0, dataGraficoHistorialActual.length);
           labelsGraficoHistorialActual.splice(0, labelsGraficoHistorialActual.length);
@@ -141,16 +169,27 @@ var mainApp = new Vue({
       reiniciarVisoresMedicionesEnVivo: function(){
           this.indicadoresDeSaludVariables.pulsoActual = 0;
           this.indicadoresDeSaludVariables.pulsoPromedio = 0;
+          this.indicadoresDeSaludVariables.pulsoMaximo = 0;
+          this.indicadoresDeSaludVariables.pulsoMinimo = 0;
           this.indicadoresDeSaludVariables.temperaturaActual = 0;
           this.indicadoresDeSaludVariables.temperaturaMaxima = 0;
           this.indicadoresDeSaludVariables.temperaturaMinima = 0;
           this.indicadoresDeSaludVariables.temperaturaPromedio = 0;
           this.indicadoresDeSaludVariables.oxigenoActual = 0;
           this.indicadoresDeSaludVariables.oxigenoPromedio = 0;
+          this.indicadoresDeSaludVariables.oxigenoMaximo = 0;
+          this.indicadoresDeSaludVariables.oxigenoMinimo = 0;
+          this.indicadoresDeSaludVariables.velocidadActual = 0;
+          this.indicadoresDeSaludVariables.velocidadMaxima = 0;
+          this.indicadoresDeSaludVariables.velocidadMinima = 0;
+          this.indicadoresDeSaludVariables.velocidadPromedio = 0;
+          this.indicadoresDeSaludVariables.distanciaActual = 0;
+          this.indicadoresDeSaludVariables.distanciaMaxima = 0;
+          this.indicadoresDeSaludVariables.distanciaMinima = 0;
+          this.indicadoresDeSaludVariables.distanciaPromedio = 0;
+          this.indicadoresDeSaludVariables.calorias = 0;
+          this.indicadoresDeSaludVariables.analisisInteligente = 0;
           this.indicadoresDeSaludVariables.indicadorSeguimiento = true;
-          this.indicadoresDeSaludVariables.inhalacionActual = 0;
-          this.indicadoresDeSaludVariables.exhalacionActual = 0;
-          this.indicadoresDeSaludVariables.tiempoRestante= "00:00";
           //reinicio de gráficos:
           dataRitmoGrafico.splice(0, dataRitmoGrafico.length);
           labelsRitmoGrafico.splice(0, labelsRitmoGrafico.length);
@@ -161,7 +200,23 @@ var mainApp = new Vue({
           graficoRitmoCardiaco.update();
           graficoOxigeno.update();
           graficoTemperatura.update();
-      }
+          dataVelocidadGrafico.splice(0, dataVelocidadGrafico.length);
+          labelsVelocidadGrafico.splice(0, labelsVelocidadGrafico.length);
+          graficoVelocidad.update();
+          dataDistanciaGrafico.splice(0, dataDistanciaGrafico.length);
+          labelsDistanciaGrafico.splice(0, labelsDistanciaGrafico.length);
+          graficoDistancia.update();
+
+      },reiniciarRutinas: function(){
+         this.controladoresDeHistoriales.listaRutinas.splice(0, this.controladoresDeHistoriales.listaRutinas.length);
+         dataGraficoHistorialActual.splice(0, dataGraficoHistorialActual.length);
+        labelsGraficoHistorialActual.splice(0, labelsGraficoHistorialActual.length);
+        colorGraficoHistorialActual.splice(0, colorGraficoHistorialActual.length);
+        colorHoverGraficoHistorialActual.splice(0, colorHoverGraficoHistorialActual.length);
+      },reiniciarTemporizador: function(){
+        this.indicadoresDeSaludVariables.tiempoRestante= "03:00";
+        this.indicadoresDeSaludVariables.milisegundosActividad= 180000;
+     }
       //#endregion METHODS
     }
 })
@@ -427,7 +482,7 @@ function ejecutarReloj(){
 //#region Ventanas
 document.getElementById('botonVerAtletas').addEventListener("click", Procesos.mostrarVisorAtletasAsignados);
 document.getElementById('botonRegresarPerfil').addEventListener("click", mainApp.activarVisorPerfil);
-document.getElementById('opcionHistorial').addEventListener("click", Procesos.obtenerHistorialesPersonales);
+document.getElementById('botonActualizador').addEventListener("click", Procesos.obtenerHistorialesPersonales);
 //#endregion Ventanas
 
 //#region Mensajes
@@ -436,6 +491,8 @@ document.getElementById('controladorSesion').addEventListener("click", Mensajes.
 //#endregion Mensajes
 
 //#region Acciones API
+document.getElementById('selectorIntensidad').addEventListener("change", Procesos.seleccionarIntensidad); 
+document.getElementById('botonInicioEvaluacion').addEventListener("click", Procesos.ejecutarRutinaEnVivo);
 /*document.getElementById('botonAgregarAtleta').addEventListener("click", Procesos.asignarAtletaNoAsignado);
 document.getElementById('atletasNoAsignados').addEventListener("change", Procesos.obtenerNombresAtletaNoAsignado);
 document.getElementById('selectorSemana').addEventListener("change", Procesos.mostrarPruebasFiltradasFecha);
@@ -462,5 +519,6 @@ export {
   labelsOxigenoGrafico,
   graficoRitmoCardiaco,
   graficoOxigeno,
-  graficoTemperatura
+  graficoTemperatura,
+  componentesNaveteeLive
 };
