@@ -144,7 +144,7 @@ void loop ()
     Serial.print(",");
     Serial.print(porcentaje);     //porcentaje
     Serial.print(",");    
-    Serial.print(zm);             //aceleracion
+    Serial.print(abs(z_printable));             //aceleracion
     Serial.print(",");
     Serial.print(repeticion);     //bandera que determina si es repeticion
     //ultimo dato 'z' representa la velocidad o intesidad y el 'z_printable la distancia'
