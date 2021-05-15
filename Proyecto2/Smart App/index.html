@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- #region Referencias a Librerias, Frameworks y otros archivos -->
+    <link rel="stylesheet" href="Estilos/estilos_tve.css">
+    <!-- ícono para la pestaña de la página en navegador -->
+    <link rel="shortcut icon" href="Íconos/IOT.ico"> 
+    <!-- google font: Nixie One -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
+    <!-- Llamada a framework Vue.js -->
+    <script type="text/javascript" src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script> 
+    <!-- Llamada a sweealert 2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
+    <!-- Llamada a Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <!-- Llamada a bundle -->
+    <script type="text/javascript" src="src/bundle.js" defer></script> 
+    <!-- #endregion Referencias a Librerias, Frameworks y otros archivos -->
+     <title>Glove Fit</title>
+</head>
+<body>
+    <!-- #region covertor -->
+        <section id="covertor"> 
+            <div class="rellenoCovertor"></div>
+        </section>
+    <!-- #endregion covertor -->
+    <!-- #region Opciones de encabezado -->
+        <header id="encabezado">
+            <h1 class="tituloPrincipal"> {{titulo}}</h1>
+            <section id="barraInformativa">
+                    <h2 class="lectorTiempo"> {{fecha}}</h2>
+                    <h2 class="lectorTiempo"> {{hora}}</h2>
+                    <span id="controladorSesion" class="icon-switch" alt="Cerrar sesión" title="Cerrar Sesión"></span>
+            </section>
+        </header>
+    <!-- #endregion Opciones de ebncabezado -->
+    <!-- #region DashBoard -->
+    <section id="main">
+        <!-- #region Menu de Opciones -->
+        <section id="menu">
+            <div v-on:click="activarVisorPerfil" v-bind:class="[estadoVisualizadores.estadoPerfil || estadoVisualizadores.estadoAtletas ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulosMenu">{{titulos.seccion_Perfil}} </h2>
+            </div>
+            <div v-on:click="activarVisorRendimiento" v-bind:class="[estadoVisualizadores.estadoRendimiento ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulosMenu"> {{titulos.seccion_Rendimiento}} </h2>
+            </div>
+            <div id = "opcionHistorial" v-on:click="activarVisorHistorial" v-bind:class="[estadoVisualizadores.estadoHistorial ? estiloActual.activo : estiloActual.inactivo]">
+                <h2 class="titulosMenu">{{titulos.seccion_Historial}} </h2>
+            </div>   
+        </section> 
+         <!-- #endregion Menu de Opciones -->
+        <!-- #region Visores/Subventanas -->
+        <section id="visualizador">
+            <!-- #region Visor Perfil -->
+            <div v-show= "estadoVisualizadores.estadoPerfil" class="visores">
+                <div class = "contenedorDinamico">
+                    <div class= "primerSeparador">
+                        <h2 class="titulos">{{titulos.visorDatosPersonales}}</h2>
+                        <form id="datosPerfil" class="proyectorResultados">
+                            <br>
+                            <p>Id: <input v-bind:value="datosDePerfilEnSesion.id" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Nombres: <input v-bind:value="datosDePerfilEnSesion.nombres" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Apellidos: <input v-bind:value="datosDePerfilEnSesion.apellidos" type="text" readonly="readonly"></p>
+                        </form>
+                        <img id="imagenPerfil" src="./Imagenes/Perfil.gif" alt="Imagen de Freepik Storyset"  title="Imagen de Freepik Storyset">
+                    </div>
+                    <div class= "segundoSeparador" id="contenedorDatosDeportivos">
+                        <br>
+                        <h2 class="titulos">{{titulos.visorDatosDeportivos}}</h2>
+                        <br>
+                        <form id="datosDeportivos" class="proyectorResultados">
+                            <p>Usuario: <input v-bind:value="datosDePerfilEnSesion.username" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Edad: <input v-bind:value="datosDePerfilEnSesion.edad" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Sexo: <input v-bind:value="datosDePerfilEnSesion.sexo" type="text" readonly="readonly"></p>
+                            <br>
+                            <p>Peso: <input v-bind:value="datosDePerfilEnSesion.peso" type="text" readonly="readonly">(Lbs)</p>
+                            <br>
+                            <p>Estatura: <input v-bind:value="datosDePerfilEnSesion.estatura" type="text" readonly="readonly">(cm)</p>
+                        </form>
+                        <br>
+                        <div v-show= "datosDePerfilEnSesion.estadoTipo" class="contenedorBotonAccionador">
+                            <button id="botonVerAtletas">Ver atletas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #endregion Visor Perfil -->
+            <!-- #region Visor Rendimiento en Vivo -->
+            <div  v-show= "estadoVisualizadores.estadoRendimiento" class="visores">
+                    <div class = "contenedorMayor">
+                        <!-- #region Visor Panel de Control -->
+                        <br>
+                            <h2 class="titulos">{{titulos.visorSalud}}</h2>
+                        <br>
+                        <p class="infoJustificada">La sección de rendimiento permite poder visualizar tu estado fisico reflejado por el guante activado, 
+                            permitiendo asi poder analizar tu información de manera fluida. Puedes iniciar tu evaluación para poder visualizar
+                            tus mediciones en tiempo real eligiendo el nivel de intensidad que desees:
+                        </p>
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form class="proyectorResultados">      
+                                <p>Intensidad: 
+                                    <select id="selectorIntensidad" class="selectorOpcionesMultiples">
+                                        <option selected>Suave</option>
+                                        <option>Medio</option>
+                                        <option>Intenso</option>
+                                    </select>
+                                </p>
+                                <br>
+                                <p>Tiempo Restante:</p>
+                                <br>
+                                <p>{{indicadoresDeSaludVariables.tiempoRestante}}</p>
+                                <br>
+                            </form>
+                        </div>
+                        <br>
+                        <div class="opcionesDeAnalisis">
+                            <div class="contenedorBotonAccionador">
+                                <button id = "botonInicioEvaluacion" class="botonInicioEvaluacion" >Evaluarme</button>
+                            </div>
+                        </div>
+                        <!-- #endregion Visor Panel de Control -->
+                        <br>
+                        <!-- #region Visor Ritmo Cardiaco -->
+                        <h2 class="titulos">{{titulos.visorCardiaco}}</h2>
+                        <br>
+                        <canvas id="visorGraficoRitmoCardiaco" width="60%" height="20%"></canvas>
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form id="indicadoresDePulso" class="proyectorResultados">      
+                                <p>Mi ritmo actual: <input v-bind:value="indicadoresDeSaludVariables.pulsoActual" type="text" readonly="readonly">(Lpm)</p>
+                                <br>
+                            </form>
+                        </div>
+                        <!-- #endregion Ritmo Cardiaco -->
+                        <br>
+                        <!-- #region Visor Temperatura -->
+                        <h2 class="titulos">{{titulos.visorTemperatura}}</h2>
+                        <br>
+                        <canvas id="visorGraficoTemperatura" width="60%" height="20%"></canvas>
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form id="indicadoresDeTemperatura" class="proyectorResultados">      
+                                <p>Temperatura actual: <input v-bind:value="indicadoresDeSaludVariables.temperaturaActual" type="text" readonly="readonly">°C</p>
+                                <br>
+                            </form>
+                        </div>
+                        <!-- #endregion Visor Temperatura -->
+                        <br>
+                        <!-- #region Visor Oxigeno -->
+                        <h2 class="titulos">{{titulos.visorOxigeno}}</h2>
+                        <br>
+                        <canvas id="visorGraficoOxigeno" width="60%" height="20%"></canvas>
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form id="indicadoresDeOxigeno" class="proyectorResultados">      
+                                <p>Nivel de Oxigeno actual: <input v-bind:value="indicadoresDeSaludVariables.oxigenoActual" type="text" readonly="readonly">(O)</p>
+                                <br>
+                            </form>
+                        </div>
+                        <!-- #endregion Visor Oxigeno -->
+                        <br>
+                        <!-- #region Visor Velocidad -->
+                        <h2 class="titulos">{{titulos.visorVelocidad}}</h2>
+                        <br>
+                        <canvas id="visorGraficoVelocidad" width="60%" height="20%"></canvas>
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form id="indicadoresDeVelocidad" class="proyectorResultados">      
+                                <p>Aceleración: <input v-bind:value="indicadoresDeSaludVariables.velocidadActual" type="text" readonly="readonly">G</p>
+                                <br>
+                            </form>
+                        </div>
+                        <!-- #endregion Visor Velocidad -->
+                        <br>
+                        <!-- #region Visor Distancia -->
+                        <h2 class="titulos">{{titulos.visorDistancia}}</h2>
+                        <br>
+                        <canvas id="visorGraficoDistancia" width="60%" height="20%"></canvas>
+                        <br>
+                        <div class="indicadoresSalud">
+                            <br>
+                            <form id="indicadoresDeDistancia" class="proyectorResultados">      
+                                <p>Porcentaje de Elevación/Flexión: <input v-bind:value="indicadoresDeSaludVariables.distanciaActual" type="text" readonly="readonly">%</p>
+                                <br>
+                            </form>
+                        </div>
+                        <!-- #endregion Visor Distancia -->
+                        <br>
+                </div>
+            </div>
+            <!-- #endregion Visor Rendimiento en Vivo -->
+            <!-- #region Visor Historial -->
+            <div v-show= "estadoVisualizadores.estadoHistorial" class="visores">
+                <div class = "contenedorMayor">
+                <h2 class="titulos">{{titulos.medicionesHistoriales}}</h2>
+                <br>
+                <div class="tablasSesionesVO2">
+                    <table id = "" class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Fecha</th><th>Detalles</th><th>Graficar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoRutinasAtleta" >
+                            <tr  v-for="elemento in controladoresDeHistoriales.listaRutinas">
+                                <td>{{elemento.fecha}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                 </div>
+                 <div class="contenedorBotonAccionador">
+                    <button id = "botonActualizador" >Actualizar</button>
+                </div>
+                 <div class="tablasSesionesVO2Simple">
+                    <h2 class="titulos">{{titulos.tituloDetallesVitales}}</h2>
+                    <br>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Ritmo Minimo (lpm)</th><th>Ritmo Máximo (lpm)</th><th>Ritmo Promedio (lpm)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="" >
+                            <tr>
+                                <td>{{indicadoresDeSaludHistorial.pulsoMinimo}}</td>
+                                <td>{{indicadoresDeSaludHistorial.pulsoMaximo}}</td>
+                                <td>{{indicadoresDeSaludHistorial.pulsoPromedio}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+                <div class="tablasSesionesVO2Simple">
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Temperatura Minima (°C)</th><th>Temperatura Máxima (°C)</th><th>Temperatura Promedio (°C)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="" >
+                            <tr>
+                                <td>{{indicadoresDeSaludHistorial.temperaturaMinima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.temperaturaMaxima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.temperaturaPromedio}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+                <div class="tablasSesionesVO2Simple">
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Oxígeno Minimo (O)</th><th>Oxígeno Máximo (O)</th><th>Oxígeno Promedio (O)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="" >
+                            <tr>
+                                <td>{{indicadoresDeSaludHistorial.oxigenoMinimo}}</td>
+                                <td>{{indicadoresDeSaludHistorial.oxigenoMaximo}}</td>
+                                <td>{{indicadoresDeSaludHistorial.oxigenoPromedio}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+                <div class="tablasSesionesVO2Simple">
+                    <h2 class="titulos">{{titulos.tituloDetalleAgiles}}</h2>
+                    <br>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Acel. Minima (G)</th><th>Acel. Máxima (G)</th><th>Acel Promedio (G)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="" >
+                            <tr>
+                                <td>{{indicadoresDeSaludHistorial.velocidadMinima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.velocidadMaxima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.velocidadPromedio}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+                <div class="tablasSesionesVO2Simple">
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Elevación Minima (%)</th><th>Elevación Máxima (%)</th><th>Elevación Promedio (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="" >
+                            <tr>
+                                <td>{{indicadoresDeSaludHistorial.distanciaMinima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.distanciaMaxima}}</td>
+                                <td>{{indicadoresDeSaludHistorial.distanciaPromedio}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+                <div class="tablasSesionesVO2Simple">
+                    <h2 class="titulos">{{titulos.tituloDetallesEvaluacion}}</h2>
+                    <br>
+                    <table class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Intensidad</th><th>Peso Considerado (Kg)</th><th>Calorías quemadas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="" >
+                            <tr>
+                                <td>{{indicadoresDeSaludHistorial.intensidad}}</td>
+                                <td>{{indicadoresDeSaludHistorial.pesoConsiderado}}</td>
+                                <td>{{indicadoresDeSaludHistorial.calorias}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+            <br>
+            <div class="historialesGenerales">
+                <canvas id="visorGraficoHistorial" width="75%" height="35%"></canvas>
+            </div>
+            <br>
+        </div>
+            </div>
+            <!-- #endregion Visor Historial -->
+            <!-- #region Visor Atletas(De coach) -->
+            <div v-show= "estadoVisualizadores.estadoAtletas" class="visores">
+                <h2 class="titulos">{{titulos.visorAtletas}}</h2>
+                <br>
+                <div id="contenedorTablaAtletas">
+                    <br>
+                    <table id="tablaAtletas" class="tabla" >
+                        <thead>
+                            <tr>
+                                <th>Atleta</th><th>Nombre</th><th>Apellido</th><th>Edad</th><th>Sexo</th><th>Peso</th><th>Estatura</th><th>Historial</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoInformativoAtletas" >
+                            <tr v-for="elemento in controladoresDeHistorialesCoach.listaAtletas">
+                                <td>{{elemento.username}}</td>
+                                <td>{{elemento.nombre}}</td>
+                                <td>{{elemento.apellido}}</td>
+                                <td>{{elemento.edad}}</td>
+                                <td>{{elemento.sexo}}</td>
+                                <td>{{elemento.peso}}</td>
+                                <td>{{elemento.estatura}}</td>
+                                <!-- <td id="botonVerHistorial"><span class="icon-eye" alt="Ver detalles" title="Ver Detalles"></span></td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <h2 class="titulos">{{titulos.seccionNuevosAtletas}}</h2>
+                <form id="datosNuevoAtleta" class="proyectorResultados">
+                    <br>
+                    <p>Username: 
+                        <select id="atletasNoAsignados" class="selectorOpcionesMultiples">
+                            <option selected>0000</option>
+                            <option>0001</option>
+                        </select>
+                    </p>
+                    <br>
+                    <p>Nombre: <input v-bind:value="evaluacionAtleta.nombreAtleta" type="text" readonly="readonly"></p>
+                    <br>
+                    <p>Apellido: <input v-bind:value="evaluacionAtleta.apellidoAtleta" type="text" readonly="readonly"></p>
+                </form>
+                <br>
+                <div class="contenedorBotonAccionador">
+                    <button id="botonAgregarAtleta">Agregar Atleta</button>
+                    <br>
+                    <button id="botonRegresarPerfil">Regresar a mi perfil</button>
+                </div>
+            </div>
+            <!-- #endregion Visor Atletas(De coach) -->  
+        </section>
+        <!-- #endregion Visores/Subventanas -->
+    </section>
+    <!-- #endregion DashBoard -->
+    <!-- #region Pie de Página -->
+    <footer>
+        <article>
+            <h4>Arquitectura de Computadores y Ensambladores 2 Sección: N</h4>
+            <p>Proyecto # 2: Prenda inteligente orientada a IOT, Ilustraciones de <a id="referenciaImagenes" href="https://storyset.com/data"> Freepik Storyset</a></p>
+        </article>
+    </footer>
+    <!-- #endregion Pie de Página -->
+</body> 
+</html>
